@@ -1,0 +1,10 @@
+/.vs
+/*/bin
+/*/obj
+*.csproj
+*.png
+*.ico
+*.jpeg
+*.jpg
+*.sln
+*.json

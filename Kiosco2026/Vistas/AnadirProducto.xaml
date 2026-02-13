@@ -1,0 +1,87 @@
+﻿<UserControl x:Class="Kiosco2026.Vistas.AnadirProducto"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Kiosco2026.Vistas"
+             xmlns:modelo="clr-namespace:Kiosco2026.ModeloDeLasVistas.Hijas"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1190">
+    <UserControl.DataContext>
+        <modelo:ModeloAnadirProducto/>
+    </UserControl.DataContext>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding ValoresPredeterminados}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Border CornerRadius="10" Margin="30" Background="#FFFFFF">
+        <Grid Margin="15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Vertical" Grid.Column="0">
+                <TextBox x:Name="entrada_nombre" Style="{StaticResource entrada_form}" Text="{Binding Nombre}" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
+                <ComboBox  x:Name="cmb_categorias"
+                           PreviewMouseDown="cmb_categorias_PreviewMouseDown"
+                           Style="{StaticResource cmb_entrada_form}" 
+                           ItemsSource="{Binding ListaCategorias}"
+                           SelectedItem="{Binding Categoria}"
+                           Cursor="Hand">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate >
+                            <TextBlock Text="{Binding Nombre}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <TextBox x:Name="entrada_codigo" Style="{StaticResource entrada_form}" Text="{Binding Codigo}" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
+                <TextBox x:Name="entrada_venta" Style="{StaticResource entrada_form}" Text="{Binding Venta}" PreviewTextInput="entradas_PreviewTextInput" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
+                <TextBox x:Name="entrada_compra" Style="{StaticResource entrada_form}" Text="{Binding Compra}" PreviewTextInput="entradas_PreviewTextInput" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
+                <TextBlock Margin="10" FontFamily="Roboto Flex" 
+                           FontSize="16"><Bold>- Campos obligatorios: </Bold> Todos los campos marcados con un asterisco
+                    <LineBreak/> (<Span Foreground="#990000">*</Span>) deben completarse sin excepción.</TextBlock>
+                <TextBlock Margin="10" FontFamily="Roboto Flex" 
+                           FontSize="16"><Bold>- Fecha de ingreso:</Bold> Se asigna automáticamente la fecha del día
+                    <LineBreak/> en curso al momento de la carga.
+                </TextBlock>
+                <TextBlock Margin="10" FontFamily="Roboto Flex" 
+                           FontSize="16"><Bold>- Fecha de vencimiento:</Bold> Por defecto se establece un año posterior
+                    <LineBreak/> a la fecha de ingreso.
+                </TextBlock>
+                <TextBlock Margin="10" FontFamily="Roboto Flex" 
+                           FontSize="16"><Bold>- Agregar categorías:</Bold> Para ampliar tu listado, utilizá la opción 
+                    <LineBreak/><Span Foreground="#FF265B71">“Administrar categorías”</Span> disponible dentro de la sección “Productos”.
+                </TextBlock>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <TextBox x:Name="entrada_cantidad" Style="{StaticResource entrada_form}" Text="{Binding Cantidad}" PreviewTextInput="entradas_PreviewTextInput" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
+                <TextBox x:Name="entrada_proveedor" Style="{StaticResource entrada_form}" Text="{Binding Proveedor}" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
+                <Grid Margin="10, 9, 10, 10" Height="41">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="135"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource titulosFormularios}" Grid.Column="0" VerticalAlignment="Center" >Ingreso*:</TextBlock>
+                    <DatePicker Grid.Column="1" BorderThickness="0" FontFamily="Roboto Flex" FontSize="20" 
+                                Padding="0" VerticalAlignment="Center" SelectedDate="{Binding Ingreso}"></DatePicker>
+                </Grid>
+                <Grid Margin="10, 9, 10, 10" Height="41">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="135"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Style="{StaticResource titulosFormularios}" Grid.Column="0" VerticalAlignment="Center">Vencimiento:</TextBlock>
+                    <DatePicker Grid.Column="1" BorderThickness="0" FontFamily="Roboto Flex" FontSize="20" 
+                                Padding="0" VerticalAlignment="Center" SelectedDate="{Binding Vencimiento}"></DatePicker>
+                </Grid>
+                <RadioButton Style="{StaticResource boton_confirmar}" Command="{Binding CargarProducto}">
+                    <TextBlock Style="{StaticResource texto_botones_uno}" Text="Añadir"/>
+                </RadioButton>
+                <TextBlock Margin="10" FontFamily="Roboto Flex" 
+                           FontSize="16" Text="{Binding Mensaje}" Foreground="{Binding ColorMensaje}" ></TextBlock>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

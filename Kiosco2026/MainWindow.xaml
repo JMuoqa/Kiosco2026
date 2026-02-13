@@ -1,0 +1,290 @@
+﻿<Window x:Class="Kiosco2026.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Kiosco2026"
+        xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+        xmlns:modeloHijas="clr-namespace:Kiosco2026.ModeloDeLasVistas.Hijas"
+        xmlns:vistas="clr-namespace:Kiosco2026.Vistas"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="Transparent"
+        AllowsTransparency="True"
+        MouseDown="MoverVentana"
+        StateChanged="NuevoEstado"
+        Title="Kiosco" Height="900" Width="1440">
+    <Window.RenderTransform>
+        <!-- Transform que vamos a animar -->
+        <ScaleTransform x:Name="EscalaVentana" ScaleX="1" ScaleY="1"                    
+                        CenterX="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Window}, Mode=OneWay}"
+                        CenterY="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Window}, Mode=OneWay}"/>
+    </Window.RenderTransform>
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type modeloHijas:ModeloAnadirProducto}">
+            <vistas:AnadirProducto/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type modeloHijas:ModeloEditarProducto}">
+            <vistas:EditarProductos/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type modeloHijas:ModeloAdministrarCategorias}">
+            <vistas:AdministrarCategorias/>
+        </DataTemplate>
+        <!-- Animación para minimizar -->
+        <Storyboard x:Key="MinimizarVentana">
+            <DoubleAnimation Storyboard.TargetName="EscalaVentana"
+                             Storyboard.TargetProperty="ScaleX"
+                             To="0.1" Duration="0:0:0.3"
+                             AccelerationRatio="0.2" DecelerationRatio="0.8"/>
+            <DoubleAnimation Storyboard.TargetName="EscalaVentana"
+                             Storyboard.TargetProperty="ScaleY"
+                             To="0.1" Duration="0:0:0.3"
+                             AccelerationRatio="0.2" DecelerationRatio="0.8"/>
+            <DoubleAnimation Storyboard.TargetName="ContenidoPrincipal" 
+                             Storyboard.TargetProperty="Opacity"
+                             To="0" Duration="0:0:0.3"/>
+        </Storyboard>
+        <!-- Animación para normalizar -->
+        <Storyboard x:Key="NormalizarVentana">
+            <DoubleAnimation Storyboard.TargetName="EscalaVentana"
+                             Storyboard.TargetProperty="ScaleX"
+                             To="0.8" Duration="0:0:0.1"
+                             AccelerationRatio="0.2" DecelerationRatio="0.8"/>
+            <DoubleAnimation Storyboard.TargetName="EscalaVentana"
+                             Storyboard.TargetProperty="ScaleY"
+                             To="0.8" Duration="0:0:0.1"
+                             AccelerationRatio="0.2" DecelerationRatio="0.8"/>
+            <DoubleAnimation Storyboard.TargetName="ContenidoPrincipal" 
+                             Storyboard.TargetProperty="Opacity"
+                             From="0"  To="0.5" Duration="0:0:0.1"/>
+            <!--Para que funcione tenes que cambiar el name a un elemento que contenga opacity-->
+        </Storyboard>
+        <!-- Animación para maximizar -->
+        <Storyboard x:Key="MaximizarVentana">
+            <DoubleAnimation Storyboard.TargetName="EscalaVentana"
+                             Storyboard.TargetProperty="ScaleX"
+                             To="0.9" Duration="0:0:0.1"
+                             AccelerationRatio="0.2" DecelerationRatio="0.8"/>
+            <DoubleAnimation Storyboard.TargetName="EscalaVentana"
+                             Storyboard.TargetProperty="ScaleY"
+                             To="0.9" Duration="0:0:0.1"
+                             AccelerationRatio="0.2" DecelerationRatio="0.8"/>
+            <DoubleAnimation Storyboard.TargetName="ContenidoPrincipal" 
+                             Storyboard.TargetProperty="Opacity"
+                             From="0.7" To="1" Duration="0:0:0.1"/>
+        </Storyboard>
+        <!-- Animación para restaurar -->
+        <Storyboard x:Key="RestaurarVentana">
+            <DoubleAnimation Storyboard.TargetName="EscalaVentana"
+                             Storyboard.TargetProperty="ScaleX"
+                             To="1" Duration="0:0:0.3"
+                             AccelerationRatio="0.2" DecelerationRatio="0.8"/>
+            <DoubleAnimation Storyboard.TargetName="EscalaVentana"
+                             Storyboard.TargetProperty="ScaleY"
+                             To="1" Duration="0:0:0.3"
+                             AccelerationRatio="0.2" DecelerationRatio="0.8"/>
+            <DoubleAnimation Storyboard.TargetName="ContenidoPrincipal" 
+                             Storyboard.TargetProperty="Opacity"
+                             To="1" Duration="0:0:0.3"/>
+        </Storyboard>
+        <!-- Animación para cerrar-->
+        <Storyboard x:Key="CerrarVentana">
+            <DoubleAnimation Storyboard.TargetName="EscalaVentana"
+                             Storyboard.TargetProperty="ScaleX"
+                             To="0.6" Duration="0:0:0.3"
+                             AccelerationRatio="0.2" DecelerationRatio="0.8"/>
+            <DoubleAnimation Storyboard.TargetName="EscalaVentana"
+                             Storyboard.TargetProperty="ScaleY"
+                             To="0.6" Duration="0:0:0.3"
+                             AccelerationRatio="0.2" DecelerationRatio="0.8"/>
+            <DoubleAnimation Storyboard.TargetName="ContenidoPrincipal" 
+                             Storyboard.TargetProperty="Opacity"
+                             To="0" Duration="0:0:0.3"/>
+        </Storyboard>
+    </Window.Resources>
+    <Grid x:Name="ContenidoPrincipal" Background="#E9E9E9" SizeChanged="ActualizarBordesGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="30"></ColumnDefinition>
+                <ColumnDefinition Width="30"></ColumnDefinition>
+                <ColumnDefinition Width="30"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Image Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" Source="/Imagenes/IconoLogoMuoqa.ico"
+                   Margin="10, 0, 0, 0" Width="30" Height="30" Cursor="Hand"/>
+            <RadioButton Grid.Column="3" Style="{StaticResource botonMenuSup}"  Click="CerrarApp"> 
+                <Image Source="/Imagenes/x_negro.png"  Width="16" Height="16"/>
+            </RadioButton>
+            <RadioButton Grid.Column="2" Style="{StaticResource botonMenuSup}" Click="Btn_PantallaCompleta">
+                <Image Source="/Imagenes/cuadrado_negro.png"  Width="16" Height="16"/>
+            </RadioButton>
+            <RadioButton Grid.Column="1" Style="{StaticResource botonMenuSup}" Click="MinimizarApp">
+                <Image Source="/Imagenes/minimizar_negro.png"  Width="16" Height="16"/>
+            </RadioButton>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0" Background="#FFFFFF" CornerRadius="0, 20, 0 ,0">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Style="{StaticResource titulosNav}">VENTAS</TextBlock>
+                    <RadioButton Style="{StaticResource botones_nav}">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:IconImage Icon="DollarSign" Style="{StaticResource iconos_menu}"/>
+                            <TextBlock Style="{StaticResource texto_botones_nav}">Registrar venta</TextBlock>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource botones_nav}">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:IconImage Icon="Edit" Style="{StaticResource iconos_menu}"/>
+                            <TextBlock Style="{StaticResource texto_botones_nav}">Buscar y editar</TextBlock>
+                        </StackPanel>
+                    </RadioButton>
+                    <TextBlock Style="{StaticResource titulosNav}">MERCADOPAGO</TextBlock>
+                    <RadioButton Style="{StaticResource botones_nav}">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:IconImage Icon="MoneyBillTransfer" Style="{StaticResource iconos_menu}"/>
+                            <TextBlock Style="{StaticResource texto_botones_nav}">Movimientos</TextBlock>
+                        </StackPanel>
+                    </RadioButton>
+                    <TextBlock Style="{StaticResource titulosNav}">PRODUCTOS</TextBlock>
+                    <StackPanel x:Name="paneProductos" Orientation="Vertical">
+                        <RadioButton Style="{StaticResource botones_nav}" Command="{Binding MostrarVistaAdicionProducto}">
+                            <StackPanel Orientation="Horizontal">
+                                <fa:IconImage Icon="Add" Style="{StaticResource iconos_menu}" />
+                                <TextBlock Style="{StaticResource texto_botones_nav}">Añadir producto</TextBlock>
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton Style="{StaticResource botones_nav}" Command="{Binding MostrarEdicionProducto}">
+                            <StackPanel Orientation="Horizontal">
+                                <fa:IconImage Icon="Edit" Style="{StaticResource iconos_menu}"/>
+                                <TextBlock Style="{StaticResource texto_botones_nav}">Editar producto</TextBlock>
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton Style="{StaticResource botones_nav}" Command="{Binding MostrarAdministrarCategorias}">
+                            <StackPanel Orientation="Horizontal">
+                                <fa:IconImage Icon="LayerGroup" Style="{StaticResource iconos_menu}"/>
+                                <TextBlock Style="{StaticResource texto_botones_nav}">Administrar categorias</TextBlock>
+                            </StackPanel>
+                        </RadioButton>
+                    </StackPanel>
+                    <TextBlock Style="{StaticResource titulosNav}">PROVEEDOR</TextBlock>
+                    <RadioButton Style="{StaticResource botones_nav}">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:IconImage Icon="Add" Style="{StaticResource iconos_menu}"/>
+                            <TextBlock Style="{StaticResource texto_botones_nav}">Añadir proveedor</TextBlock>
+                        </StackPanel>
+                    </RadioButton>
+                </StackPanel>
+            </Border>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" CornerRadius="20" Background="#FFFFFF" Margin="30, 0, 15, 0">
+                        <Grid Margin="15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="40"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock FontSize="22" FontWeight="Bold" FontFamily="Roboto Flex" VerticalAlignment="Center"
+                                       Text="{Binding NombreVentana}"></TextBlock>
+                            <Button Grid.Column="1">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                        <Setter Property="Width" Value="40"/>
+                                        <Setter Property="Height" Value="40"/>
+                                        <Setter Property="Cursor" Value="Hand"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#BEE6FD"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    CornerRadius="20">
+                                            <ContentPresenter 
+                                                    RecognizesAccessKey="True"
+                                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                    Margin="{TemplateBinding Padding}" />
+                                        </Border>
+                                    </ControlTemplate>
+                                </Button.Template>
+                                <fa:IconImage  Icon="CaretLeft" Width="15" Margin="0, 0, 5, 0"/>
+                            </Button>
+                        </Grid>
+                    </Border>
+                    <Border Grid.Column="1" CornerRadius="20" Background="#FFFFFF" Margin="15, 0, 30, 0">
+                        <Grid Margin="15">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Grid.Column="1">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Width" Value="40"/>
+                                            <Setter Property="Height" Value="40"/>
+                                            <Setter Property="Cursor" Value="Hand"/>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#BEE6FD"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    CornerRadius="20">
+                                                <ContentPresenter 
+                                                    RecognizesAccessKey="True"
+                                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                    Margin="{TemplateBinding Padding}" />
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                    <fa:IconImage  Icon="Gear" Width="20"/>
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </Grid>
+                <ContentControl Grid.Row="1" Content="{Binding VistaHijaActual}"
+                                x:Name="pruebaAncho"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
