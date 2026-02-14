@@ -18,10 +18,16 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             ActualizarAnchoActual = new ComandoModeloDeVista(EjecutarActualizarAnchoActual);
             ObtenerProductos = new ComandoModeloDeVista(EjecutarObtenerProductos);
             ObtenerProductosPorIngreso = new ComandoModeloDeVista(EjecutarObtenerProductosPorIngreso);
+            ObtenerCategorias = new ComandoModeloDeVista(EjecutarObtenerCategoriasGenerales);
             _adminProductos = new AdminProductos();
+            Marcado = default;
+            Nombre = "Nombre";
+            Venta = "Venta";
+            Compra = "Compra";
+            Cantidad = "Cantidad";
         }
         #region Propiedades
-        private AdminProductos _adminProductos;
+        #region Columnas privadas
         private double _eColumna_uno;
         private double _eColumna_dos;
         private double _eColumna_tres;
@@ -38,17 +44,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private double _tColumna_seis;
         private double _tColumna_siete;
         private double _tColumna_ocho;
-        //Queda hacer las propiedades publicas con getters y setters
-        private ObservableCollection<Productos> _listaProductos;
-        public ObservableCollection<Productos> ListaProductos
-        {
-            get => _listaProductos;
-            set
-            {
-                _listaProductos = value;
-                OnPropertyChanged(nameof(ListaProductos));
-            }
-        }
+        #endregion
+        #region Columnas publicas
         public double EColumna_uno
         {
             get => _eColumna_uno;
@@ -60,7 +57,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         public double EColumna_dos
         {
-            get=> _eColumna_dos;
+            get => _eColumna_dos;
             set
             {
                 _eColumna_dos = value;
@@ -194,17 +191,99 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             }
         }
         #endregion
+        private AdminProductos _adminProductos;
+        private ObservableCollection<Categorias> _listaCategorias;
+        private Categorias _categoria;
+        private string _venta;
+        private string _compra;
+        private string _cantidad;
+        private string _nombre;
+        private bool _marcado;
+        public bool Marcado
+        {
+            get => _marcado;
+            set
+            {
+                _marcado = value;
+                OnPropertyChanged(nameof(Marcado));
+            }
+        }
+        public string Nombre
+        {
+            get => _nombre;
+            set
+            {
+                _nombre = value;
+                OnPropertyChanged(nameof(Nombre));
+            }
+        }
+        public string Venta
+        {
+            get => _venta;
+            set
+            {
+                _venta = value;
+                OnPropertyChanged(nameof(Venta));
+            }
+        }
+        public string Compra
+        {
+            get => _compra;
+            set
+            {
+                _compra = value;
+                OnPropertyChanged(nameof(Compra));
+            }
+        }
+        public string Cantidad
+        {
+            get => _cantidad;
+            set
+            {
+                _cantidad = value;
+                OnPropertyChanged(nameof(Cantidad));
+            }
+        }
+        public ObservableCollection<Categorias> ListaCategorias
+        {
+            get => _listaCategorias;
+            set
+            {
+                _listaCategorias = value;
+                OnPropertyChanged(nameof(ListaCategorias));
+            }
+        }
+        //Queda hacer las propiedades publicas con getters y setters 13/2/2026??
+        private ObservableCollection<Productos> _listaProductos;
+        public ObservableCollection<Productos> ListaProductos
+        {
+            get => _listaProductos;
+            set
+            {
+                _listaProductos = value;
+                OnPropertyChanged(nameof(ListaProductos));
+            }
+        }
+        public Categorias Categoria
+        {
+            get => _categoria;
+            set
+            {
+                _categoria = value;
+                OnPropertyChanged(nameof(Categoria));
+            }
+        }
+        #endregion
         #region Comandos
         public ICommand ActualizarAnchoActual { get; }
         public ICommand ObtenerProductos { get; }
+        public ICommand ObtenerCategorias { get; }
         public ICommand ObtenerProductosPorIngreso { get; }
         #endregion
         #region Eventos
         private async Task EjecutarObtenerProductosPorIngreso(object obj)
         {
-            Debug.WriteLine(obj);
             Productos producto = obj as Productos;
-            Debug.WriteLine(producto.IDCategoria);
         }
         private async Task EjecutarObtenerProductos(object obj)
         {
@@ -213,7 +292,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 valor = valor;
             var res = await _adminProductos.BusquedaProductos(valor);
             ListaProductos = new ObservableCollection<Productos>(res.lista);
-            Debug.WriteLine(res);
         }
         private async Task EjecutarActualizarAnchoActual(object arg)
         {
@@ -240,7 +318,23 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             TColumna_seis = relleno;
             TColumna_siete = relleno;
             TColumna_ocho = relleno;
-
+        }
+        private async Task EjecutarObtenerCategoriasGenerales(object arg)
+        {
+            var respuesta = await _adminProductos.ObtenerCategoriasGenerales();
+            var respuestaDos = await _adminProductos.ObtenerCategoriasCliente();
+            List<Categorias> listaGeneral = respuesta.lista;
+            List<Categorias> listaCliente = respuestaDos.lista;
+            List<Categorias> listaCompleta = new List<Categorias>();
+            for (int i = 0; i < listaGeneral.Count; i++)
+            {
+                listaCompleta.Add(listaGeneral[i]);
+            }
+            for (int i = 0; i < listaCliente.Count; i++)
+            {
+                listaCompleta.Add(listaCliente[i]);
+            }
+            ListaCategorias = new ObservableCollection<Categorias>(listaCompleta);
         }
         #endregion
     }

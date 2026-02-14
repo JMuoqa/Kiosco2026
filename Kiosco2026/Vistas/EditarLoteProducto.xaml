@@ -1,0 +1,127 @@
+﻿<Window x:Class="Kiosco2026.Vistas.EditarLoteProducto"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Kiosco2026.Vistas"
+        xmlns:modelo="clr-namespace:Kiosco2026.ModeloDeLasVistas.Hijas"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Title="EditarLoteProducto" Height="800" Width="1400">
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="300"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Margin="15, 0, 15, 5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="18"
+               VerticalAlignment="Center" Text="Lotes"/>
+            <Border  Grid.Row="1" BorderThickness="0.6" CornerRadius="10" BorderBrush="#000000">
+                <Grid >
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SizeChanged">
+                            <i:InvokeCommandAction Command="{Binding ActualizarAnchoActual}"                                   
+                               CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=Grid}}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="LayoutUpdated">
+                                <i:InvokeCommandAction Command="{Binding ActualizarAnchoActual}"                                   
+                                                   CommandParameter="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <Border Width="{Binding EColumna_uno}">
+                            <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
+                                   VerticalAlignment="Center" Text="ID" Margin="10, 0, 0, 0"/>
+                        </Border>
+                        <Border Width="{Binding EColumna_dos}">
+                            <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
+                                   VerticalAlignment="Center" Text="VISIBILIDAD"/>
+                        </Border>
+                        <Border Width="{Binding EColumna_tres}">
+                            <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
+                                   VerticalAlignment="Center" Text="NOMBRE"/>
+                        </Border>
+                        <Border Width="{Binding EColumna_cuatro}">
+                            <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
+                                   VerticalAlignment="Center" Text="CATEGORIA"/>
+                        </Border>
+                        <Border Width="{Binding EColumna_cinco}">
+                            <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
+                                   VerticalAlignment="Center" Text="CODIGO"/>
+                        </Border>
+                        <Border Width="{Binding EColumna_seis}">
+                            <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
+                                   VerticalAlignment="Center" Text="COMPRA"/>
+                        </Border>
+                        <Border Width="{Binding EColumna_siete}">
+                            <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
+                                   VerticalAlignment="Center" Text="VENTA"/>
+                        </Border>
+                        <Border Width="{Binding EColumna_ocho}">
+                            <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
+                                   VerticalAlignment="Center" Text="CANTIDAD"/>
+                        </Border>
+                    </StackPanel>
+                    <ScrollViewer  Grid.Row="1" VerticalScrollBarVisibility="Auto" >
+                        <ItemsControl  ItemsSource="{Binding ListaProductos}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Background="Transparent" BorderThickness="0" Cursor="Hand" 
+                                        HorizontalAlignment="Left" Height="40" >
+                                        <StackPanel Orientation="Horizontal">
+                                            <Border Width="{Binding DataContext.TColumna_uno, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                                <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
+                                                       VerticalAlignment="Center"  Text="{Binding ID}" Margin="10, 0, 0, 0"/>
+                                            </Border>
+                                            <Border Width="{Binding DataContext.TColumna_dos, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                                <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
+                                                       VerticalAlignment="Center"  Text="{Binding Mostrar}"/>
+                                            </Border>
+                                            <Border Width="{Binding DataContext.TColumna_tres, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                                <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
+                                                           VerticalAlignment="Center"  Text="{Binding Nombre}"/>
+                                            </Border>
+                                            <Border Width="{Binding DataContext.TColumna_cuatro, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                                <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
+                                                           VerticalAlignment="Center"  Text="{Binding Categoria}"/>
+                                            </Border>
+                                            <Border Width="{Binding DataContext.TColumna_cinco, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                                <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
+                                                           VerticalAlignment="Center"  Text="{Binding Codigo}"/>
+                                            </Border>
+                                            <Border Width="{Binding DataContext.TColumna_seis, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                                <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
+                                                           VerticalAlignment="Center"  Text="{Binding Compra}"/>
+                                            </Border>
+                                            <Border Width="{Binding DataContext.TColumna_siete, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                                <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
+                                                           VerticalAlignment="Center"  Text="{Binding Venta}"/>
+                                            </Border>
+                                            <Border Width="{Binding DataContext.TColumna_ocho, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                                <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
+                                                           VerticalAlignment="Center"  Text="{Binding Cantidad}"/>
+                                            </Border>
+                                        </StackPanel>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

@@ -9,12 +9,8 @@
         xmlns:vistas="clr-namespace:Kiosco2026.Vistas"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="None"
-        ResizeMode="NoResize"
         Background="Transparent"
-        AllowsTransparency="True"
-        MouseDown="MoverVentana"
-        StateChanged="NuevoEstado"
+        WindowState="Maximized"
         Title="Kiosco" Height="900" Width="1440">
     <Window.RenderTransform>
         <!-- Transform que vamos a animar -->
@@ -32,102 +28,12 @@
         <DataTemplate DataType="{x:Type modeloHijas:ModeloAdministrarCategorias}">
             <vistas:AdministrarCategorias/>
         </DataTemplate>
-        <!-- Animación para minimizar -->
-        <Storyboard x:Key="MinimizarVentana">
-            <DoubleAnimation Storyboard.TargetName="EscalaVentana"
-                             Storyboard.TargetProperty="ScaleX"
-                             To="0.1" Duration="0:0:0.3"
-                             AccelerationRatio="0.2" DecelerationRatio="0.8"/>
-            <DoubleAnimation Storyboard.TargetName="EscalaVentana"
-                             Storyboard.TargetProperty="ScaleY"
-                             To="0.1" Duration="0:0:0.3"
-                             AccelerationRatio="0.2" DecelerationRatio="0.8"/>
-            <DoubleAnimation Storyboard.TargetName="ContenidoPrincipal" 
-                             Storyboard.TargetProperty="Opacity"
-                             To="0" Duration="0:0:0.3"/>
-        </Storyboard>
-        <!-- Animación para normalizar -->
-        <Storyboard x:Key="NormalizarVentana">
-            <DoubleAnimation Storyboard.TargetName="EscalaVentana"
-                             Storyboard.TargetProperty="ScaleX"
-                             To="0.8" Duration="0:0:0.1"
-                             AccelerationRatio="0.2" DecelerationRatio="0.8"/>
-            <DoubleAnimation Storyboard.TargetName="EscalaVentana"
-                             Storyboard.TargetProperty="ScaleY"
-                             To="0.8" Duration="0:0:0.1"
-                             AccelerationRatio="0.2" DecelerationRatio="0.8"/>
-            <DoubleAnimation Storyboard.TargetName="ContenidoPrincipal" 
-                             Storyboard.TargetProperty="Opacity"
-                             From="0"  To="0.5" Duration="0:0:0.1"/>
-            <!--Para que funcione tenes que cambiar el name a un elemento que contenga opacity-->
-        </Storyboard>
-        <!-- Animación para maximizar -->
-        <Storyboard x:Key="MaximizarVentana">
-            <DoubleAnimation Storyboard.TargetName="EscalaVentana"
-                             Storyboard.TargetProperty="ScaleX"
-                             To="0.9" Duration="0:0:0.1"
-                             AccelerationRatio="0.2" DecelerationRatio="0.8"/>
-            <DoubleAnimation Storyboard.TargetName="EscalaVentana"
-                             Storyboard.TargetProperty="ScaleY"
-                             To="0.9" Duration="0:0:0.1"
-                             AccelerationRatio="0.2" DecelerationRatio="0.8"/>
-            <DoubleAnimation Storyboard.TargetName="ContenidoPrincipal" 
-                             Storyboard.TargetProperty="Opacity"
-                             From="0.7" To="1" Duration="0:0:0.1"/>
-        </Storyboard>
-        <!-- Animación para restaurar -->
-        <Storyboard x:Key="RestaurarVentana">
-            <DoubleAnimation Storyboard.TargetName="EscalaVentana"
-                             Storyboard.TargetProperty="ScaleX"
-                             To="1" Duration="0:0:0.3"
-                             AccelerationRatio="0.2" DecelerationRatio="0.8"/>
-            <DoubleAnimation Storyboard.TargetName="EscalaVentana"
-                             Storyboard.TargetProperty="ScaleY"
-                             To="1" Duration="0:0:0.3"
-                             AccelerationRatio="0.2" DecelerationRatio="0.8"/>
-            <DoubleAnimation Storyboard.TargetName="ContenidoPrincipal" 
-                             Storyboard.TargetProperty="Opacity"
-                             To="1" Duration="0:0:0.3"/>
-        </Storyboard>
-        <!-- Animación para cerrar-->
-        <Storyboard x:Key="CerrarVentana">
-            <DoubleAnimation Storyboard.TargetName="EscalaVentana"
-                             Storyboard.TargetProperty="ScaleX"
-                             To="0.6" Duration="0:0:0.3"
-                             AccelerationRatio="0.2" DecelerationRatio="0.8"/>
-            <DoubleAnimation Storyboard.TargetName="EscalaVentana"
-                             Storyboard.TargetProperty="ScaleY"
-                             To="0.6" Duration="0:0:0.3"
-                             AccelerationRatio="0.2" DecelerationRatio="0.8"/>
-            <DoubleAnimation Storyboard.TargetName="ContenidoPrincipal" 
-                             Storyboard.TargetProperty="Opacity"
-                             To="0" Duration="0:0:0.3"/>
-        </Storyboard>
     </Window.Resources>
-    <Grid x:Name="ContenidoPrincipal" Background="#E9E9E9" SizeChanged="ActualizarBordesGrid">
+    <Grid x:Name="ContenidoPrincipal" Background="#E9E9E9">
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="10"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="30"></ColumnDefinition>
-                <ColumnDefinition Width="30"></ColumnDefinition>
-                <ColumnDefinition Width="30"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Image Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" Source="/Imagenes/IconoLogoMuoqa.ico"
-                   Margin="10, 0, 0, 0" Width="30" Height="30" Cursor="Hand"/>
-            <RadioButton Grid.Column="3" Style="{StaticResource botonMenuSup}"  Click="CerrarApp"> 
-                <Image Source="/Imagenes/x_negro.png"  Width="16" Height="16"/>
-            </RadioButton>
-            <RadioButton Grid.Column="2" Style="{StaticResource botonMenuSup}" Click="Btn_PantallaCompleta">
-                <Image Source="/Imagenes/cuadrado_negro.png"  Width="16" Height="16"/>
-            </RadioButton>
-            <RadioButton Grid.Column="1" Style="{StaticResource botonMenuSup}" Click="MinimizarApp">
-                <Image Source="/Imagenes/minimizar_negro.png"  Width="16" Height="16"/>
-            </RadioButton>
-        </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="250"/>

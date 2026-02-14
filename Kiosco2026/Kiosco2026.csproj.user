@@ -8,6 +8,9 @@
     <Compile Update="Vistas\AnadirProducto.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Vistas\EditarLoteProducto.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Vistas\EditarProductos.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

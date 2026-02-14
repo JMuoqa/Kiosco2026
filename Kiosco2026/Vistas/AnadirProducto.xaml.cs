@@ -36,39 +36,6 @@ namespace Kiosco2026.Vistas
             else
                 cmb_categorias.Foreground = new SolidColorBrush(Color.FromArgb(255, 185, 185, 185));
         }
-        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            TextBox entrada = (TextBox)sender;
-            entrada.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
-            if (RevisarEntradas(entrada))
-                entrada.Text = string.Empty;
-        }
-        private bool RevisarEntradas(TextBox entrada)
-        {
-            string[] valores = ["Nombre*", "Código*", "Precio de venta*", "Costo de compra*", "Cantidad*", "Proveedor"];
-            foreach (string valor in valores)
-            {
-                if (valor == entrada.Text)
-                    return true;
-            }
-            return false;
-
-        }
-        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            TextBox entrada = (TextBox)sender;
-            string nombre = entrada.Name;
-            switch (nombre)
-            {
-                case "entrada_nombre": if (string.IsNullOrWhiteSpace(entrada.Text) || entrada.Text.Trim() == "Nombre*") { entrada.Text = "Nombre*"; entrada.Foreground = new SolidColorBrush(Color.FromArgb(255, 185, 185, 185)); } break;
-                case "entrada_codigo": if (string.IsNullOrWhiteSpace(entrada.Text) || entrada.Text.Trim() == "Código*") { entrada.Text = "Código*"; entrada.Foreground = new SolidColorBrush(Color.FromArgb(255, 185, 185, 185)); } break;
-                case "entrada_venta": if (string.IsNullOrWhiteSpace(entrada.Text) || entrada.Text.Trim() == "Precio de venta*") { entrada.Text = "Precio de venta*"; entrada.Foreground = new SolidColorBrush(Color.FromArgb(255, 185, 185, 185)); } break;
-                case "entrada_compra": if (string.IsNullOrWhiteSpace(entrada.Text) || entrada.Text.Trim() == "Costo de compra*") { entrada.Text = "Costo de compra*"; entrada.Foreground = new SolidColorBrush(Color.FromArgb(255, 185, 185, 185)); } break;
-                case "entrada_cantidad": if (string.IsNullOrWhiteSpace(entrada.Text) || entrada.Text.Trim() == "Cantidad*") { entrada.Text = "Cantidad*"; entrada.Foreground = new SolidColorBrush(Color.FromArgb(255, 185, 185, 185)); } break;
-                case "entrada_proveedor": if (string.IsNullOrWhiteSpace(entrada.Text) || entrada.Text.Trim() == "Proveedor") { entrada.Text = "Proveedor"; entrada.Foreground = new SolidColorBrush(Color.FromArgb(255, 185, 185, 185)); } break;
-            }
-            entrada.Text.Trim();
-        }
         private void EstiloItems()
         {
             //Este evento se ejecuta cuando el itemcontainer cambia de estado (inicio, generando, terminado)

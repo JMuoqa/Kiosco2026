@@ -1,5 +1,6 @@
 ﻿using Dominio;
 using Entidades;
+using Kiosco2026.Clases.Colores;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,17 +8,24 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Kiosco2026.ModeloDeLasVistas.Hijas
 {
     public class ModeloAnadirProducto : ModeloDeVistaBase
     {
-        public ModeloAnadirProducto() 
+        public ModeloAnadirProducto()
         {
+            ColoresEntradas = new ColoresProductos();
             ObtenerCategoriasGenerales = new ComandoModeloDeVista(EjecutarObtenerCategoriasGenerales);
             CargarProducto = new ComandoModeloDeVista(EjecutarCargarProducto);
             ValoresPredeterminados = new ComandoModeloDeVista(EjecutarValoresPredeterminados);
+            GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
+            LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
+            Selected = new ComandoModeloDeVista(EjecutarSelected);
             _colores = new ColoresTexto();
             _adminProductos = new AdminProductos();
             ColorMensaje = _colores.Normal;
@@ -37,6 +45,16 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private DateTime _vencimiento;
         private AdminProductos _adminProductos;
         private ObservableCollection<Categorias> _listaCategorias;
+        private ColoresProductos _coloresEntradas;
+        public ColoresProductos ColoresEntradas
+        {
+            get => _coloresEntradas;
+            set
+            {
+                _coloresEntradas = value;
+                OnPropertyChanged(nameof(_coloresEntradas));
+            }
+        }
         public string Nombre
         {
             get => _nombre;
@@ -149,6 +167,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand CargarProducto { get; }
         public ICommand ValoresPredeterminados { get; }
         public ICommand EditarCategoria { get; }
+        public ICommand GotFocus { get; }
+        public ICommand LostFocus { get; }
+        public ICommand Selected { get; }
         #endregion 
         private async Task EjecutarObtenerCategoriasGenerales(object arg)
         {
@@ -171,6 +192,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             try
             {
+                
                 ProductosDto producto = new ProductosDto
                 {
                     Nombre = this.Nombre,
@@ -189,6 +211,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 else
                     ColorMensaje = _colores.ColorError;
                 Mensaje = respuesta.mensaje;
+                PostCarga();
             }
             catch (Exception ex) 
             {
@@ -204,6 +227,13 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             Compra = "Costo de compra*";
             Cantidad = "Cantidad*";
             Proveedor = "Proveedor";
+            ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Proveedor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            Debug.WriteLine(ColoresEntradas.Nombre);
             DateTime hoy = DateTime.Today;
             DateTime AnoDespues = hoy.AddYears(1);
             Ingreso = hoy;
@@ -211,5 +241,77 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             ColorMensaje = _colores.Normal;
             EjecutarObtenerCategoriasGenerales(null);
         }
+
+        #region Grafica
+        private async Task EjecutarSelected (object arg)
+        {
+            ComboBoxItem item = (ComboBoxItem)arg;
+            Categorias cate = (Categorias)item.Content;
+            string str = cate.Nombre.ToLower();
+            if (str != "categoria*")
+                ColoresEntradas.Categoria = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+            else
+                ColoresEntradas.Categoria= new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+        }
+        private async Task EjecutarGotFocus(object arg)
+        {
+            TextBox entrada = (TextBox)arg;
+            if (RevisarEntradas(entrada))
+            {
+                switch (entrada.Name)
+                {
+                    case "entrada_nombre": Nombre = string.Empty; ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                    case "entrada_codigo": Codigo = string.Empty; ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                    case "entrada_venta": Venta = string.Empty; ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                    case "entrada_compra": Compra = string.Empty; ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                    case "entrada_cantidad": Cantidad = string.Empty; ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                    case "entrada_proveedor": Proveedor = string.Empty; ColoresEntradas.Proveedor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                }
+            }
+        }
+        private async Task EjecutarLostFocus(object arg)
+        {
+            string nombre = (string)arg;
+            switch (nombre)
+            {
+                case "entrada_nombre": if (string.IsNullOrWhiteSpace(Nombre) || Nombre.Trim() == "Nombre*") { Nombre = "Nombre*"; ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+                case "entrada_codigo": if (string.IsNullOrWhiteSpace(Codigo) || Codigo.Trim() == "Código*") { Codigo = "Código*"; ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+                case "entrada_venta": if (string.IsNullOrWhiteSpace(Venta) || Venta.Trim() == "Precio de venta*") { Venta= "Precio de venta*"; ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+                case "entrada_compra": if (string.IsNullOrWhiteSpace(Compra) || Compra.Trim() == "Costo de compra*") { Compra = "Costo de compra*"; ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+                case "entrada_cantidad": if (string.IsNullOrWhiteSpace(Cantidad) || Cantidad.Trim() == "Cantidad*") { Cantidad = "Cantidad*"; ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+                case "entrada_proveedor": if (string.IsNullOrWhiteSpace(Proveedor) || Proveedor.Trim() == "Proveedor") { Proveedor = "Proveedor"; ColoresEntradas.Proveedor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+            }
+        }
+        private bool RevisarEntradas(TextBox entrada)
+        {
+            string[] valores = ["Nombre*", "Código*", "Precio de venta*", "Costo de compra*", "Cantidad*", "Proveedor"];
+            foreach (string valor in valores)
+            {
+                if (valor == entrada.Text)
+                    return true;
+            }
+            return false;
+
+        }
+        private void PostCarga()
+        {
+            Nombre = "Nombre*";
+            Codigo = "Código*";
+            Venta = "Precio de venta*";
+            Compra = "Costo de compra*";
+            Cantidad = "Cantidad*";
+            Proveedor = "Proveedor";
+            ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Proveedor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            DateTime hoy = DateTime.Today;
+            DateTime AnoDespues = hoy.AddYears(1);
+            Ingreso = hoy;
+            Vencimiento = AnoDespues;
+        }
+        #endregion
     }
 }

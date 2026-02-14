@@ -14,24 +14,23 @@
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding ObtenerProductos}"/>
+            <i:InvokeCommandAction Command="{Binding ObtenerCategorias}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Border CornerRadius="10" Margin="30" Background="#FFFFFF">
         <Grid Margin="15">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="185"/>
+                <RowDefinition Height="225"/>
             </Grid.RowDefinitions>
-                <Grid Grid.Row="0" Margin="4">
+            <Grid Grid.Row="0" Margin="5, 0, 5, 5">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="40"/>
-                    <RowDefinition/>
                     <RowDefinition Height="40"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="18"
                            VerticalAlignment="Center" Text="Productos"/>
-                    <Border  Grid.Row="1" BorderThickness="0.6" CornerRadius="10" BorderBrush="#000000" Margin="0, 0, 5, 0">
+                    <Border  Grid.Row="1" BorderThickness="0.6" CornerRadius="10" BorderBrush="#000000">
                         <Grid >
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SizeChanged">
@@ -44,14 +43,13 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <StackPanel Orientation="Horizontal">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="LayoutUpdated">
-                                        <i:InvokeCommandAction Command="{Binding ActualizarAnchoActual}"                                   
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="LayoutUpdated">
+                                    <i:InvokeCommandAction Command="{Binding ActualizarAnchoActual}"                                   
                                                                CommandParameter="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                
-                                <Border Width="{Binding EColumna_uno}">
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <Border Width="{Binding EColumna_uno}">
                                     <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
                                                VerticalAlignment="Center" Text="ID" Margin="10, 0, 0, 0"/>
                                 </Border>
@@ -90,7 +88,8 @@
                                         <DataTemplate>
                                             <Button Background="Transparent" BorderThickness="0" Cursor="Hand" 
                                                     HorizontalAlignment="Left" Height="40" Command="{Binding DataContext.ObtenerProductosPorIngreso, 
-                                                    RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding }">
+                                                    RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding }"
+                                                    Tag="{Binding }" Click="Button_Click">
                                                 <StackPanel Orientation="Horizontal">
                                                     <Border Width="{Binding DataContext.TColumna_uno, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
                                                         <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
@@ -132,29 +131,45 @@
                             </ScrollViewer>
                         </Grid>
                 </Border>
-                <TextBlock Grid.Row="2" FontFamily="Roboto Flex" FontWeight="Bold" FontSize="18"
-                           VerticalAlignment="Center" Text="Lotes de:"/>
             </Grid>
-            <Border Grid.Row="1" BorderThickness="0.6" CornerRadius="10" BorderBrush="#000000" Margin="0, 0, 5, 0">
+            
+            <Border Grid.Row="1" BorderThickness="0" CornerRadius="10"  >
                 <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Orientation="Vertical">
-                        <TextBox x:Name="entrada_nombre" Style="{StaticResource entrada_form}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="18"
+                           VerticalAlignment="Center" Text="Producto seleccionado: "/>
+                        <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="18"
+                           VerticalAlignment="Center" Text="-"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical">
+                        <TextBox x:Name="entrada_nombre" Style="{StaticResource entrada_form}" Text="{Binding Nombre}" />
                         <ComboBox  x:Name="cmb_categorias"
                                    Style="{StaticResource cmb_entrada_form}" 
+                                   ItemsSource="{Binding ListaCategorias}"
+                                   SelectedItem="{Binding Categoria}"
                                    Cursor="Hand">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate >
+                                    <TextBlock Text="{Binding Nombre}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
                         </ComboBox>
-                        <TextBox Style="{StaticResource entrada_form}"/>
+                        <TextBox Style="{StaticResource entrada_form}" Text="{Binding Compra}"/>
                     </StackPanel>
-                    <StackPanel Orientation="Vertical" Grid.Column="1">
-                        <TextBox Style="{StaticResource entrada_form}"/>
+                    <StackPanel Grid.Row="1" Orientation="Vertical" Grid.Column="1">
+                        <TextBox Style="{StaticResource entrada_form}" Text="{Binding Venta}"/>
                         <StackPanel Orientation="Horizontal" Height="40" Margin="10, 5">
                             <TextBlock FontSize="20" FontWeight="Medium" Margin="5, 0, 0, 0"
-                                    VerticalAlignment="Center" FontFamily="Roboto Flex">Visibilidad:</TextBlock>
-                            <CheckBox VerticalAlignment="Center"  Margin="10, 0, 0, 0" ></CheckBox>
+                                    VerticalAlignment="Center" FontFamily="Roboto Flex" >Visibilidad:</TextBlock>
+                            <CheckBox VerticalAlignment="Center"  Margin="10, 0, 0, 0" IsChecked="{Binding Marcado}"></CheckBox>
                         </StackPanel>
                     </StackPanel>
                 </Grid>

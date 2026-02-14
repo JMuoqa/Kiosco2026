@@ -23,22 +23,75 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Vertical" Grid.Column="0">
-                <TextBox x:Name="entrada_nombre" Style="{StaticResource entrada_form}" Text="{Binding Nombre}" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
+                <TextBox x:Name="entrada_nombre" Style="{StaticResource entrada_form}"
+                         Text="{Binding Nombre}" Foreground="{Binding ColoresEntradas.Nombre}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="GotFocus">
+                            <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                                                   CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="LostFocus">
+                            <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                                                   CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
                 <ComboBox  x:Name="cmb_categorias"
                            PreviewMouseDown="cmb_categorias_PreviewMouseDown"
                            Style="{StaticResource cmb_entrada_form}" 
                            ItemsSource="{Binding ListaCategorias}"
-                           SelectedItem="{Binding Categoria}"
                            Cursor="Hand">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectedItem">
+                            <i:InvokeCommandAction Command="{Binding Selected}"
+                                                   CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <ComboBox.ItemTemplate>
                         <DataTemplate >
                             <TextBlock Text="{Binding Nombre}"/>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <TextBox x:Name="entrada_codigo" Style="{StaticResource entrada_form}" Text="{Binding Codigo}" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
-                <TextBox x:Name="entrada_venta" Style="{StaticResource entrada_form}" Text="{Binding Venta}" PreviewTextInput="entradas_PreviewTextInput" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
-                <TextBox x:Name="entrada_compra" Style="{StaticResource entrada_form}" Text="{Binding Compra}" PreviewTextInput="entradas_PreviewTextInput" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
+                <TextBox x:Name="entrada_codigo" Style="{StaticResource entrada_form}" Text="{Binding Codigo}" 
+                         Foreground="{Binding ColoresEntradas.Codigo}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="GotFocus">
+                            <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                               CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="LostFocus">
+                            <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                               CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
+                <TextBox x:Name="entrada_venta" Style="{StaticResource entrada_form}" Text="{Binding Venta}" 
+                         PreviewTextInput="entradas_PreviewTextInput" Foreground="{Binding ColoresEntradas.Venta}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="GotFocus">
+                            <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                               CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="LostFocus">
+                            <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                               CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
+                <TextBox x:Name="entrada_compra" Style="{StaticResource entrada_form}" Text="{Binding Compra}" 
+                         PreviewTextInput="entradas_PreviewTextInput" Foreground="{Binding ColoresEntradas.Compra}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="GotFocus">
+                            <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                               CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="LostFocus">
+                            <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                               CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
                 <TextBlock Margin="10" FontFamily="Roboto Flex" 
                            FontSize="16"><Bold>- Campos obligatorios: </Bold> Todos los campos marcados con un asterisco
                     <LineBreak/> (<Span Foreground="#990000">*</Span>) deben completarse sin excepción.</TextBlock>
@@ -56,8 +109,32 @@
                 </TextBlock>
             </StackPanel>
             <StackPanel Grid.Column="1">
-                <TextBox x:Name="entrada_cantidad" Style="{StaticResource entrada_form}" Text="{Binding Cantidad}" PreviewTextInput="entradas_PreviewTextInput" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
-                <TextBox x:Name="entrada_proveedor" Style="{StaticResource entrada_form}" Text="{Binding Proveedor}" GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
+                <TextBox x:Name="entrada_cantidad" Style="{StaticResource entrada_form}" Text="{Binding Cantidad}" 
+                         PreviewTextInput="entradas_PreviewTextInput" Foreground="{Binding ColoresEntradas.Cantidad}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="GotFocus">
+                            <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                               CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="LostFocus">
+                            <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                               CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
+                <TextBox x:Name="entrada_proveedor" Style="{StaticResource entrada_form}" Text="{Binding Proveedor}" 
+                         Foreground="{Binding ColoresEntradas.Proveedor}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="GotFocus">
+                            <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                               CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="LostFocus">
+                            <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                               CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
                 <Grid Margin="10, 9, 10, 10" Height="41">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="135"/>
