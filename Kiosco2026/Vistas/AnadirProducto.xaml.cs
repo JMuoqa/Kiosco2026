@@ -26,16 +26,7 @@ namespace Kiosco2026.Vistas
             InitializeComponent(); 
             EstiloItems();
         }
-        private void ComboBoxItem_Selected_Categoria(object sender, RoutedEventArgs e)
-        {
-            ComboBoxItem item = (ComboBoxItem)sender;
-            Categorias cate = (Categorias)item.Content;
-            string str = cate.Nombre.ToLower();
-            if (str != "categoria*")
-                cmb_categorias.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
-            else
-                cmb_categorias.Foreground = new SolidColorBrush(Color.FromArgb(255, 185, 185, 185));
-        }
+
         private void EstiloItems()
         {
             //Este evento se ejecuta cuando el itemcontainer cambia de estado (inicio, generando, terminado)
@@ -52,7 +43,6 @@ namespace Kiosco2026.Vistas
                         if (container != null)
                         {
                             container.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
-                            container.Selected += ComboBoxItem_Selected_Categoria;
                         }
                     }
                     cmb_categorias.SelectedIndex = 0;
@@ -68,8 +58,13 @@ namespace Kiosco2026.Vistas
         }
         private void cmb_categorias_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            ComboBox cmb = (ComboBox)sender;
-            cmb.IsDropDownOpen = true;
+            if ((e.OriginalSource is TextBox || e.OriginalSource is Border) || e.OriginalSource is TextBlock)
+            {
+                ComboBox cmb = (ComboBox)sender;
+                if (!cmb.IsDropDownOpen)
+                    cmb.IsDropDownOpen = true;
+                e.Handled = true;
+            }
         }
     }
 }

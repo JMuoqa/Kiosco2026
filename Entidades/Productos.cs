@@ -2,6 +2,11 @@
 {
     public class Productos
     {
+        public Productos() { }
+        public Productos(string nombre)
+        {
+            this.Nombre = nombre;
+        }
         public int ID { get; set; }
         public int IDUsuario { get; set; }
         public string Nombre { get; set; }
@@ -69,6 +74,11 @@
     }
     public class Categorias
     {
+        public Categorias() { }
+        public Categorias(string cat)
+        {
+            this.Nombre = cat;
+        }
         public int ID { get; set; }
         public int IDUsuario { get; set; }
         public string Nombre { get; set; }

@@ -23,11 +23,14 @@ namespace Kiosco2026.Vistas
     /// </summary>
     public partial class EditarProductos : UserControl
     {
+
         public EditarProductos()
         {
             InitializeComponent();
             EstiloItems();
+            _prSelecionado = new Productos();
         }
+        private Productos _prSelecionado;
         private void EstiloItems()
         {
             //Este evento se ejecuta cuando el itemcontainer cambia de estado (inicio, generando, terminado)
@@ -44,7 +47,7 @@ namespace Kiosco2026.Vistas
                         if (container != null)
                         {
                             container.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
-                            container.Selected += ComboBoxItem_Selected_Categoria;
+                            //container.Selected += ComboBoxItem_Selected_Categoria;
                         }
                     }
                     cmb_categorias.SelectedIndex = 0;
@@ -67,9 +70,25 @@ namespace Kiosco2026.Vistas
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Button btn = (Button)sender;
+            Productos pr = btn.Tag as Productos;
+            _prSelecionado = pr;
+        }
+
+        private void cmb_categorias_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if ((e.OriginalSource is TextBox || e.OriginalSource is Border) || e.OriginalSource is TextBlock)
+            {
+                ComboBox cmb = (ComboBox)sender;
+                if(!cmb.IsDropDownOpen)
+                    cmb.IsDropDownOpen = true;
+                e.Handled = true;
+            }
+
+        }
+        private void RadioButton_Click(object sender, RoutedEventArgs e)
+        {
             // Hace lo mismo que arriba pero diferente sintaxis
-            Productos pr = btn.Tag as Productos; 
-            EditarLoteProducto window = new EditarLoteProducto(pr); 
+            EditarLoteProducto window = new EditarLoteProducto(_prSelecionado);
             // Le dice que el padre de esta ventana es MainWindow
             window.Owner = Application.Current.MainWindow;
             window.Show();

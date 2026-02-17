@@ -24,6 +24,8 @@ namespace Dominio
             if (productoDto.Proveedor == "Proveedor")
                 productoDto.Proveedor = "";
             await ValidarDatosProducto(productoDto);
+            if (precioCompra >= precioVenta)
+                throw new Exception("El campo de 'Venta' es menor al campo de 'Compra'");
             Productos producto = new Productos
             {
                 Nombre = productoDto.Nombre,

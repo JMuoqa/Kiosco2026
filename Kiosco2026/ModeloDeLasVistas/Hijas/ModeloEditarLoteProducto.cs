@@ -18,9 +18,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             ActualizarAnchoActual = new ComandoModeloDeVista(EjecutarActualizarAnchoActual);
             ObtenerProductos = new ComandoModeloDeVista(EjecutarObtenerProductos);
             _pr = pr;
-            Venta = _pr.Venta;
-            Compra = _pr.Compra;
-            Cantidad = _pr.Cantidad.ToString();
+            _adminProductos = new AdminProductos();
         }
         #region Propiedades
         #region Columnas privadas
@@ -191,6 +189,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private string _venta;
         private string _compra;
         private string _cantidad;
+        private AdminProductos _adminProductos;
         private ObservableCollection<Productos> _listaProductos;
         public ObservableCollection<Productos> ListaProductos
         {
@@ -231,13 +230,19 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         #endregion
         #region Comandos
         public ICommand ObtenerProductos { get; }
-        public ICommand ObtenerProductosPorIngreso { get; }
         public ICommand ActualizarAnchoActual { get; }
         #endregion
         #region Eventos y funciones
-
         private async Task EjecutarObtenerProductos(object obj)
         {
+            Debug.WriteLine(_pr.Codigo);
+            var res = await _adminProductos.BusquedaPorIngreso(_pr.Codigo);
+            ListaProductos = new ObservableCollection<Productos>(res.lista);
+            for (int i = 0; i < res.lista.Count; i++) 
+            {
+                Debug.WriteLine(res.lista[i].Nombre.ToString());
+            }
+            Debug.WriteLine(res.lista.Count);
         }
         private async Task EjecutarActualizarAnchoActual(object arg)
         {

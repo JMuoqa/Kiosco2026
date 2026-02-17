@@ -1,5 +1,6 @@
 ﻿using Dominio;
 using Entidades;
+using Kiosco2026.Clases.Colores;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -7,7 +8,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Kiosco2026.ModeloDeLasVistas.Hijas
 {
@@ -17,9 +20,17 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             ActualizarAnchoActual = new ComandoModeloDeVista(EjecutarActualizarAnchoActual);
             ObtenerProductos = new ComandoModeloDeVista(EjecutarObtenerProductos);
-            ObtenerProductosPorIngreso = new ComandoModeloDeVista(EjecutarObtenerProductosPorIngreso);
+            CargarDatos = new ComandoModeloDeVista(EjecutarCargarDatos);
             ObtenerCategorias = new ComandoModeloDeVista(EjecutarObtenerCategoriasGenerales);
+            GuardarCmb = new ComandoModeloDeVista(EjecutarGuardarCmb);
+            SelectionChanged = new ComandoModeloDeVista(EjecutarSelected);
+            ValoresPredeterminados = new ComandoModeloDeVista(EjecutarValoresPredeterminados);
+            GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
+            LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
             _adminProductos = new AdminProductos();
+            ColoresEntradas = new ColoresProductos();
+            Producto = new Productos("-");
+            cmbCat = new ComboBox();
             Marcado = default;
             Nombre = "Nombre";
             Venta = "Venta";
@@ -194,11 +205,32 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private AdminProductos _adminProductos;
         private ObservableCollection<Categorias> _listaCategorias;
         private Categorias _categoria;
+        private Productos _producto;
+        private ComboBox cmbCat;
         private string _venta;
         private string _compra;
         private string _cantidad;
         private string _nombre;
         private bool _marcado;
+        private ColoresProductos _coloresEntradas;
+        public ColoresProductos ColoresEntradas
+        {
+            get => _coloresEntradas;
+            set
+            {
+                _coloresEntradas = value;
+                OnPropertyChanged(nameof(_coloresEntradas));
+            }
+        }
+        public Productos Producto
+        {
+            get => _producto;
+            set
+            {
+                _producto = value;
+                OnPropertyChanged(nameof(Producto));
+            }
+        }
         public bool Marcado
         {
             get => _marcado;
@@ -278,12 +310,46 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand ActualizarAnchoActual { get; }
         public ICommand ObtenerProductos { get; }
         public ICommand ObtenerCategorias { get; }
-        public ICommand ObtenerProductosPorIngreso { get; }
+        public ICommand ValoresPredeterminados { get; }
+        public ICommand CargarDatos { get; }
+        public ICommand GotFocus { get; }
+        public ICommand LostFocus { get; }
+        public ICommand GuardarCmb { get; }
+        public ICommand SelectionChanged { get; }
         #endregion
         #region Eventos
-        private async Task EjecutarObtenerProductosPorIngreso(object obj)
+        private async Task EjecutarGuardarCmb(object arg)
+        {
+            ComboBox cmb = (ComboBox)arg;
+            cmbCat = cmb;
+        }
+        private async Task EjecutarSelected(object arg)
+        {
+            Categorias cate = (Categorias)arg;
+            string str = cate.Nombre.ToLower();
+            if (str != "categoria*")
+                ColoresEntradas.Categoria = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+            else
+                ColoresEntradas.Categoria = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+        }
+        private async Task EjecutarCargarDatos(object obj)
         {
             Productos producto = obj as Productos;
+            Producto = producto;
+            Nombre = Producto.Nombre;
+            Venta = Producto.Venta;
+            Compra = Producto.Compra;
+            Cantidad = Producto.Cantidad.ToString();
+            for (int i = 0; i < cmbCat.Items.Count; i++) 
+            {
+                Categorias cate = (Categorias)cmbCat.Items[i];
+                if(cate.ID == producto.IDCategoria)
+                    cmbCat.SelectedIndex = i;
+            }
+            bool mostrar = false;
+            if(Producto.Mostrar == "si")
+                mostrar = true;
+            Marcado = mostrar;
         }
         private async Task EjecutarObtenerProductos(object obj)
         {
@@ -335,6 +401,57 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 listaCompleta.Add(listaCliente[i]);
             }
             ListaCategorias = new ObservableCollection<Categorias>(listaCompleta);
+        }
+        private async Task EjecutarValoresPredeterminados(object arg)
+        {
+            Nombre = "Nombre*";
+            Venta = "Precio de venta*";
+            Compra = "Costo de compra*";
+            Cantidad = "Cantidad*";
+            ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Categoria = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+        }
+        #endregion
+        #region Grafica
+
+        private async Task EjecutarGotFocus(object arg)
+        {
+            TextBox entrada = (TextBox)arg;
+            if (RevisarEntradas(entrada))
+            {
+                switch (entrada.Name)
+                {
+                    case "entrada_nombre": Nombre = string.Empty; ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                    case "entrada_venta": Venta = string.Empty; ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                    case "entrada_compra": Compra = string.Empty; ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                    case "entrada_cantidad": Cantidad = string.Empty; ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                }
+            }
+        }
+        private async Task EjecutarLostFocus(object arg)
+        {
+            string nombre = (string)arg;
+            switch (nombre)
+            {
+                case "entrada_nombre": if (string.IsNullOrWhiteSpace(Nombre) || Nombre.Trim() == "Nombre*") { Nombre = "Nombre*"; ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+                case "entrada_venta": if (string.IsNullOrWhiteSpace(Venta) || Venta.Trim() == "Precio de venta*") { Venta = "Precio de venta*"; ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+                case "entrada_compra": if (string.IsNullOrWhiteSpace(Compra) || Compra.Trim() == "Costo de compra*") { Compra = "Costo de compra*"; ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+                case "entrada_cantidad": if (string.IsNullOrWhiteSpace(Cantidad) || Cantidad.Trim() == "Cantidad*") { Cantidad = "Cantidad*"; ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+            }
+        }
+        private bool RevisarEntradas(TextBox entrada)
+        {
+            string[] valores = ["Nombre*", "Código*", "Precio de venta*", "Costo de compra*", "Cantidad*", "Proveedor"];
+            foreach (string valor in valores)
+            {
+                if (valor == entrada.Text)
+                    return true;
+            }
+            return false;
+
         }
         #endregion
     }
