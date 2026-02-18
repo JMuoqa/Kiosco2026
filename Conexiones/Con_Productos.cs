@@ -32,9 +32,7 @@ namespace Conexiones
                         //{ estado: true, mensaje: 'Se cargo el producto correctamente'};
                         string resultado = await respuesta.Content.ReadAsStringAsync();
                         var datos = JsonSerializer.Deserialize<ResProductos>(resultado);
-                        if(!datos.estado)
-                            return (false, datos.mensaje);
-                        return (true, "Se cargo correctamente");
+                        return (datos.estado, datos.mensaje);
                     }
                     return (false, "Algo salio mal");
                 }
@@ -62,9 +60,7 @@ namespace Conexiones
                     {
                         string resultado = await respuesta.Content.ReadAsStringAsync();
                         var datos = JsonSerializer.Deserialize<ResProductos>(resultado);
-                        if (!datos.estado)
-                            return (false, datos.mensaje);
-                        return (true, "Se cargo correctamente");
+                        return (datos.estado, datos.mensaje);
                     }
                     return (false, "Algo salio mal");
                 }
@@ -93,9 +89,7 @@ namespace Conexiones
                     {
                         string resultado = await respuesta.Content.ReadAsStringAsync();
                         var datos = JsonSerializer.Deserialize<ResProductos>(resultado);
-                        if (!datos.estado)
-                            return (false, datos.mensaje);
-                        return (true, "Se edito correctamente");
+                        return (datos.estado, datos.mensaje);
                     }
                     return (false, "Algo salio mal");
                 }
@@ -118,7 +112,7 @@ namespace Conexiones
                     {
                         string resultado = await respuesta.Content.ReadAsStringAsync();
                         var datos = JsonSerializer.Deserialize<ResCategorias>(resultado);
-                        return (true, "ok", datos.Categorias);
+                        return (datos.estado, datos.mensaje, datos.Categorias);
                     }
                     return (false, "Hubo un error en la respuesta", new List<Categorias>());
                 }
@@ -141,7 +135,7 @@ namespace Conexiones
                     {
                         string resultado = await respuesta.Content.ReadAsStringAsync();
                         var datos = JsonSerializer.Deserialize<ResCategorias>(resultado);
-                        return (true, "ok", datos.Categorias);
+                        return (datos.estado, datos.mensaje, datos.Categorias);
                     }
                     return (false, "Hubo un error en la respuesta", new List<Categorias>());
                 }
@@ -165,7 +159,7 @@ namespace Conexiones
                     {
                         string resultado = await respuesta.Content.ReadAsStringAsync();
                         var datos = JsonSerializer.Deserialize<ResCategorias>(resultado);
-                        return (true, "ok", datos.Categorias);
+                        return (datos.estado, datos.mensaje, datos.Categorias);
                     }
                     return (false, "Hubo un error en la respuesta", new List<Categorias>());
                 }catch(Exception ex)
@@ -212,9 +206,7 @@ namespace Conexiones
                                 }
                             }
                         }
-                        if (!datos.estado)
-                            return (false, datos.mensaje, datos.Productos);
-                        return (true, "ok", datos.Productos);
+                        return (datos.estado, datos.mensaje, datos.Productos);
                     }
                     return (false, "Hubo un error en la respuesta", new List<Productos>());
                 }
@@ -262,9 +254,7 @@ namespace Conexiones
                                 }
                             }
                         }
-                        if (!datos.estado)
-                            return (false, datos.mensaje, datos.Productos);
-                        return (true, datos.mensaje, datos.Productos);
+                        return (datos.estado, datos.mensaje, datos.Productos);
                     }
                     return (false, "Hubo un error en la respuesta", new List<Productos>());
                 }

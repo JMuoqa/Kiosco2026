@@ -12,12 +12,6 @@
         Background="Transparent"
         WindowState="Maximized"
         Title="Kiosco" Height="900" Width="1440">
-    <Window.RenderTransform>
-        <!-- Transform que vamos a animar -->
-        <ScaleTransform x:Name="EscalaVentana" ScaleX="1" ScaleY="1"                    
-                        CenterX="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Window}, Mode=OneWay}"
-                        CenterY="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Window}, Mode=OneWay}"/>
-    </Window.RenderTransform>
     <Window.Resources>
         <DataTemplate DataType="{x:Type modeloHijas:ModeloAnadirProducto}">
             <vistas:AnadirProducto/>

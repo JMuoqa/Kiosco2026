@@ -178,6 +178,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             List<Categorias> listaGeneral = respuesta.lista;
             List<Categorias> listaCliente = respuestaDos.lista;
             List<Categorias> listaCompleta = new List<Categorias>();
+            Debug.WriteLine(respuesta.mensaje);
+            Debug.WriteLine(respuestaDos.mensaje);
             for (int i = 0; i < listaGeneral.Count; i++) 
             {
                 listaCompleta.Add(listaGeneral[i]);
@@ -192,7 +194,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             try
             {
-                ComboBox cmb = (ComboBox)arg;
+                ComboBox cmb = (ComboBox)arg; // ComboBox cmb = arg as Combobox;
                 ProductosDto producto = new ProductosDto
                 {
                     Nombre = this.Nombre,

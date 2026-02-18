@@ -29,6 +29,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             _colores = new ColoresTexto();
             ColorMensaje = _colores.Normal;
             ColorEdicion = "#B9B9B9";
+            ColorMensajeEdicion = _colores.Normal;
         }
         #region Propiedades
         private string _busqueda;
@@ -61,22 +62,22 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 OnPropertyChanged(nameof(IdEditar));
             }
         }
-        public string MensajeEditar
+        public string MensajeEdicion
         {
             get => _mensajeEditar;
             set
             {
                 _mensajeEditar = value;
-                OnPropertyChanged(nameof(MensajeEditar));
+                OnPropertyChanged(nameof(MensajeEdicion));
             }
         }
-        public string ColorMensajeEditar
+        public string ColorMensajeEdicion
         {
             get => _colorMensajeEditar;
             set
             {
                 _colorMensajeEditar = value;
-                OnPropertyChanged(nameof(ColorMensajeEditar));
+                OnPropertyChanged(nameof(ColorMensajeEdicion));
             }
         }
         public bool SoloLectura
@@ -262,8 +263,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             }
             catch (Exception ex) 
             {
-                ColorMensajeEditar = _colores.ColorError;
-                MensajeEditar = ex.Message;
+                ColorMensajeEdicion = _colores.ColorError;
+                MensajeEdicion = ex.Message;
             }
         }
         private async Task EjecutarLlenarDatos(object arg)
