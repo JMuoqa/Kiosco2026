@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace Conexiones
 {
     public class Con_Productos
@@ -29,10 +30,45 @@ namespace Conexiones
                     var respuesta = await cliente.PostAsync("https://muoqa.com/cliente-kiosco2026/cargar-producto", contenido);
                     if (respuesta.IsSuccessStatusCode)
                     {
-                        //{ estado: true, mensaje: 'Se cargo el producto correctamente'};
                         string resultado = await respuesta.Content.ReadAsStringAsync();
                         var datos = JsonSerializer.Deserialize<ResProductos>(resultado);
                         return (datos.estado, datos.mensaje);
+                    }
+                    return (false, "Algo salio mal");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    return (false, ex.Message);
+                }
+            }
+        }
+        public async Task<(bool estado, string mensaje)> Con_EditarProductoPorCodigo(Productos producto)
+        {
+            using (var cliente = new HttpClient()) 
+            {
+                try
+                {
+                    var json = JsonSerializer.Serialize(new
+                    {
+                        nombre = producto.Nombre,
+                        categoria = producto.Categoria,
+                        compra = producto.Compra,
+                        codigo = producto.Codigo,
+                        venta = producto.Venta,
+                        mostrar = producto.Mostrar,
+                        idProducto = producto.ID,
+                        token = ObtenerTokenJWT()
+                    });
+                    var contenido = new StringContent(json, Encoding.UTF8, "application/json");
+                    var respuesta = await cliente.PutAsync("https://muoqa.com/cliente-kiosco2026/editar-producto", contenido);
+                    if (respuesta.IsSuccessStatusCode)
+                    {
+                        string resultado = await respuesta.Content.ReadAsStringAsync();
+                        Debug.WriteLine(resultado);
+                        var datos = JsonSerializer.Deserialize<ResProductos>(resultado);
+                        return (datos.estado, datos.mensaje);
+
                     }
                     return (false, "Algo salio mal");
                 }
@@ -79,15 +115,17 @@ namespace Conexiones
                 {
                     var json = JsonSerializer.Serialize(new
                     {
+                        id = categoria.ID,
                         nombre = categoria.Nombre,
                         mostrar = categoria.Mostrar,
                         token = ObtenerTokenJWT()
                     });
                     var contenido = new StringContent(json, Encoding.UTF8, "application/json");
-                    var respuesta = await cliente.PostAsync("https://muoqa.com/cliente-kiosco2026/cargar-categoria", contenido);
+                    var respuesta = await cliente.PostAsync("https://muoqa.com/cliente-kiosco2026/editar-categoria", contenido);
                     if (respuesta.IsSuccessStatusCode)
                     {
                         string resultado = await respuesta.Content.ReadAsStringAsync();
+                        Debug.WriteLine(resultado);
                         var datos = JsonSerializer.Deserialize<ResProductos>(resultado);
                         return (datos.estado, datos.mensaje);
                     }

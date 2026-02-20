@@ -145,7 +145,7 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Margin="10, 0">
                         <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="18"
                            VerticalAlignment="Center" Text="Producto seleccionado: "/>
                         <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="18"
@@ -222,20 +222,7 @@
                         </Grid>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Orientation="Vertical" Grid.Column="1">
-                        <TextBox x:Name="entrada_cantidad" Grid.Column="1" Style="{StaticResource entrada_form}" Text="{Binding Cantidad}"
-                                 Foreground="{Binding ColoresEntradas.Cantidad}">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="GotFocus">
-                                    <i:InvokeCommandAction Command="{Binding GotFocus}" 
-                                                   CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="LostFocus">
-                                    <i:InvokeCommandAction Command="{Binding LostFocus}" 
-                                                   CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </TextBox>
-                        <StackPanel Orientation="Horizontal" Height="40" Margin="10, 5">
+                        <StackPanel Orientation="Horizontal" Height="40" Margin="10, 10">
                             <TextBlock FontSize="20" FontWeight="Medium" Margin="5, 0, 0, 0"
                                     VerticalAlignment="Center" FontFamily="Roboto Flex" >Visibilidad:</TextBlock>
                             <CheckBox VerticalAlignment="Center"  Margin="10, 0, 0, 0" IsChecked="{Binding Marcado}"></CheckBox>
@@ -245,14 +232,16 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <RadioButton Style="{StaticResource boton_confirmar}">
+                            <RadioButton Style="{StaticResource boton_confirmar}" Command="{Binding EditarProducto}">
                                 <TextBlock Style="{StaticResource texto_botones_uno}" Text="Editar"/>
                             </RadioButton>
                             <RadioButton Grid.Column="1" Style="{StaticResource boton_neutral}"
-                                         Click="RadioButton_Click">
+                                         Click="RadioButton_Click" >
                                 <TextBlock Style="{StaticResource texto_botones_uno}" Text="Ver lotes"/>
                             </RadioButton>
                         </Grid>
+                        <TextBlock Margin="10, 23, 10, 0" FontFamily="Roboto Flex" 
+                           FontSize="16" Text="{Binding Mensaje}" Foreground="{Binding ColorMensaje}" TextWrapping="Wrap" ></TextBlock>
                     </StackPanel>
                 </Grid>
             </Border>

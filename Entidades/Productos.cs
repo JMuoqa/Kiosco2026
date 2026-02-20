@@ -53,9 +53,31 @@
             }
         }
         public string Proveedor { get; set; }
-        public string Mostrar { get; set; }
+        private string _mostrar;
+        public string Mostrar 
+        {
+            get => _mostrar.ToUpper();
+            set { _mostrar = value; } 
+        }
         public DateTime Ingreso { get; set; }
         public DateTime Vencimiento { get; set; }
+
+        public string FechaIngresoARG
+        {
+            get
+            {
+                string fecha = $"{Ingreso.Day.ToString().PadLeft(2, '0')}/{Ingreso.Month.ToString().PadLeft(2, '0')}/{Ingreso.Year} {Ingreso.Hour.ToString().PadLeft(2, '0')}:{Ingreso.Minute.ToString().PadLeft(2, '0')}";
+                return fecha;
+            }
+        }
+        public string FechaVencimientoARG
+        {
+            get
+            {
+                string fecha = $"{Vencimiento.Day.ToString().PadLeft(2, '0')}/{Vencimiento.Month.ToString().PadLeft(2, '0')}/{Vencimiento.Year}";
+                return fecha;
+            }
+        }
     }
     public class ProductosDto
     {

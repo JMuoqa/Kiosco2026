@@ -5,6 +5,9 @@
     <Compile Update="Vistas\AdministrarCategorias.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Vistas\AgregarCategoria.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Vistas\AnadirProducto.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

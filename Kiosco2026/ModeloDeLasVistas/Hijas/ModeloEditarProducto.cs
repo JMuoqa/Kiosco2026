@@ -1,13 +1,15 @@
 ﻿using Dominio;
 using Entidades;
 using Kiosco2026.Clases.Colores;
+using Kiosco2026.Vistas;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Timers;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -27,17 +29,22 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             ValoresPredeterminados = new ComandoModeloDeVista(EjecutarValoresPredeterminados);
             GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
             LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
+            EditarProducto = new ComandoModeloDeVista(EjecutarEditarProducto);
             _adminProductos = new AdminProductos();
             ColoresEntradas = new ColoresProductos();
             Producto = new Productos("-");
             cmbCat = new ComboBox();
-            Marcado = default;
-            Nombre = "Nombre";
-            Venta = "Venta";
-            Compra = "Compra";
-            Cantidad = "Cantidad";
+            _colores = new ColoresTexto();
+            ColorMensaje = _colores.Normal;
+            tiempo = new System.Timers.Timer();
+            tiempo.Elapsed += ResetearMensaje;
+            tiempo.Enabled = false;
+            tiempo.AutoReset = true;
         }
         #region Propiedades
+
+        private System.Timers.Timer tiempo;
+        
         #region Columnas privadas
         private double _eColumna_uno;
         private double _eColumna_dos;
@@ -203,15 +210,36 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         #endregion
         private AdminProductos _adminProductos;
+        private ColoresTexto _colores;
         private ObservableCollection<Categorias> _listaCategorias;
         private Categorias _categoria;
         private Productos _producto;
         private ComboBox cmbCat;
+        private string _colorMensaje;
         private string _venta;
         private string _compra;
-        private string _cantidad;
         private string _nombre;
         private bool _marcado;
+        private string _mensaje;
+        private int _idProducto { get; set; }
+        public string ColorMensaje
+        {
+            get => _colorMensaje;
+            set
+            {
+                _colorMensaje = value;
+                OnPropertyChanged(nameof(ColorMensaje));
+            }
+        }
+        public string Mensaje
+        {
+            get => _mensaje;
+            set
+            {
+                _mensaje = value;
+                OnPropertyChanged(nameof(Mensaje));
+            }
+        }
         private ColoresProductos _coloresEntradas;
         public ColoresProductos ColoresEntradas
         {
@@ -231,6 +259,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 OnPropertyChanged(nameof(Producto));
             }
         }
+        //Marcado sirve para controlar el checbox dependiendo de que producto se seleccione 
         public bool Marcado
         {
             get => _marcado;
@@ -265,15 +294,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 _compra = value;
                 OnPropertyChanged(nameof(Compra));
-            }
-        }
-        public string Cantidad
-        {
-            get => _cantidad;
-            set
-            {
-                _cantidad = value;
-                OnPropertyChanged(nameof(Cantidad));
             }
         }
         public ObservableCollection<Categorias> ListaCategorias
@@ -316,8 +336,64 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand LostFocus { get; }
         public ICommand GuardarCmb { get; }
         public ICommand SelectionChanged { get; }
+        public ICommand EditarProducto { get; }
         #endregion
         #region Eventos
+        public async Task EjecutarEditarProducto(object arg)
+        {
+            try
+            {
+                if(Producto == null)
+                    throw new Exception("No hay ningun producto seleccionado");
+                var confirmacion = MessageBox.Show(
+                    $"Los campos Nombre y Categoría afectan a todos los lotes asociados al producto con el código de barras: {Producto.Codigo}.\r\n",
+                    "¿Quieres continuar?",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question
+                );
+                if (confirmacion != MessageBoxResult.Yes)
+                    throw new Exception("Cancelaste la operación");
+                string mostrar = "SI";
+                if (!Marcado)
+                    mostrar = "NO";
+                Productos producto = new Productos
+                {
+                    Nombre = this.Nombre,
+                    Categoria = this.Categoria.Nombre,
+                    Venta = this.Venta,
+                    Compra = this.Compra,
+                    Codigo = this.Producto.Codigo,
+                    ID = this._idProducto,
+                    Mostrar = mostrar
+                };
+                var res = await _adminProductos.EditarProductoPorCodigo(producto);
+                if(res.estado){
+                    ColorMensaje = _colores.ColorExito;
+                    cmbCat.SelectedIndex = 0;
+                    EjecutarValoresPredeterminados(null);
+                    EjecutarObtenerProductos(null);
+                }
+                else{
+                    ColorMensaje = _colores.ColorError;
+                }
+                Mensaje = res.mensaje;
+            }
+            catch (Exception ex)
+            {
+                ColorMensaje = _colores.ColorError;
+                Mensaje = ex.Message;
+            }
+            finally
+            {
+                tiempo.Interval = 10000;
+                tiempo.Enabled = true;
+            }
+        }
+        private void ResetearMensaje(object source, ElapsedEventArgs e)
+        {
+            tiempo.Enabled = false;
+            Mensaje = "";
+        }
         private async Task EjecutarGuardarCmb(object arg)
         {
             ComboBox cmb = (ComboBox)arg;
@@ -339,7 +415,11 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             Nombre = Producto.Nombre;
             Venta = Producto.Venta;
             Compra = Producto.Compra;
-            Cantidad = Producto.Cantidad.ToString();
+            _idProducto = Producto.ID;
+            ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+            ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+            ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+            ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
             for (int i = 0; i < cmbCat.Items.Count; i++) 
             {
                 Categorias cate = (Categorias)cmbCat.Items[i];
@@ -347,7 +427,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     cmbCat.SelectedIndex = i;
             }
             bool mostrar = false;
-            if(Producto.Mostrar == "si")
+            if(Producto.Mostrar == "SI")
                 mostrar = true;
             Marcado = mostrar;
         }
@@ -407,11 +487,11 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             Nombre = "Nombre*";
             Venta = "Precio de venta*";
             Compra = "Costo de compra*";
-            Cantidad = "Cantidad*";
+            Marcado = default;
+            Producto = null;
             ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
             ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
             ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
-            ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
             ColoresEntradas.Categoria = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
         }
         #endregion
@@ -427,7 +507,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     case "entrada_nombre": Nombre = string.Empty; ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
                     case "entrada_venta": Venta = string.Empty; ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
                     case "entrada_compra": Compra = string.Empty; ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
-                    case "entrada_cantidad": Cantidad = string.Empty; ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
                 }
             }
         }
@@ -439,7 +518,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 case "entrada_nombre": if (string.IsNullOrWhiteSpace(Nombre) || Nombre.Trim() == "Nombre*") { Nombre = "Nombre*"; ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
                 case "entrada_venta": if (string.IsNullOrWhiteSpace(Venta) || Venta.Trim() == "Precio de venta*") { Venta = "Precio de venta*"; ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
                 case "entrada_compra": if (string.IsNullOrWhiteSpace(Compra) || Compra.Trim() == "Costo de compra*") { Compra = "Costo de compra*"; ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
-                case "entrada_cantidad": if (string.IsNullOrWhiteSpace(Cantidad) || Cantidad.Trim() == "Cantidad*") { Cantidad = "Cantidad*"; ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
             }
         }
         private bool RevisarEntradas(TextBox entrada)

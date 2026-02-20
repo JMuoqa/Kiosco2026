@@ -76,13 +76,6 @@
                             </StackPanel>
                         </RadioButton>
                     </StackPanel>
-                    <TextBlock Style="{StaticResource titulosNav}">PROVEEDOR</TextBlock>
-                    <RadioButton Style="{StaticResource botones_nav}">
-                        <StackPanel Orientation="Horizontal">
-                            <fa:IconImage Icon="Add" Style="{StaticResource iconos_menu}"/>
-                            <TextBlock Style="{StaticResource texto_botones_nav}">Añadir proveedor</TextBlock>
-                        </StackPanel>
-                    </RadioButton>
                 </StackPanel>
             </Border>
             <Grid Grid.Column="1">

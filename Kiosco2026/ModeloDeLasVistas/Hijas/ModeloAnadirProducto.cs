@@ -5,9 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -29,8 +31,13 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             _colores = new ColoresTexto();
             _adminProductos = new AdminProductos();
             ColorMensaje = _colores.Normal;
+            tiempo = new System.Timers.Timer();
+            tiempo.Elapsed += ResetearMensaje;
+            tiempo.Enabled = false;
+            tiempo.AutoReset = true;
         }
         #region Propiedades
+        private System.Timers.Timer tiempo;
         private string _nombre;
         private string _codigo;
         private Categorias _categoria;
@@ -178,8 +185,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             List<Categorias> listaGeneral = respuesta.lista;
             List<Categorias> listaCliente = respuestaDos.lista;
             List<Categorias> listaCompleta = new List<Categorias>();
-            Debug.WriteLine(respuesta.mensaje);
-            Debug.WriteLine(respuestaDos.mensaje);
             for (int i = 0; i < listaGeneral.Count; i++) 
             {
                 listaCompleta.Add(listaGeneral[i]);
@@ -195,6 +200,15 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             try
             {
                 ComboBox cmb = (ComboBox)arg; // ComboBox cmb = arg as Combobox;
+                DateTime horaActual = DateTime.Now;
+                DateTime fechaSeleccionadaHoraActual = new DateTime(
+                    Ingreso.Year,
+                    Ingreso.Month,
+                    Ingreso.Day,
+                    horaActual.Hour,
+                    horaActual.Minute,
+                    horaActual.Second
+                );
                 ProductosDto producto = new ProductosDto
                 {
                     Nombre = this.Nombre,
@@ -204,7 +218,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     Compra = this.Compra,
                     Cantidad = this.Cantidad,
                     Proveedor = this.Proveedor,
-                    Ingreso = this.Ingreso,
+                    Ingreso = fechaSeleccionadaHoraActual,
                     Vencimiento = this.Vencimiento
                 };
                 var respuesta = await _adminProductos.CargarProducto(producto);
@@ -222,8 +236,19 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 ColorMensaje = _colores.ColorError;
                 Mensaje = ex.Message;
             }
+            finally
+            {
+                tiempo.Interval = 10000;
+                tiempo.Enabled = true;
+            }
         }
         #region Grafica
+
+        private void ResetearMensaje(object source, ElapsedEventArgs e)
+        {
+            tiempo.Enabled = false;
+            Mensaje = "";
+        }
         private async Task EjecutarValoresPredeterminados(object arg)
         {
             Nombre = "Nombre*";

@@ -8,7 +8,6 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         ShowInTaskbar="False"
-        ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Title="EditarLoteProducto" Height="800" Width="1400">
     <i:Interaction.Triggers>
@@ -61,19 +60,19 @@
                         </Border>
                         <Border Width="{Binding EColumna_cuatro}">
                             <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
-                                   VerticalAlignment="Center" Text="CATEGORIA"/>
+                                   VerticalAlignment="Center" Text="COMPRA"/>
                         </Border>
                         <Border Width="{Binding EColumna_cinco}">
                             <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
-                                   VerticalAlignment="Center" Text="CODIGO"/>
+                                   VerticalAlignment="Center" Text="VENTA"/>
                         </Border>
                         <Border Width="{Binding EColumna_seis}">
                             <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
-                                   VerticalAlignment="Center" Text="COMPRA"/>
+                                   VerticalAlignment="Center" Text="INGRESO"/>
                         </Border>
                         <Border Width="{Binding EColumna_siete}">
                             <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
-                                   VerticalAlignment="Center" Text="VENTA"/>
+                                   VerticalAlignment="Center" Text="VENCIMIENTO"/>
                         </Border>
                         <Border Width="{Binding EColumna_ocho}">
                             <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
@@ -101,19 +100,19 @@
                                             </Border>
                                             <Border Width="{Binding DataContext.TColumna_cuatro, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
                                                 <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
-                                                           VerticalAlignment="Center"  Text="{Binding Categoria}"/>
+                                                           VerticalAlignment="Center"  Text="{Binding Compra}"/>
                                             </Border>
                                             <Border Width="{Binding DataContext.TColumna_cinco, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
                                                 <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
-                                                           VerticalAlignment="Center"  Text="{Binding Codigo}"/>
+                                                           VerticalAlignment="Center"  Text="{Binding Venta}"/>
                                             </Border>
                                             <Border Width="{Binding DataContext.TColumna_seis, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
                                                 <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
-                                                           VerticalAlignment="Center"  Text="{Binding Compra}"/>
+                                                           VerticalAlignment="Center"  Text="{Binding FechaIngresoARG}"/>
                                             </Border>
                                             <Border Width="{Binding DataContext.TColumna_siete, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
                                                 <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
-                                                           VerticalAlignment="Center"  Text="{Binding Venta}"/>
+                                                           VerticalAlignment="Center"  Text="{Binding FechaVencimientoARG}"/>
                                             </Border>
                                             <Border Width="{Binding DataContext.TColumna_ocho, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
                                                 <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"

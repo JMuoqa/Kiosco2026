@@ -235,14 +235,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         #region Eventos y funciones
         private async Task EjecutarObtenerProductos(object obj)
         {
-            Debug.WriteLine(_pr.Codigo);
             var res = await _adminProductos.BusquedaPorIngreso(_pr.Codigo);
             ListaProductos = new ObservableCollection<Productos>(res.lista);
-            for (int i = 0; i < res.lista.Count; i++) 
-            {
-                Debug.WriteLine(res.lista[i].Nombre.ToString());
-            }
-            Debug.WriteLine(res.lista.Count);
         }
         private async Task EjecutarActualizarAnchoActual(object arg)
         {

@@ -1,5 +1,8 @@
 ﻿using Conexiones;
 using Entidades;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
 
 namespace Dominio
 {
@@ -17,7 +20,7 @@ namespace Dominio
             int cantidadProductos;
             if (!double.TryParse(productoDto.Venta, out precioVenta))
                 throw new Exception("El campo de 'Precio de venta' no es numerico");
-            if (!double.TryParse(productoDto.Compra, out precioCompra))
+            if (!double.TryParse(productoDto.Compra,  out precioCompra))
                 throw new Exception("El campo de 'Costo de compra' no es numerico");
             if (!int.TryParse(productoDto.Cantidad, out cantidadProductos))
                 throw new Exception("El campo de 'Cantidad' no es numerico");
@@ -31,7 +34,7 @@ namespace Dominio
                 Nombre = productoDto.Nombre,
                 Categoria = productoDto.Categoria, //Es texto pero en el backend de la web conseguimos el id
                 Codigo = productoDto.Codigo,
-                Venta = precioVenta.ToString(),// esto tengo que corregirlo por que me parece que es rendundante 3/2/2026
+                Venta = precioVenta.ToString(), // esto tengo que corregirlo por que me parece que es rendundante 3/2/2026
                 Compra = precioCompra.ToString(),
                 Cantidad = cantidadProductos,
                 Proveedor = productoDto.Proveedor,
@@ -39,6 +42,30 @@ namespace Dominio
                 Vencimiento = productoDto.Vencimiento
             };
             return await _productos.Con_CargarProducto(producto);
+        }
+        public async Task<(bool estado, string mensaje)> EditarProductoPorCodigo(Productos producto)
+        {
+            await ValidarDatosParaEdicionProducto(producto);
+            double precioVenta;
+            double precioCompra;
+            if (!double.TryParse(producto.Venta, NumberStyles.Any, CultureInfo.InvariantCulture, out precioVenta))
+                throw new Exception("El campo de 'Precio de venta' no es numerico");
+            if (!double.TryParse(producto.Compra, NumberStyles.Any, CultureInfo.InvariantCulture, out precioCompra))
+                throw new Exception("El campo de 'Costo de compra' no es numerico");
+            if (precioCompra >= precioVenta)
+                throw new Exception("El campo de 'Venta' es menor al campo de 'Compra'");
+            return await _productos.Con_EditarProductoPorCodigo(producto);
+        } 
+        public async Task ValidarDatosParaEdicionProducto(Productos producto)
+        {
+            if (string.IsNullOrWhiteSpace(producto.Nombre) || producto.Nombre == "Nombre*")
+                throw new Exception("El campo 'Nombre' esta vacio");
+            if (string.IsNullOrWhiteSpace(producto.Categoria) || producto.Categoria == "Categoria*")
+                throw new Exception("El campo 'Categoria' esta vacio");
+            if (string.IsNullOrWhiteSpace(producto.Compra) || producto.Compra == "Costo de compra*")
+                throw new Exception("El campo 'Compra' esta vacio");
+            if (string.IsNullOrWhiteSpace(producto.Venta) || producto.Venta == "Precio de venta*")
+                throw new Exception("El campo 'Venta' esta vacio");
         }
         public async Task<(bool estado, string mensaje, List<Categorias> lista)> BusquedaCategorias(string busqueda) 
         {

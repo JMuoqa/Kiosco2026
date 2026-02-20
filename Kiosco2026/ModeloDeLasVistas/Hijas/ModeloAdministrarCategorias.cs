@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Input;
 
 namespace Kiosco2026.ModeloDeLasVistas.Hijas
@@ -30,8 +31,13 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             ColorMensaje = _colores.Normal;
             ColorEdicion = "#B9B9B9";
             ColorMensajeEdicion = _colores.Normal;
+            tiempo = new System.Timers.Timer();
+            tiempo.Elapsed += ResetearMensaje;
+            tiempo.Enabled = false;
+            tiempo.AutoReset = true;
         }
         #region Propiedades
+        private System.Timers.Timer tiempo;
         private string _busqueda;
         private string _nombreCargar;
         private string _edicion;
@@ -39,7 +45,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private string _categoriaSeleccionada;
         private string _colorEdicion;
         private string _colorMensaje;
-        private string _idEditar;
         private ColoresTexto _colores;
         private string _colorMensajeEditar;
         private string _mensajeEditar;
@@ -53,15 +58,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private double _tColumna_tres;
         private AdminProductos _adminProductos;
         private ObservableCollection<Categorias> _listaCategorias;
-        private string IdEditar
-        {
-            get => _idEditar;
-            set
-            {
-                _idEditar = value;
-                OnPropertyChanged(nameof(IdEditar));
-            }
-        }
         public string MensajeEdicion
         {
             get => _mensajeEditar;
@@ -250,7 +246,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 else
                     visualizacion = "no";
                 int idCategoria;
-                if (!int.TryParse(IdEditar, out idCategoria))
+                if (!int.TryParse(CategoriaSeleccionada, out idCategoria))
                     throw new Exception("Algo salio mal, contactanos");
                 Categorias cate = new Categorias
                 {
@@ -259,18 +255,38 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     Mostrar = visualizacion
                 };
                 var respuesta = await _adminProductos.EditarCategoria(cate);
-                Debug.Write(respuesta);
+                if (respuesta.estado)
+                {
+                    Busqueda = "Buscar por nombre";
+                    Edicion = "Editar nombre";
+                    NombreCargar = "Nombre de la categoria";
+                    CategoriaSeleccionada = "Ninguna seleccionada";
+                    ColorEdicion = "#B9B9B9";
+                    ColorMensajeEdicion = _colores.ColorExito;
+
+                }
+                else
+                {
+                    ColorMensajeEdicion = _colores.ColorError;
+                }
+                MensajeEdicion = respuesta.mensaje;
             }
             catch (Exception ex) 
             {
                 ColorMensajeEdicion = _colores.ColorError;
                 MensajeEdicion = ex.Message;
             }
+            finally
+            {
+                tiempo.Interval = 10000;
+                tiempo.Enabled = true;
+            }
         }
         private async Task EjecutarLlenarDatos(object arg)
         {
             Categorias categoria = (Categorias)arg;
             Edicion = categoria.Nombre;
+            SoloLectura = false;
             if (categoria.Mostrar == "si")
                 Visualizacion = true;
             else
@@ -315,6 +331,11 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             TColumna_uno = quince;
             TColumna_dos = treinta;
             TColumna_tres = setenta;
+        }
+        private void ResetearMensaje(object source, ElapsedEventArgs e)
+        {
+            tiempo.Enabled = false;
+            MensajeEdicion = "";
         }
     }
 }
