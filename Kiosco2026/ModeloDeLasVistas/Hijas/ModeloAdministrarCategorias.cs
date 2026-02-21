@@ -9,6 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Media3D;
+using System.Windows.Controls;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using Kiosco2026.Clases.Colores;
 
 namespace Kiosco2026.ModeloDeLasVistas.Hijas
 {
@@ -19,17 +24,16 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             ActualizarAnchoActual = new ComandoModeloDeVista(EjecutarActualizarAnchoActual);
             LlenarDatos = new ComandoModeloDeVista(EjecutarLlenarDatos);
             BuscarCategorias = new ComandoModeloDeVista(EjecutarBuscarCategorias);
-            CargarCategoria = new ComandoModeloDeVista(EjecutarCargarCategoria);
             EditarCategoria = new ComandoModeloDeVista(EjecutarEditarCategoria);
+            GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
+            LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
             _adminProductos = new AdminProductos();
+            _coloresEntradas = new ColoresProductos();
             SoloLectura = true;
             Busqueda = "Buscar por nombre";
             Edicion = "Editar nombre";
-            NombreCargar = "Nombre de la categoria";
             CategoriaSeleccionada = "Ninguna seleccionada";
             _colores = new ColoresTexto();
-            ColorMensaje = _colores.Normal;
-            ColorEdicion = "#B9B9B9";
             ColorMensajeEdicion = _colores.Normal;
             tiempo = new System.Timers.Timer();
             tiempo.Elapsed += ResetearMensaje;
@@ -38,26 +42,51 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         #region Propiedades
         private System.Timers.Timer tiempo;
-        private string _busqueda;
-        private string _nombreCargar;
         private string _edicion;
-        private string _mensaje;
         private string _categoriaSeleccionada;
-        private string _colorEdicion;
-        private string _colorMensaje;
-        private ColoresTexto _colores;
         private string _colorMensajeEditar;
         private string _mensajeEditar;
-        private bool _visualizacion;
-        private bool _soloLectura;
+        private ColoresTexto _colores;
+        private ColoresProductos _coloresEntradas;
+        private AdminProductos _adminProductos;
+        private ObservableCollection<Categorias> _listaCategorias;
+        private string _busqueda;
         private double _eColumna_uno;
         private double _eColumna_dos;
-        private double _eColumna_tres; 
+        private double _eColumna_tres;
         private double _tColumna_uno;
         private double _tColumna_dos;
         private double _tColumna_tres;
-        private AdminProductos _adminProductos;
-        private ObservableCollection<Categorias> _listaCategorias;
+        private bool _visualizacion;
+        private bool _soloLectura;
+        private string _colorBusqueda;
+        public ColoresProductos ColoresProductos
+        {
+            get => _coloresEntradas;
+            set
+            {
+                _coloresEntradas = value;
+                OnPropertyChanged(nameof(ColoresProductos));
+            }
+        }
+        public string ColorBusqueda
+        {
+            get => _colorBusqueda;
+            set
+            {
+                _colorBusqueda = value;
+                OnPropertyChanged(nameof(ColorBusqueda));
+            }
+        }
+        public string Busqueda
+        {
+            get => _busqueda;
+            set
+            {
+                _busqueda = value;
+                OnPropertyChanged(nameof(Busqueda));
+            }
+        }
         public string MensajeEdicion
         {
             get => _mensajeEditar;
@@ -83,15 +112,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 _soloLectura = value;
                 OnPropertyChanged(nameof(SoloLectura));
-            }
-        }
-        public string ColorEdicion
-        {
-            get => _colorEdicion;
-            set
-            {
-                _colorEdicion = value;
-                OnPropertyChanged(nameof(ColorEdicion));
             }
         }
         public ObservableCollection<Categorias> ListaCategorias
@@ -121,33 +141,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 OnPropertyChanged(nameof(CategoriaSeleccionada));
             }
         }
-        public string ColorMensaje
-        {
-            get => _colorMensaje;
-            set
-            {
-                _colorMensaje = value;
-                OnPropertyChanged(nameof(ColorMensaje));
-            }
-        }
-        public string Mensaje
-        {
-            get => _mensaje;
-            set
-            {
-                _mensaje = value;
-                OnPropertyChanged(nameof(Mensaje));
-            }
-        }
-        public string NombreCargar
-        {
-            get => _nombreCargar;
-            set
-            {
-                _nombreCargar = value;
-                OnPropertyChanged(nameof(NombreCargar));
-            }
-        }
         public string Edicion
         {
             get => _edicion;
@@ -155,15 +148,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 _edicion = value;
                 OnPropertyChanged(nameof(Edicion));
-            }
-        }
-        public string Busqueda
-        {
-            get => _busqueda;
-            set
-            {
-                _busqueda = value;
-                OnPropertyChanged(nameof(Busqueda));
             }
         }
         public double EColumna_uno
@@ -225,8 +209,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand ActualizarAnchoActual { get; }
         public ICommand LlenarDatos { get; }
         public ICommand BuscarCategorias { get; }
-        public ICommand CargarCategoria { get; }
         public ICommand EditarCategoria { get; }
+        public ICommand GotFocus { get; }
+        public ICommand LostFocus { get; }
         #endregion
         private async Task EjecutarBuscarCategorias(object arg)
         {
@@ -259,9 +244,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 {
                     Busqueda = "Buscar por nombre";
                     Edicion = "Editar nombre";
-                    NombreCargar = "Nombre de la categoria";
                     CategoriaSeleccionada = "Ninguna seleccionada";
-                    ColorEdicion = "#B9B9B9";
+                    ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
                     ColorMensajeEdicion = _colores.ColorExito;
 
                 }
@@ -290,30 +274,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             if (categoria.Mostrar == "si")
                 Visualizacion = true;
             else
-                Visualizacion = false;
-            ColorEdicion = "#FFFFFF";
+                Visualizacion = false; 
             CategoriaSeleccionada = categoria.ID.ToString();
-        }
-        private async Task EjecutarCargarCategoria(object arg)
-        {
-            try
-            {
-                Categorias cate = new Categorias
-                {
-                    Nombre = NombreCargar
-                };
-                var respuesta = await _adminProductos.CargarCategoria(cate);
-                if (respuesta.estado)
-                    ColorMensaje = _colores.ColorExito;
-                else
-                    ColorMensaje = _colores.ColorError;
-                Mensaje = respuesta.mensaje;
-            }
-            catch (Exception ex)
-            {
-                ColorMensaje = _colores.ColorError;
-                Mensaje = ex.Message;
-            }
         }
         private async Task EjecutarActualizarAnchoActual(object arg)
         {
@@ -337,5 +299,41 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             tiempo.Enabled = false;
             MensajeEdicion = "";
         }
+
+        #region Grafica
+
+        private async Task EjecutarGotFocus(object arg)
+        {
+            TextBox entrada = (TextBox)arg;
+            if (RevisarEntradas(entrada))
+            {
+                switch (entrada.Name)
+                {
+                    case "entrada_busqueda": Busqueda = string.Empty; ColoresProductos.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                    case "entrada_edicion": Edicion = string.Empty; ColoresProductos.BusuqedaUno= new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                }
+            }
+        }
+        private async Task EjecutarLostFocus(object arg)
+        {
+            string nombre = (string)arg;
+            switch (nombre)
+            {
+                case "entrada_busqueda": if (string.IsNullOrWhiteSpace(Busqueda) || Busqueda.Trim() == "Buscar por nombre") { Busqueda = "Buscar por nombre"; ColoresProductos.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+                case "entrada_edicion": if (string.IsNullOrWhiteSpace(Edicion) || Edicion.Trim() == "Editar nombre") { Edicion = "Editar nombre"; ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+            }
+        }
+        private bool RevisarEntradas(TextBox entrada)
+        {
+            string[] valores = ["Editar nombre", "Buscar por nombre"];
+            foreach (string valor in valores)
+            {
+                if (valor == entrada.Text)
+                    return true;
+            }
+            return false;
+
+        }
+        #endregion
     }
 }

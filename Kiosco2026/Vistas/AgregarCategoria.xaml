@@ -4,9 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kiosco2026.Vistas"
+        xmlns:modelo="clr-namespace:Kiosco2026.ModeloDeLasVistas.Hijas"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="AgregarCategoria" Height="150" Width="900"
-        MaxWidth="1100" MaxHeight="800">
+        WindowStartupLocation="CenterOwner"
+        Title="AgregarCategoria" Height="180" Width="900"
+        MaxWidth="1100" MaxHeight="230">
+    <Window.DataContext>
+        <modelo:MAC/>
+    </Window.DataContext>
     <StackPanel Orientation="Vertical">
         <TextBlock Margin="10" FontSize="22" FontWeight="SemiBold" FontFamily="Roboto Flex">Agregar categoria</TextBlock>
         <Grid>
@@ -14,16 +20,26 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <StackPanel Orientation="Vertical">
-                <TextBox Grid.Column="0" x:Name="entrada_categoria_carga" Style="{StaticResource entrada_form}" Text="{Binding NombreCargar}" 
-                                 GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
-                <TextBlock Margin="10, 0, 10, 0" FontFamily="Roboto Flex" 
-                           FontSize="16" Text="{Binding Mensaje}" Foreground="{Binding ColorMensaje}" ></TextBlock>
-            </StackPanel>
-            <RadioButton Grid.Column="1"  Style="{StaticResource boton_confirmar}" Command="{Binding CargarCategoria}"
-                                 VerticalAlignment="Top">
+            <TextBox Grid.Column="0" x:Name="entrada_categoria_carga" Style="{StaticResource entrada_form}" 
+                     Text="{Binding NombreCargar}" Foreground="{Binding ColorBusqueda}" >
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="GotFocus">
+                        <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                               CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="LostFocus">
+                        <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                               CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </TextBox>
+            <RadioButton Grid.Column="1"  Style="{StaticResource boton_confirmar}" 
+                         Command="{Binding CargarCategoria}" VerticalAlignment="Top">
                 <TextBlock Style="{StaticResource texto_botones_uno}" Text="Añadir"/>
             </RadioButton>
         </Grid>
+        <TextBlock Margin="10" FontFamily="Roboto Flex" FontSize="16" Text="{Binding Mensaje}" 
+                   Foreground="{Binding ColorMensaje}" TextWrapping="Wrap" ></TextBlock>
     </StackPanel>
 </Window>

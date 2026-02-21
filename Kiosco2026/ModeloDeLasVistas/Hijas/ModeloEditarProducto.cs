@@ -40,6 +40,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             tiempo.Elapsed += ResetearMensaje;
             tiempo.Enabled = false;
             tiempo.AutoReset = true;
+            BusquedaCodigo = "Buscar por codigo";
         }
         #region Propiedades
 
@@ -221,6 +222,16 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private string _nombre;
         private bool _marcado;
         private string _mensaje;
+        private string _busquedaCodigo;
+        public string BusquedaCodigo
+        {
+            get => _busquedaCodigo;
+            set
+            {
+                _busquedaCodigo = value;
+                OnPropertyChanged(nameof(BusquedaCodigo));
+            }
+        }
         private int _idProducto { get; set; }
         public string ColorMensaje
         {

@@ -7,8 +7,8 @@
         xmlns:modelo="clr-namespace:Kiosco2026.ModeloDeLasVistas.Hijas"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        ShowInTaskbar="False"
-        WindowStartupLocation="CenterScreen"
+        ShowInTaskbar="True"
+        WindowStartupLocation="CenterOwner"
         Title="EditarLoteProducto" Height="800" Width="1400">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">

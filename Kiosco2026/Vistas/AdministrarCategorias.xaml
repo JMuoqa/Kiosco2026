@@ -17,116 +17,150 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <Border CornerRadius="10" Margin="30" Background="#FFFFFF">
-        <Grid Margin="15">
+        <Grid Grid.Row="1" Margin="10">
             <Grid.RowDefinitions>
-                <RowDefinition Height="160"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="1" Margin="10">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="300"/>
                 </Grid.ColumnDefinitions>
-                <Border Grid.Column="0" BorderThickness="0.6" CornerRadius="10" BorderBrush="#000000" Margin="0, 0, 5, 0">
-                    <Grid Margin="4">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock FontSize="22" FontWeight="SemiBold" FontFamily="Roboto Flex" 
+                           VerticalAlignment="Center" Margin="0, 0, 10, 0">Buscar categoria</TextBlock>
+                    <TextBox x:Name="entrada_busqueda" Style="{StaticResource entrada_form}" Margin="0, 0, 10, 0" Text="{Binding Busqueda}" 
+                         Height="40" Width="250" Foreground="{Binding ColoresProductos.Busuqeda}">
                         <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="SizeChanged">
-                                <i:InvokeCommandAction Command="{Binding ActualizarAnchoActual}"                                   
-                                                       CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=Grid}}"/>
+                            <i:EventTrigger EventName="GotFocus">
+                                <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                               CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="LostFocus">
+                                <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                               CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="40"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="LayoutUpdated">
-                                    <i:InvokeCommandAction Command="{Binding ActualizarAnchoActual}"                                   
-                                        CommandParameter="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                            <Border Width="{Binding EColumna_uno}">
-                                <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
-                                           VerticalAlignment="Center" Text="ID" Margin="10, 0, 0, 0"/>
-                            </Border>
-                            <Border Width="{Binding EColumna_dos}">
-                                <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
-                                           VerticalAlignment="Center" Text="VISIBILIDAD"/>
-                            </Border>
-                            <Border Width="{Binding EColumna_tres}">
-                                <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
-                                           VerticalAlignment="Center" Text="NOMBRE"/>
-                            </Border>
-                        </StackPanel>
-                        <ScrollViewer  Grid.Row="1" VerticalScrollBarVisibility="Auto" >
-                            <ItemsControl  ItemsSource="{Binding ListaCategorias}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Button Background="Transparent" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Left"
-                                                Height="40" Command="{Binding DataContext.LlenarDatos, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                CommandParameter="{Binding }">
-                                            <StackPanel Orientation="Horizontal">
-                                                <Border Width="{Binding DataContext.TColumna_uno, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
-                                                    <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
-                                                               VerticalAlignment="Center"  Text="{Binding ID}" Margin="10, 0, 0, 0"/>
-                                                </Border>
-                                                <Border Width="{Binding DataContext.TColumna_dos, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
-                                                    <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
-                                                               VerticalAlignment="Center"  Text="{Binding Mostrar}"/>
-                                                </Border>
-                                                <Border Width="{Binding DataContext.TColumna_tres, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
-                                                    <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
-                                                               VerticalAlignment="Center"  Text="{Binding Nombre}"/>
-                                                </Border>
-                                            </StackPanel>
-                                        </Button>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </ScrollViewer>
-                    </Grid>
-                </Border>
-                <StackPanel Grid.Column="1"  Orientation="Vertical">
-                    <TextBlock Margin="0, 0, 0, 10" FontSize="22" 
-                               FontWeight="SemiBold" FontFamily="Roboto Flex">Buscar categoria</TextBlock>
-                    <TextBox x:Name="entrada_busqueda"  Grid.Column="0" Style="{StaticResource entrada_form}" Margin="0" Text="{Binding Busqueda}" 
-                             GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"/>
-                    <RadioButton Grid.Column="1"  Style="{StaticResource boton_buscar}" Margin="0, 10, 0, 0">
+                    </TextBox>
+                    <RadioButton Grid.Column="1"  Style="{StaticResource boton_buscar}" Height="40" 
+                             VerticalAlignment="Center" Margin="0" Width="200">
                         <TextBlock Background="Transparent" Foreground="#141414" FontFamily="Roboto Flex"
-                             FontSize="18" FontWeight="Medium">Buscar</TextBlock>
+                         FontSize="18" FontWeight="Medium">Buscar</TextBlock>
                     </RadioButton>
-                    <StackPanel Margin="0, 20, 0, 10" Orientation="Horizontal">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock  FontSize="22" FontWeight="SemiBold" FontFamily="Roboto Flex">Editar categoria Nº:</TextBlock>
-                            <TextBox Background="Transparent" Foreground="#000000"
-                                     FontSize="20" FontWeight="Medium" FontFamily="Roboto Flex"
-                                     Margin="10, 0, 0, 0" Text="{Binding CategoriaSeleccionada}" 
-                                     BorderThickness="0" IsReadOnly="True" VerticalAlignment="Bottom"></TextBox>
-                        </StackPanel>
-                        <TextBox IsReadOnly="True" Background="Transparent" FontSize="18" FontFamily="Robot Flex" 
-                                 BorderThickness="0" FontWeight="Medium" Margin="10, 0, 0, 0"></TextBox>
+                </StackPanel>
+                <RadioButton Style="{StaticResource boton_neutral}" Grid.Column="1" Click="RadioButton_Click"
+                             VerticalAlignment="Center" Margin="0" Width="240" HorizontalAlignment="Right">
+                    <TextBlock Background="Transparent" Foreground="#FFFFFF" FontFamily="Roboto Flex"
+                         FontSize="18" FontWeight="Medium">Ver opciones para agregar</TextBlock>
+                </RadioButton>
+            </Grid>
+            <Border Grid.Row="1" BorderThickness="0.6" CornerRadius="10" BorderBrush="#000000">
+                <Grid Margin="4">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SizeChanged">
+                            <i:InvokeCommandAction Command="{Binding ActualizarAnchoActual}"                                   
+                                                   CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=Grid}}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="LayoutUpdated">
+                                <i:InvokeCommandAction Command="{Binding ActualizarAnchoActual}"                                   
+                                    CommandParameter="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <Border Width="{Binding EColumna_uno}">
+                            <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
+                                       VerticalAlignment="Center" Text="ID" Margin="10, 0, 0, 0"/>
+                        </Border>
+                        <Border Width="{Binding EColumna_dos}">
+                            <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
+                                       VerticalAlignment="Center" Text="VISIBILIDAD"/>
+                        </Border>
+                        <Border Width="{Binding EColumna_tres}">
+                            <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
+                                       VerticalAlignment="Center" Text="NOMBRE"/>
+                        </Border>
                     </StackPanel>
-                    <TextBox IsReadOnly="{Binding SoloLectura}" x:Name="entrada_edicion" Grid.Column="0" Style="{StaticResource entrada_form}" Margin="0" Text="{Binding Edicion}" 
-                             GotFocus="TextBox_GotFocus" LostFocus="TextBox_LostFocus"
-                             Foreground="{Binding ColorEdicion}"/>
-                    <StackPanel Orientation="Horizontal" Height="40" Margin="0, 10, 0, 0">
+                    <ScrollViewer  Grid.Row="1" VerticalScrollBarVisibility="Auto" >
+                        <ItemsControl  ItemsSource="{Binding ListaCategorias}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Background="Transparent" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Left"
+                                            Height="40" Command="{Binding DataContext.LlenarDatos, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                            CommandParameter="{Binding }">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Border Width="{Binding DataContext.TColumna_uno, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                                <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
+                                                           VerticalAlignment="Center"  Text="{Binding ID}" Margin="10, 0, 0, 0"/>
+                                            </Border>
+                                            <Border Width="{Binding DataContext.TColumna_dos, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                                <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
+                                                           VerticalAlignment="Center"  Text="{Binding Mostrar}"/>
+                                            </Border>
+                                            <Border Width="{Binding DataContext.TColumna_tres, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                                <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
+                                                           VerticalAlignment="Center"  Text="{Binding Nombre}"/>
+                                            </Border>
+                                        </StackPanel>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+            <StackPanel Grid.Row="2"  Orientation="Vertical">
+                <StackPanel Margin="0, 20, 0, 10" Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock  FontSize="22" FontWeight="SemiBold" FontFamily="Roboto Flex">Editar categoria Nº:</TextBlock>
+                        <TextBox Background="Transparent" Foreground="#000000"
+                                 FontSize="20" FontWeight="Medium" FontFamily="Roboto Flex"
+                                 Margin="10, 0, 0, 0" Text="{Binding CategoriaSeleccionada}" 
+                                 BorderThickness="0" IsReadOnly="True" VerticalAlignment="Bottom"></TextBox>
+                    </StackPanel>
+                    <TextBox IsReadOnly="True" Background="Transparent" FontSize="18" FontFamily="Robot Flex" 
+                             BorderThickness="0" FontWeight="Medium" Margin="10, 0, 0, 0"></TextBox>
+                </StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" IsReadOnly="{Binding SoloLectura}" x:Name="entrada_edicion" 
+                             Style="{StaticResource entrada_form}" Margin="0" Text="{Binding Edicion}" 
+                             Foreground="{Binding ColoresProductos.BusuqedaUno}" Height="40">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="GotFocus">
+                                <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                               CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="LostFocus">
+                                <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                               CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </TextBox>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Height="40" Margin="0, 10, 0, 0">
                         <TextBlock FontSize="20" FontWeight="Medium" Margin="5, 0, 0, 0"
-                                    VerticalAlignment="Center" FontFamily="Roboto Flex">Visibilidad: </TextBlock>
+                                VerticalAlignment="Center" FontFamily="Roboto Flex">Visibilidad:</TextBlock>
                         <CheckBox VerticalAlignment="Center"  Margin="10, 0, 0, 0" IsChecked="{Binding Visualizacion}"></CheckBox>
                     </StackPanel>
-                    <RadioButton Grid.Column="1"  Style="{StaticResource boton_confirmar}" Margin="0, 10" Command="{Binding EditarCategoria}">
-                        <TextBlock Style="{StaticResource texto_botones_uno}" Text="Realizar cambios" />
-                    </RadioButton>
-                    <RadioButton Grid.Column="1"  Style="{StaticResource boton_cancelar}" Margin="0, 10" >
-                        <TextBlock Style="{StaticResource texto_botones_uno}" Text="Cancelar" />
-                    </RadioButton>
-                    <TextBlock FontFamily="Roboto Flex" FontSize="16" 
-                               Text="{Binding MensajeEdicion}" Foreground="{Binding ColorMensajeEdicion}"></TextBlock>
-                </StackPanel>
-            </Grid>
-            <StackPanel Grid.Row="2" Width="550" HorizontalAlignment="Left" >
-                
+                </Grid>
+                <RadioButton Grid.Column="1"  Style="{StaticResource boton_confirmar}" Margin="0, 10" Command="{Binding EditarCategoria}">
+                    <TextBlock Style="{StaticResource texto_botones_uno}" Text="Realizar cambios" />
+                </RadioButton>
+                <RadioButton Grid.Column="1"  Style="{StaticResource boton_cancelar}" Margin="0, 10" >
+                    <TextBlock Style="{StaticResource texto_botones_uno}" Text="Cancelar" />
+                </RadioButton>
+                <TextBlock FontFamily="Roboto Flex" FontSize="16" 
+                           Text="{Binding MensajeEdicion}" Foreground="{Binding ColorMensajeEdicion}"></TextBlock>
             </StackPanel>
         </Grid>
     </Border>

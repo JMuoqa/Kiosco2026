@@ -12,6 +12,11 @@ namespace Kiosco2026.Clases.Colores
     // Esta clase debe implementar INotifyPropertyChanged por mas que se llame dentro de una calse que lo implementa
     public class ColoresProductos : ModeloDeVistaBase
     {
+        public ColoresProductos() 
+        {
+            Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+        }
         private Brush _nombre;
         private Brush _categoria;
         private Brush _codigo;
@@ -19,6 +24,26 @@ namespace Kiosco2026.Clases.Colores
         private Brush _venta;
         private Brush _cantidad;
         private Brush _proveedor;
+        private Brush _busuqeda;
+        private Brush _busuqedaUno;
+        public Brush Busuqeda
+        {
+            get => _busuqeda;
+            set
+            {
+                _busuqeda = value;
+                OnPropertyChanged(nameof(Busuqeda));
+            }
+        }
+        public Brush BusuqedaUno
+        {
+            get => _busuqedaUno;
+            set
+            {
+                _busuqedaUno = value;
+                OnPropertyChanged(nameof(BusuqedaUno));
+            }
+        }
         public Brush Nombre 
         {
             get => _nombre;
