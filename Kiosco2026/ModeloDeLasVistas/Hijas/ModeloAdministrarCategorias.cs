@@ -247,7 +247,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     CategoriaSeleccionada = "Ninguna seleccionada";
                     ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
                     ColorMensajeEdicion = _colores.ColorExito;
-
+                    EjecutarBuscarCategorias(null);
                 }
                 else
                 {
@@ -274,7 +274,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             if (categoria.Mostrar == "si")
                 Visualizacion = true;
             else
-                Visualizacion = false; 
+                Visualizacion = false;
+            ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
             CategoriaSeleccionada = categoria.ID.ToString();
         }
         private async Task EjecutarActualizarAnchoActual(object arg)

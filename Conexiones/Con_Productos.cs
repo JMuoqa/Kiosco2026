@@ -190,7 +190,7 @@ namespace Conexiones
             {
                 try
                 {
-
+                    Debug.WriteLine(busqueda);
                     string token = ObtenerTokenJWT();
                     var respuesta = await cliente.GetAsync($"https://muoqa.com/cliente-kiosco2026/busqueda-categorias?token={token}&busqueda={busqueda}");
                     if (respuesta.IsSuccessStatusCode) 
