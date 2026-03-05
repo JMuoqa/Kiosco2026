@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -25,10 +26,14 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
             _adminProductos = new AdminProductos();
             _colores = new ColoresTexto();
-            NombreCargar = "Buscar";
+            NombreCargar = "Nombre de la categoria";
             ColorBusqueda = "#B9B9B9";
-            
+            tiempo = new System.Timers.Timer();
+            tiempo.Elapsed += ResetearMensaje;
+            tiempo.Enabled = false;
+            tiempo.AutoReset = true;
         }
+        private System.Timers.Timer tiempo;
         private AdminProductos _adminProductos;
         private ColoresTexto _colores;
         private string _colorBusqueda;
@@ -74,6 +79,11 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand CargarCategoria { get; }
         public ICommand GotFocus { get; }
         public ICommand LostFocus { get; }
+        private void EjecutarPostCarga()
+        {
+            NombreCargar = "Nombre de la categoria";
+            ColorBusqueda = "#B9B9B9";
+        }
         private async Task EjecutarCargarCategoria(object arg)
         {
             try
@@ -83,10 +93,13 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     Nombre = NombreCargar
                 };
                 var respuesta = await _adminProductos.CargarCategoria(cate);
-                if (respuesta.estado)
+                if (respuesta.estado){
                     ColorMensaje = _colores.ColorExito;
-                else
+                    EjecutarPostCarga();
+                }
+                else{
                     ColorMensaje = _colores.ColorError;
+                }
                 Mensaje = respuesta.mensaje;
             }
             catch (Exception ex)
@@ -94,11 +107,16 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 ColorMensaje = _colores.ColorError;
                 Mensaje = ex.Message;
             }
+            finally
+            {
+                tiempo.Interval = 10000;
+                tiempo.Enabled = true;
+            }
         }
-
         private async Task EjecutarGotFocus(object arg)
         {
-            if (NombreCargar == "Buscar"){
+            if (NombreCargar == "Nombre de la categoria")
+            {
                 NombreCargar = string.Empty;
                 ColorBusqueda = "#FFFFFF";
             }
@@ -106,11 +124,16 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private async Task EjecutarLostFocus(object arg)
         {
             string nombre = (string)arg;
-            if (string.IsNullOrWhiteSpace(NombreCargar) || NombreCargar.Trim() == "Buscar") 
+            if (string.IsNullOrWhiteSpace(NombreCargar) || NombreCargar.Trim() == "Nombre de la categoria") 
             { 
-                NombreCargar = "Buscar";
-                ColorBusqueda = "#FFFFFF";
-            } 
+                NombreCargar = "Nombre de la categoria";
+                ColorBusqueda = "#B9B9B9";
+            }
+        }
+        private void ResetearMensaje(object source, ElapsedEventArgs e)
+        {
+            tiempo.Enabled = false;
+            Mensaje = "";
         }
     }
 }

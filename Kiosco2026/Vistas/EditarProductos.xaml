@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Kiosco2026.Vistas"
              xmlns:modelo="clr-namespace:Kiosco2026.ModeloDeLasVistas.Hijas"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="1190">
     <UserControl.DataContext>
@@ -26,12 +27,52 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" Margin="5, 0, 5, 5">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="55"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="18"
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
                            VerticalAlignment="Center" Text="Productos">
-                </TextBlock>
+                    </TextBlock>
+                    <TextBox x:Name="entrada_busqueda" Style="{StaticResource entrada_form}" Margin="10, 0, 10, 0" 
+                             Text="{Binding Busqueda}" Height="40" Width="250" Foreground="{Binding ColoresEntradas.Busuqeda}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="GotFocus">
+                                <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="LostFocus">
+                                <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                                 CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </TextBox>
+                    <RadioButton Grid.Column="1"  Style="{StaticResource boton_buscar}" Height="40" 
+                                VerticalAlignment="Center" Margin="0" Width="60" Command="{Binding ObtenerProductos}">
+                        <fa:IconImage Icon="Search" Margin="0" Style="{StaticResource iconos_menu}"/>
+                    </RadioButton>
+                    <TextBox x:Name="entrada_codigo" Style="{StaticResource entrada_form}" Margin="10, 0, 10, 0" 
+                             Text="{Binding BusquedaCodigo}" Height="40" Width="250" Foreground="{Binding ColoresEntradas.BusuqedaUno}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="GotFocus">
+                                <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="LostFocus">
+                                <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                                 CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </TextBox>
+                    <RadioButton Grid.Column="1"  Style="{StaticResource boton_buscar}" Height="40" 
+                                VerticalAlignment="Center" Margin="0" Width="60" Command="{Binding BusquedaPorCodigo}">
+                        <fa:IconImage Icon="Search" Margin="0" Style="{StaticResource iconos_menu}"/>
+                    </RadioButton>
+                    <RadioButton Grid.Column="1"  Style="{StaticResource boton_buscar}" Height="40" 
+                            VerticalAlignment="Center" Margin="5, 0, 0, 0" Width="50" Command="{Binding ResetearBusqueda}">
+                        <fa:IconImage Icon="ArrowRotateForward" Margin="0" Style="{StaticResource iconos_menu}"/>
+                    </RadioButton>
+                </StackPanel>
                 <Border  Grid.Row="1" BorderThickness="0.6" CornerRadius="10" BorderBrush="#000000">
                     <Grid >
                         <i:Interaction.Triggers>

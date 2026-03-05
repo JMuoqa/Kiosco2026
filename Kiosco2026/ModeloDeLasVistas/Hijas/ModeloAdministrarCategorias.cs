@@ -26,6 +26,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             BuscarCategorias = new ComandoModeloDeVista(EjecutarBuscarCategorias);
             EditarCategoria = new ComandoModeloDeVista(EjecutarEditarCategoria);
             GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
+            Cancelar = new ComandoModeloDeVista(EjecutarCancelar);
             LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
             _adminProductos = new AdminProductos();
             _coloresEntradas = new ColoresProductos();
@@ -212,7 +213,16 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand EditarCategoria { get; }
         public ICommand GotFocus { get; }
         public ICommand LostFocus { get; }
+        public ICommand Cancelar { get; }
         #endregion
+        private async Task EjecutarCancelar(object arg)
+        {
+            SoloLectura = true;
+            Visualizacion = default;
+            Edicion = "Editar nombre";
+            CategoriaSeleccionada = "Ninguna seleccionada";
+            ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+        }
         private async Task EjecutarBuscarCategorias(object arg)
         {
             string valor = "";
@@ -225,6 +235,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(CategoriaSeleccionada) ||CategoriaSeleccionada == "Ninguna seleccionada")
+                    throw new Exception("No hay ninguna categoria seleccionada");
                 string visualizacion;
                 if (Visualizacion)
                     visualizacion = "si";

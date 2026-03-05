@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Kiosco2026.Vistas"
              xmlns:modelo="clr-namespace:Kiosco2026.ModeloDeLasVistas.Hijas"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="1190">
     <UserControl.DataContext>
@@ -29,7 +30,7 @@
                     <ColumnDefinition Width="300"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock FontSize="22" FontWeight="SemiBold" FontFamily="Roboto Flex" 
+                    <TextBlock FontSize="20" FontWeight="SemiBold" FontFamily="Roboto Flex" 
                            VerticalAlignment="Center" Margin="0, 0, 10, 0">Buscar categoria</TextBlock>
                     <TextBox x:Name="entrada_busqueda" Style="{StaticResource entrada_form}" Margin="0, 0, 10, 0" Text="{Binding Busqueda}" 
                          Height="40" Width="250" Foreground="{Binding ColoresProductos.Busuqeda}">
@@ -48,6 +49,10 @@
                              VerticalAlignment="Center" Margin="0" Width="200" Command="{Binding BuscarCategorias}">
                         <TextBlock Background="Transparent" Foreground="#141414" FontFamily="Roboto Flex"
                          FontSize="18" FontWeight="Medium">Buscar</TextBlock>
+                    </RadioButton>
+                    <RadioButton Grid.Column="1"  Style="{StaticResource boton_buscar}" Height="40" 
+                             VerticalAlignment="Center" Margin="5, 0, 0, 0" Width="50" Command="{Binding BuscarCategorias}">
+                             <fa:IconImage Icon="ArrowRotateForward" Margin="0" Style="{StaticResource iconos_menu}"/>
                     </RadioButton>
                 </StackPanel>
                 <RadioButton Style="{StaticResource boton_neutral}" Grid.Column="1" Click="RadioButton_Click"
@@ -119,9 +124,9 @@
             <StackPanel Grid.Row="2"  Orientation="Vertical">
                 <StackPanel Margin="0, 20, 0, 10" Orientation="Horizontal">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock  FontSize="22" FontWeight="SemiBold" FontFamily="Roboto Flex">Editar categoria Nº:</TextBlock>
+                        <TextBlock  FontSize="20" FontWeight="SemiBold" FontFamily="Roboto Flex">Editar categoria Nº:</TextBlock>
                         <TextBox Background="Transparent" Foreground="#000000"
-                                 FontSize="20" FontWeight="Medium" FontFamily="Roboto Flex"
+                                 FontSize="18" FontWeight="Medium" FontFamily="Roboto Flex"
                                  Margin="10, 0, 0, 0" Text="{Binding CategoriaSeleccionada}" 
                                  BorderThickness="0" IsReadOnly="True" VerticalAlignment="Bottom"></TextBox>
                     </StackPanel>
@@ -154,7 +159,8 @@
                 <RadioButton Grid.Column="1"  Style="{StaticResource boton_confirmar}" Margin="0, 10" Command="{Binding EditarCategoria}">
                     <TextBlock Style="{StaticResource texto_botones_uno}" Text="Realizar cambios" />
                 </RadioButton>
-                <RadioButton Grid.Column="1"  Style="{StaticResource boton_cancelar}" Margin="0, 10" >
+                <RadioButton Grid.Column="1"  Style="{StaticResource boton_cancelar}" Margin="0, 10" 
+                             Command="{Binding Cancelar}">
                     <TextBlock Style="{StaticResource texto_botones_uno}" Text="Cancelar" />
                 </RadioButton>
                 <TextBlock FontFamily="Roboto Flex" FontSize="16" 

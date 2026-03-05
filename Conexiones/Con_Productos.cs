@@ -220,19 +220,7 @@ namespace Conexiones
                         string resultado = await respuesta.Content.ReadAsStringAsync();
                         var datos = JsonSerializer.Deserialize<ResProductosDos>(resultado);
                         //Aca se obtiene el nombre de la categoria ya que en la tabla productos solo guardamos el ID de la categoria
-                        var consultaCategorias = await Con_ObtenerCategoriasGenerales();
-                        var consultaCategoriasClientes = await Con_ObtenerCategoriasClientes();
-                        List<Categorias> listaGeneral = consultaCategorias.lista;
-                        List<Categorias> listaCliente = consultaCategoriasClientes.lista;
-                        List<Categorias> listaCompleta = new List<Categorias>();
-                        for (int i = 0; i < listaGeneral.Count; i++)
-                        {
-                            listaCompleta.Add(listaGeneral[i]);
-                        }
-                        for (int i = 0; i < listaCliente.Count; i++)
-                        {
-                            listaCompleta.Add(listaCliente[i]);
-                        }
+                        List<Categorias> listaCompleta = await OrganizarCategorias();
                         for(int i = 0; i < datos.Productos.Count; i++)
                         {
                             for (int j = 0; j < listaCompleta.Count; j++)
@@ -255,6 +243,25 @@ namespace Conexiones
                 }
             }
         }
+        //Esta sirve para resumir la busqueda de categorias
+        private async Task<List<Categorias>> OrganizarCategorias()
+        {
+            var consultaCategorias = await Con_ObtenerCategoriasGenerales();
+            var consultaCategoriasClientes = await Con_ObtenerCategoriasClientes();
+            List<Categorias> listaGeneral = consultaCategorias.lista;
+            List<Categorias> listaCliente = consultaCategoriasClientes.lista;
+            List<Categorias> listaCompleta = new List<Categorias>();
+            for (int i = 0; i < listaGeneral.Count; i++)
+            {
+                listaCompleta.Add(listaGeneral[i]);
+            }
+            for (int i = 0; i < listaCliente.Count; i++)
+            {
+                listaCompleta.Add(listaCliente[i]);
+            }
+            return listaCompleta;
+        }
+
         public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_ProductosPorIngreso(string codigo)
         {
             using (var cliente = new HttpClient())
@@ -268,19 +275,7 @@ namespace Conexiones
                         string resultado = await respuesta.Content.ReadAsStringAsync();
                         var datos = JsonSerializer.Deserialize<ResProductosDos>(resultado);
                         //Aca se obtiene el nombre de la categoria ya que en la tabla productos solo guardamos el ID de la categoria
-                        var consultaCategorias = await Con_ObtenerCategoriasGenerales();
-                        var consultaCategoriasClientes = await Con_ObtenerCategoriasClientes();
-                        List<Categorias> listaGeneral = consultaCategorias.lista;
-                        List<Categorias> listaCliente = consultaCategoriasClientes.lista;
-                        List<Categorias> listaCompleta = new List<Categorias>();
-                        for (int i = 0; i < listaGeneral.Count; i++)
-                        {
-                            listaCompleta.Add(listaGeneral[i]);
-                        }
-                        for (int i = 0; i < listaCliente.Count; i++)
-                        {
-                            listaCompleta.Add(listaCliente[i]);
-                        }
+                        List<Categorias> listaCompleta = await OrganizarCategorias();
                         for (int i = 0; i < datos.Productos.Count; i++)
                         {
                             for (int j = 0; j < listaCompleta.Count; j++)
@@ -301,6 +296,41 @@ namespace Conexiones
                     Debug.WriteLine(ex.Message);
                     return (false, ex.Message, new List<Productos>());
                 }
+            }
+        }
+        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_BusquedaProductoPorCodigo(string codigo)
+        {
+            using (var cliente = new HttpClient())
+            {
+                try
+                {
+                    string token = ObtenerTokenJWT();
+                    var respuesta = await cliente.GetAsync($"https://muoqa.com/cliente-kiosco2026/busqueda-por-codigo?codigo={codigo}&token={token}");
+                    if (respuesta.IsSuccessStatusCode)
+                    {
+                        string resultado = await respuesta.Content.ReadAsStringAsync();
+                        var datos = JsonSerializer.Deserialize<ResProductosDos>(resultado);
+                        List<Categorias> listaCompleta = await OrganizarCategorias();
+                        for (int i = 0; i < datos.Productos.Count; i++)
+                        {
+                            for (int j = 0; j < listaCompleta.Count; j++)
+                            {
+                                if (listaCompleta[j].ID == datos.Productos[i].IDCategoria)
+                                {
+                                    datos.Productos[i].Categoria = listaCompleta[j].Nombre;
+                                    break;
+                                }
+                            }
+                        }
+                        return (datos.estado, datos.mensaje, datos.Productos);
+                    }
+                    return (false, "Hubo un error en la respuesta", new List<Productos>());
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    return (false, ex.Message, new List<Productos>());
+                } 
             }
         }
         public string ObtenerTokenJWT()

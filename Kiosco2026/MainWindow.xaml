@@ -48,14 +48,7 @@
                             <TextBlock Style="{StaticResource texto_botones_nav}">Buscar y editar</TextBlock>
                         </StackPanel>
                     </RadioButton>
-                    <TextBlock Style="{StaticResource titulosNav}">MERCADOPAGO</TextBlock>
-                    <RadioButton Style="{StaticResource botones_nav}">
-                        <StackPanel Orientation="Horizontal">
-                            <fa:IconImage Icon="MoneyBillTransfer" Style="{StaticResource iconos_menu}"/>
-                            <TextBlock Style="{StaticResource texto_botones_nav}">Movimientos</TextBlock>
-                        </StackPanel>
-                    </RadioButton>
-                    <TextBlock Style="{StaticResource titulosNav}">PRODUCTOS</TextBlock>
+                    <TextBlock Style="{StaticResource titulosNav}">STOCK</TextBlock>
                     <StackPanel x:Name="paneProductos" Orientation="Vertical">
                         <RadioButton Style="{StaticResource botones_nav}" Command="{Binding MostrarVistaAdicionProducto}">
                             <StackPanel Orientation="Horizontal">

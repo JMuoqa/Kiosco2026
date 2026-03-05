@@ -13,6 +13,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Kiosco2026.ModeloDeLasVistas.Hijas
 {
@@ -30,6 +31,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
             LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
             EditarProducto = new ComandoModeloDeVista(EjecutarEditarProducto);
+            BusquedaPorCodigo = new ComandoModeloDeVista(EjecutarBusquedaPorCodigo);
+            ResetearBusqueda = new ComandoModeloDeVista(ResetearTabla);
             _adminProductos = new AdminProductos();
             ColoresEntradas = new ColoresProductos();
             Producto = new Productos("-");
@@ -41,6 +44,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             tiempo.Enabled = false;
             tiempo.AutoReset = true;
             BusquedaCodigo = "Buscar por codigo";
+            Busqueda = "Buscar por nombre";
         }
         #region Propiedades
 
@@ -223,6 +227,16 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private bool _marcado;
         private string _mensaje;
         private string _busquedaCodigo;
+        private string _busqueda;
+        public string Busqueda
+        {
+            get => _busqueda;
+            set
+            {
+                _busqueda = value;
+                OnPropertyChanged(nameof(Busqueda));
+            }
+        }
         public string BusquedaCodigo
         {
             get => _busquedaCodigo;
@@ -340,6 +354,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         #region Comandos
         public ICommand ActualizarAnchoActual { get; }
         public ICommand ObtenerProductos { get; }
+        public ICommand ResetearBusqueda { get; }
+        public ICommand BusquedaPorCodigo { get; }
         public ICommand ObtenerCategorias { get; }
         public ICommand ValoresPredeterminados { get; }
         public ICommand CargarDatos { get; }
@@ -442,12 +458,32 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 mostrar = true;
             Marcado = mostrar;
         }
+        private async Task ResetearTabla(object arg)
+        {
+            BusquedaCodigo = "Buscar por codigo";
+            ColoresEntradas.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            Busqueda = "Buscar por nombre";
+            ColoresEntradas.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            EjecutarObtenerProductos(null);
+        }
         private async Task EjecutarObtenerProductos(object obj)
         {
             string valor = "";
-            if (valor != "Buscar por nombre")
-                valor = valor;
+            BusquedaCodigo = "Buscar por codigo"; 
+            ColoresEntradas.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            if (Busqueda != "Buscar por nombre")
+                valor = Busqueda;
             var res = await _adminProductos.BusquedaProductos(valor);
+            ListaProductos = new ObservableCollection<Productos>(res.lista);
+        }
+        private async Task EjecutarBusquedaPorCodigo(object obj)
+        {
+            Busqueda = "Buscar por nombre";
+            ColoresEntradas.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            string valor = "";
+            if(BusquedaCodigo != "Buscar por codigo")
+                valor = BusquedaCodigo;
+            var res = await _adminProductos.BusquedaProductoPorCodigo(valor);
             ListaProductos = new ObservableCollection<Productos>(res.lista);
         }
         private async Task EjecutarActualizarAnchoActual(object arg)
@@ -515,9 +551,11 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 switch (entrada.Name)
                 {
+                    case "entrada_busqueda": Busqueda = string.Empty; ColoresEntradas.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
                     case "entrada_nombre": Nombre = string.Empty; ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
                     case "entrada_venta": Venta = string.Empty; ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
                     case "entrada_compra": Compra = string.Empty; ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                    case "entrada_codigo": BusquedaCodigo = string.Empty; ColoresEntradas.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
                 }
             }
         }
@@ -526,14 +564,16 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             string nombre = (string)arg;
             switch (nombre)
             {
+                case "entrada_busqueda": if (string.IsNullOrWhiteSpace(Busqueda) || Busqueda.Trim() == "Buscar por nombre") { Busqueda = "Buscar por nombre"; ColoresEntradas.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
                 case "entrada_nombre": if (string.IsNullOrWhiteSpace(Nombre) || Nombre.Trim() == "Nombre*") { Nombre = "Nombre*"; ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
                 case "entrada_venta": if (string.IsNullOrWhiteSpace(Venta) || Venta.Trim() == "Precio de venta*") { Venta = "Precio de venta*"; ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
                 case "entrada_compra": if (string.IsNullOrWhiteSpace(Compra) || Compra.Trim() == "Costo de compra*") { Compra = "Costo de compra*"; ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+                case "entrada_codigo": if (string.IsNullOrWhiteSpace(BusquedaCodigo) || BusquedaCodigo.Trim() == "Buscar por codigo") { BusquedaCodigo = "Buscar por codigo"; ColoresEntradas.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
             }
         }
         private bool RevisarEntradas(TextBox entrada)
         {
-            string[] valores = ["Nombre*", "Código*", "Precio de venta*", "Costo de compra*", "Cantidad*", "Proveedor"];
+            string[] valores = ["Nombre*", "Código*", "Precio de venta*", "Costo de compra*", "Cantidad*", "Proveedor", "Buscar por nombre", "Buscar por codigo"];
             foreach (string valor in valores)
             {
                 if (valor == entrada.Text)

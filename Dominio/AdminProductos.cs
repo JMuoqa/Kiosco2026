@@ -67,6 +67,10 @@ namespace Dominio
             if (string.IsNullOrWhiteSpace(producto.Venta) || producto.Venta == "Precio de venta*")
                 throw new Exception("El campo 'Venta' esta vacio");
         }
+        public async Task<(bool estado, string mensaje, List<Productos> lista)> BusquedaProductoPorCodigo(string codigo)
+        {
+            return await _productos.Con_BusquedaProductoPorCodigo(codigo);
+        }
         public async Task<(bool estado, string mensaje, List<Categorias> lista)> BusquedaCategorias(string busqueda) 
         {
             return await _productos.Con_BusquedaCategorias(busqueda);
