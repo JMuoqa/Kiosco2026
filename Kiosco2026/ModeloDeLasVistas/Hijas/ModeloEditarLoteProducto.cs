@@ -1,5 +1,6 @@
 ﻿using Dominio;
 using Entidades;
+using Kiosco2026.Clases.Colores;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Kiosco2026.ModeloDeLasVistas.Hijas
 {
@@ -18,7 +20,17 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             ActualizarAnchoActual = new ComandoModeloDeVista(EjecutarActualizarAnchoActual);
             ObtenerProductos = new ComandoModeloDeVista(EjecutarObtenerProductos);
             _pr = pr;
+            Producto = new Productos("-");
             _adminProductos = new AdminProductos();
+            ColoresEntradas = new ColoresProductos();
+            Nombre = "Nombre";
+            Compra = "Costo de compra";
+            Venta = "Precio de venta";
+            Cantidad = "Cantidad";
+            ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
         }
         #region Propiedades
         #region Columnas privadas
@@ -186,11 +198,62 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         #endregion
         private Productos _pr;
+        private Productos _producto;
         private string _venta;
         private string _compra;
         private string _cantidad;
+        private string _nombre;
+        private DateTime _ingreso;
+        private DateTime _vencimiento;
+        private ColoresProductos _coloresEntradas;
+        private DateTime _busquedaIngreso;
         private AdminProductos _adminProductos;
         private ObservableCollection<Productos> _listaProductos;
+        public DateTime Ingreso
+        {
+            get => _ingreso;
+            set
+            {
+                _ingreso = value;
+                OnPropertyChanged(nameof(Ingreso));
+            }
+        }
+        public DateTime Vencimiento
+        {
+            get => _vencimiento;
+            set
+            {
+                _vencimiento = value;
+                OnPropertyChanged(nameof(_vencimiento));
+            }
+        }
+        public ColoresProductos ColoresEntradas
+        {
+            get => _coloresEntradas;
+            set
+            {
+                _coloresEntradas = value;
+                OnPropertyChanged(nameof(_coloresEntradas));
+            }
+        }
+        public Productos Producto
+        {
+            get => _producto;
+            set
+            {
+                _producto = value;
+                OnPropertyChanged(nameof(Producto));
+            }
+        }
+        public string Nombre
+        {
+            get => _nombre;
+            set
+            {
+                _nombre = value;
+                OnPropertyChanged(nameof(Nombre));
+            }
+        }
         public ObservableCollection<Productos> ListaProductos
         {
             get => _listaProductos;
@@ -198,6 +261,15 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 _listaProductos = value;
                 OnPropertyChanged(nameof(ListaProductos));
+            }
+        }
+        public DateTime BusquedaIngreso
+        {
+            get => _busquedaIngreso;
+            set
+            {
+                _busquedaIngreso = value;
+                OnPropertyChanged(nameof(_busquedaIngreso));
             }
         }
         public string Venta
@@ -231,6 +303,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         #region Comandos
         public ICommand ObtenerProductos { get; }
         public ICommand ActualizarAnchoActual { get; }
+        public ICommand GotFocus { get; }
+        public ICommand LostFocus { get; }
         #endregion
         #region Eventos y funciones
         private async Task EjecutarObtenerProductos(object obj)

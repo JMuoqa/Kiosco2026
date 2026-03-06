@@ -188,7 +188,7 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Horizontal" Margin="10, 0">
                         <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="18"
-                           VerticalAlignment="Center" Text="Producto seleccionado: "/>
+                           VerticalAlignment="Center" Text="Lote seleccionado: "/>
                         <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="18"
                            VerticalAlignment="Center" Text="{Binding Producto.Nombre}"/>
                     </StackPanel>
