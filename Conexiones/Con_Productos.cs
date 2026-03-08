@@ -1,4 +1,5 @@
 ﻿using Entidades;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
@@ -73,6 +74,40 @@ namespace Conexiones
                     return (false, "Algo salio mal");
                 }
                 catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    return (false, ex.Message);
+                }
+            }
+        }
+        public async Task<(bool estado, string mensaje)> Con_EditarLote(Productos producto)
+        {
+            using (var cliente = new HttpClient())
+            {
+                try
+                {
+                    var json = JsonSerializer.Serialize(new
+                    {
+                        nombre = producto.Nombre,
+                        compra = producto.Compra,
+                        venta = producto.Venta,
+                        cantidad = producto.Cantidad,
+                        ingreso = producto.Ingreso,
+                        vencimiento = producto.Vencimiento,
+                        idLote = producto.ID,
+                        token = ObtenerTokenJWT()
+                    });
+                    var contenido = new StringContent(json, Encoding.UTF8, "application/json");
+                    var respuesta = await cliente.PutAsync("https://muoqa.com/cliente-kiosco2026/editar-lote", contenido);
+                    if (respuesta.IsSuccessStatusCode)
+                    {
+                        string resultado = await respuesta.Content.ReadAsStringAsync();
+                        Debug.WriteLine(resultado);
+                        return (true, resultado);
+                    }
+                    return (false, "Algo salio mal");
+                }
+                catch (Exception ex) 
                 {
                     Debug.WriteLine(ex.Message);
                     return (false, ex.Message);

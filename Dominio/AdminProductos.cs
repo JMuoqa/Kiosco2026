@@ -43,6 +43,10 @@ namespace Dominio
             };
             return await _productos.Con_CargarProducto(producto);
         }
+        public async Task<(bool estado, string menasje)> EditarLote(Productos productos)
+        {
+            return await _productos.Con_EditarLote(productos);
+        }
         public async Task<(bool estado, string mensaje)> EditarProductoPorCodigo(Productos producto)
         {
             await ValidarDatosParaEdicionProducto(producto);
