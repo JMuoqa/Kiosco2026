@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Controls;
 
 namespace Kiosco2026.ModeloDeLasVistas.Hijas
 {
@@ -19,6 +20,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             ActualizarAnchoActual = new ComandoModeloDeVista(EjecutarActualizarAnchoActual);
             ObtenerProductos = new ComandoModeloDeVista(EjecutarObtenerProductos);
+            GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
+            LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
             _pr = pr;
             Producto = new Productos("-");
             _adminProductos = new AdminProductos();
@@ -337,6 +340,42 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             TColumna_seis = relleno;
             TColumna_siete = relleno;
             TColumna_ocho = relleno;
+        }
+        private async Task EjecutarGotFocus(object arg)
+        {
+            TextBox entrada = (TextBox)arg;
+            if (RevisarEntradas(entrada))
+            {
+                switch (entrada.Name)
+                {
+                    case "entrada_nombre": Nombre = string.Empty; ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                    case "entrada_venta": Venta = string.Empty; ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                    case "entrada_compra": Compra = string.Empty; ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                    case "entrada_cantidad": Cantidad = string.Empty; ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                }
+            }
+        }
+        private async Task EjecutarLostFocus(object arg)
+        {
+            string nombre = (string)arg;
+            switch (nombre)
+            {
+                case "entrada_nombre": if (string.IsNullOrWhiteSpace(Nombre) || Nombre.Trim() == "Nombre") { Nombre = "Nombre"; ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+                case "entrada_venta": if (string.IsNullOrWhiteSpace(Venta) || Venta.Trim() == "Precio de venta") { Venta = "Precio de venta"; ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+                case "entrada_compra": if (string.IsNullOrWhiteSpace(Compra) || Compra.Trim() == "Costo de compra") { Compra = "Costo de compra"; ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+                case "entrada_cantidad": if (string.IsNullOrWhiteSpace(Compra) || Compra.Trim() == "Cantidad") { Compra = "Cantidad"; ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+            }
+        }
+        private bool RevisarEntradas(TextBox entrada)
+        {
+            string[] valores = ["Nombre", "Precio de venta", "Costo de compra", "Cantidad", ];
+            foreach (string valor in valores)
+            {
+                if (valor == entrada.Text)
+                    return true;
+            }
+            return false;
+
         }
         #endregion
     }
