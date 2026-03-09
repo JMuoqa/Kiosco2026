@@ -87,11 +87,25 @@ namespace Kiosco2026.Vistas
         }
         private void RadioButton_Click(object sender, RoutedEventArgs e)
         {
-            // Hace lo mismo que arriba pero diferente sintaxis
-            EditarLoteProducto window = new EditarLoteProducto(_prSelecionado);
-            // Le dice que el padre de esta ventana es MainWindow
-            window.Owner = Application.Current.MainWindow;
-            window.Show();
+            try
+            {
+                if (_prSelecionado.ID < 1)
+                    throw new Exception("No seleccionaste ningun producto");
+                // Hace lo mismo que arriba pero diferente sintaxis
+                EditarLoteProducto window = new EditarLoteProducto(_prSelecionado);
+                // Le dice que el padre de esta ventana es MainWindow
+                window.Owner = Application.Current.MainWindow;
+                window.Show();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(
+                    $"{ex.Message}\r\n",
+                    "Sin lotes",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information
+                );
+            }
         }
     }
 }

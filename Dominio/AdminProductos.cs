@@ -43,9 +43,10 @@ namespace Dominio
             };
             return await _productos.Con_CargarProducto(producto);
         }
-        public async Task<(bool estado, string menasje)> EditarLote(Productos productos)
+        public async Task<(bool estado, string menasje)> EditarLote(Productos producto)
         {
-            return await _productos.Con_EditarLote(productos);
+            await ValidarDatosEditarLote(producto);
+            return await _productos.Con_EditarLote(producto);
         }
         public async Task<(bool estado, string mensaje)> EditarProductoPorCodigo(Productos producto)
         {
@@ -101,6 +102,19 @@ namespace Dominio
             await ValidarDatosDeEditarCategoria(categoria);
             return await _productos.Con_EditarCategoria(categoria);
         }
+        private async Task ValidarDatosEditarLote(Productos prod)
+        {
+            if (prod == null) throw new Exception("No hay datos del producto");
+            if (string.IsNullOrWhiteSpace(prod.Nombre) || prod.Nombre == "Nombre*")
+                throw new Exception("El campo 'Nombre' esta vacio");
+            if (string.IsNullOrWhiteSpace(prod.Venta.ToString()))
+                throw new Exception("El campo 'Venta' esta vacio");
+            if (string.IsNullOrWhiteSpace(prod.Compra.ToString()))
+                throw new Exception("El campo 'Compra' esta vacio");
+            if (string.IsNullOrWhiteSpace(prod.Cantidad.ToString()))
+                throw new Exception("El campo 'Cantidad' esta vacio");
+            return;
+        }
         private async Task ValidarDatosDeEditarCategoria(Categorias categoria)
         {
             if (categoria == null)
@@ -111,6 +125,7 @@ namespace Dominio
                 throw new Exception("El campo 'Mostrar' no esta definido.");
             if (categoria.ID <= 0)
                 throw new Exception("No hay ninguna categoria seleccionada");
+            return;
         }
         private async Task ValidarDatosCategoria(Categorias categoria)
         {
@@ -118,6 +133,7 @@ namespace Dominio
                 throw new Exception("No hay datos del producto");
             if(string.IsNullOrWhiteSpace(categoria.Nombre) ||categoria.Nombre == "Nombre de la categoria")
                 throw new Exception("El campo 'Nombre', del formulario de carga, esta vacio");
+            return;
         }
         private async Task ValidarDatosProducto(ProductosDto prod)
         {

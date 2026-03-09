@@ -100,8 +100,9 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Button Background="Transparent" BorderThickness="0" Cursor="Hand" 
-                                        HorizontalAlignment="Left" Height="40">
-                                        <StackPanel Orientation="Horizontal">
+                                            HorizontalAlignment="Left" Height="40" Command="{Binding DataContext.CargarDatosLote, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                            CommandParameter="{Binding }">
+                                        <StackPanel Orientation="Horizontal" >
                                             <Border Width="{Binding DataContext.TColumna_uno, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
                                                 <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
                                                        VerticalAlignment="Center"  Text="{Binding ID}" Margin="10, 0, 0, 0"/>

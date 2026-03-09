@@ -8,9 +8,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Controls;
 
 namespace Kiosco2026.ModeloDeLasVistas.Hijas
 {
@@ -23,6 +24,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
             LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
             EditarLote = new ComandoModeloDeVista(EjecutarEditarLote);
+            CargarDatosLote = new ComandoModeloDeVista(EjecutarCargarDatosLote);
             _pr = pr;
             Producto = new Productos("-");
             _adminProductos = new AdminProductos();
@@ -221,7 +223,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             set
             {
                 _vencimiento = value;
-                OnPropertyChanged(nameof(_vencimiento));
+                OnPropertyChanged(nameof(Vencimiento));
             }
         }
         public ColoresProductos ColoresEntradas
@@ -300,6 +302,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         #region Comandos
         public ICommand ObtenerProductos { get; }
         public ICommand EditarLote { get; }
+        public ICommand CargarDatosLote { get; }
         public ICommand ActualizarAnchoActual { get; }
         public ICommand GotFocus { get; }
         public ICommand LostFocus { get; }
@@ -307,6 +310,21 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand ResetearBusqueda { get; }
         #endregion
         #region Eventos y funciones
+        private async Task EjecutarCargarDatosLote(object obj)
+        {
+            Productos productoSeleccionado = obj as Productos;
+            Producto = productoSeleccionado;
+            Nombre = productoSeleccionado.Nombre;
+            Compra = productoSeleccionado.Compra;
+            Venta = productoSeleccionado.Venta;
+            Cantidad = productoSeleccionado.Cantidad.ToString();
+            Ingreso = productoSeleccionado.Ingreso;
+            Vencimiento = productoSeleccionado.Vencimiento; 
+            ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+            ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+            ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+            ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+        }
         private async Task EjecutarObtenerProductos(object obj)
         {
             var res = await _adminProductos.BusquedaPorIngreso(_pr.Codigo);
@@ -314,6 +332,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private async Task EjecutarEditarLote(object obj)
         {
+            if (Producto.ID < 1)
+                throw new Exception("No hay ningun lote seleccionado");
             int cantidad;
             if (!int.TryParse(Cantidad, out cantidad))
                 throw new Exception("El campo 'cantidad' no es un numero");
@@ -325,6 +345,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 Venta = this.Venta,
                 Vencimiento = this.Vencimiento,
                 Ingreso = this.Ingreso,
+                ID = this.Producto.ID,
             };
             var res = await _adminProductos.EditarLote(nuevoProducto);
             Debug.WriteLine(res);
