@@ -35,11 +35,11 @@
                                 Padding="0" VerticalAlignment="Center" SelectedDate="{Binding BusquedaIngreso}"
                             Margin="0, 0, 10, 0"></DatePicker>
                 <RadioButton Grid.Column="1"  Style="{StaticResource boton_buscar}" Height="40" 
-                                VerticalAlignment="Center" Margin="10, 0, 0, 0" Width="60" Command="{Binding ObtenerProductos}">
+                                VerticalAlignment="Center" Margin="10, 0, 0, 0" Width="60" Command="{Binding BuscarProductos}">
                     <fa:IconImage Icon="Search" Margin="0" Style="{StaticResource iconos_menu}"/>
                 </RadioButton>
                 <RadioButton Grid.Column="1"  Style="{StaticResource boton_buscar}" Height="40" 
-                            VerticalAlignment="Center" Margin="5, 0, 0, 0" Width="50" Command="{Binding ResetearBusqueda}">
+                            VerticalAlignment="Center" Margin="5, 0, 0, 0" Width="50" Command="{Binding ObtenerProductos}">
                     <fa:IconImage Icon="ArrowRotateForward" Margin="0" Style="{StaticResource iconos_menu}"/>
                 </RadioButton>
             </StackPanel>
@@ -241,6 +241,8 @@
                 <RadioButton Style="{StaticResource boton_confirmar}" Command="{Binding EditarLote}">
                     <TextBlock Style="{StaticResource texto_botones_uno}" Text="Editar"/>
                 </RadioButton>
+                <TextBlock Margin="10, 23, 10, 0" FontFamily="Roboto Flex" 
+                           FontSize="16" Text="{Binding Mensaje}" Foreground="{Binding ColorMensaje}" TextWrapping="Wrap" ></TextBlock>
             </StackPanel>
         </Grid>
     </Grid>

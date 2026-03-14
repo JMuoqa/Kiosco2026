@@ -66,7 +66,6 @@ namespace Conexiones
                     if (respuesta.IsSuccessStatusCode)
                     {
                         string resultado = await respuesta.Content.ReadAsStringAsync();
-                        Debug.WriteLine(resultado);
                         var datos = JsonSerializer.Deserialize<ResProductos>(resultado);
                         return (datos.estado, datos.mensaje);
 
@@ -102,8 +101,8 @@ namespace Conexiones
                     if (respuesta.IsSuccessStatusCode)
                     {
                         string resultado = await respuesta.Content.ReadAsStringAsync();
-                        Debug.WriteLine(resultado);
-                        return (true, resultado);
+                        var datos = JsonSerializer.Deserialize<ResProductos>(resultado);
+                        return (datos.estado, datos.mensaje);
                     }
                     return (false, "Algo salio mal");
                 }
@@ -297,14 +296,14 @@ namespace Conexiones
             return listaCompleta;
         }
 
-        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_ProductosPorIngreso(string codigo)
+        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_ProductosPorIngreso(string codigo, DateTime? busqueda)
         {
             using (var cliente = new HttpClient())
             {
                 try
                 {
                     string token = ObtenerTokenJWT();
-                    var respuesta = await cliente.GetAsync($"https://muoqa.com/cliente-kiosco2026/obtener-productos-por-ingreso?token={token}&codigo={codigo}");
+                    var respuesta = await cliente.GetAsync($"https://muoqa.com/cliente-kiosco2026/obtener-productos-por-ingreso?token={token}&codigo={codigo}&busqueda={busqueda}");
                     if (respuesta.IsSuccessStatusCode)
                     {
                         string resultado = await respuesta.Content.ReadAsStringAsync();

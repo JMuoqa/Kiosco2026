@@ -84,9 +84,9 @@ namespace Dominio
         {
             return await _productos.Con_BusquedaProductos(busqueda);
         }
-        public async Task<(bool estado, string mensaje, List<Productos> lista)> BusquedaPorIngreso(string codigo)
+        public async Task<(bool estado, string mensaje, List<Productos> lista)> BusquedaPorIngreso(string codigo, DateTime? busqueda)
         {
-            return await _productos.Con_ProductosPorIngreso(codigo);
+            return await _productos.Con_ProductosPorIngreso(codigo, busqueda);
         }
         public async Task<(bool estado, string mensaje, List<Categorias> lista)> ObtenerCategoriasCliente()
         {

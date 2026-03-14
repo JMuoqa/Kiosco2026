@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -25,13 +26,19 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
             EditarLote = new ComandoModeloDeVista(EjecutarEditarLote);
             CargarDatosLote = new ComandoModeloDeVista(EjecutarCargarDatosLote);
+            BuscarProductos = new ComandoModeloDeVista(EjecutarBusquedaLotes);
             _pr = pr;
             Producto = new Productos("-");
             _adminProductos = new AdminProductos();
             ColoresEntradas = new ColoresProductos();
+            tiempo = new System.Timers.Timer();
+            tiempo.Elapsed += ResetearMensaje;
+            tiempo.Enabled = false;
+            tiempo.AutoReset = true;
             EjecutarRestablecerEntradas();
         }
         #region Propiedades
+        private System.Timers.Timer tiempo;
         #region Columnas privadas
         private double _eColumna_uno;
         private double _eColumna_dos;
@@ -202,13 +209,33 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private string _compra;
         private string _cantidad;
         private string _nombre;
-        private DateTime _ingreso;
-        private DateTime _vencimiento;
+        private string _mensaje;
+        private Brush _colorMensaje;
+        private DateTime? _ingreso;
+        private DateTime? _vencimiento;
         private ColoresProductos _coloresEntradas;
-        private DateTime _busquedaIngreso;
+        private DateTime? _busquedaIngreso;
         private AdminProductos _adminProductos;
         private ObservableCollection<Productos> _listaProductos;
-        public DateTime Ingreso
+        public Brush ColorMensaje
+        {
+            get => _colorMensaje;
+            set
+            {
+                _colorMensaje = value;
+                OnPropertyChanged(nameof(ColorMensaje));
+            }
+        }
+        public string Mensaje
+        {
+            get => _mensaje;
+            set
+            {
+                _mensaje = value;
+                OnPropertyChanged(nameof(Mensaje));
+            }
+        }
+        public DateTime? Ingreso
         {
             get => _ingreso;
             set
@@ -217,7 +244,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 OnPropertyChanged(nameof(Ingreso));
             }
         }
-        public DateTime Vencimiento
+        public DateTime? Vencimiento
         {
             get => _vencimiento;
             set
@@ -262,7 +289,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 OnPropertyChanged(nameof(ListaProductos));
             }
         }
-        public DateTime BusquedaIngreso
+        public DateTime? BusquedaIngreso
         {
             get => _busquedaIngreso;
             set
@@ -301,6 +328,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         #endregion
         #region Comandos
         public ICommand ObtenerProductos { get; }
+        public ICommand BuscarProductos { get; }
         public ICommand EditarLote { get; }
         public ICommand CargarDatosLote { get; }
         public ICommand ActualizarAnchoActual { get; }
@@ -327,28 +355,64 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private async Task EjecutarObtenerProductos(object obj)
         {
-            var res = await _adminProductos.BusquedaPorIngreso(_pr.Codigo);
-            ListaProductos = new ObservableCollection<Productos>(res.lista);
+            try
+            {
+                var res = await _adminProductos.BusquedaPorIngreso(_pr.Codigo, null);
+                ListaProductos = new ObservableCollection<Productos>(res.lista);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        }
+        private async Task EjecutarBusquedaLotes(object obj)
+        {
+            try
+            {
+                var res = await _adminProductos.BusquedaPorIngreso(_pr.Codigo, BusquedaIngreso);
+                ListaProductos = new ObservableCollection<Productos>(res.lista);
+            }
+            catch (Exception ex) 
+            {
+                Debug.WriteLine(ex.Message);
+            }
         }
         private async Task EjecutarEditarLote(object obj)
         {
-            if (Producto.ID < 1)
-                throw new Exception("No hay ningun lote seleccionado");
-            int cantidad;
-            if (!int.TryParse(Cantidad, out cantidad))
-                throw new Exception("El campo 'cantidad' no es un numero");
-            Productos nuevoProducto = new Productos
+            try
             {
-                Nombre = this.Nombre,
-                Cantidad = cantidad,
-                Compra = this.Compra,
-                Venta = this.Venta,
-                Vencimiento = this.Vencimiento,
-                Ingreso = this.Ingreso,
-                ID = this.Producto.ID,
-            };
-            var res = await _adminProductos.EditarLote(nuevoProducto);
-            Debug.WriteLine(res);
+                if (Producto.ID < 1)
+                    throw new Exception("No hay ningun lote seleccionado");
+                int cantidad;
+                if (!int.TryParse(Cantidad, out cantidad))
+                    throw new Exception("El campo 'cantidad' no es un numero");
+                Productos nuevoProducto = new Productos
+                {
+                    Nombre = this.Nombre,
+                    Cantidad = cantidad,
+                    Compra = this.Compra,
+                    Venta = this.Venta,
+                    Vencimiento = this.Vencimiento ?? new DateTime(),
+                    Ingreso = this.Ingreso ?? new DateTime(),
+                    ID = this.Producto.ID,
+                };
+                var res = await _adminProductos.EditarLote(nuevoProducto);
+                ColorMensaje = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#009933"));
+                if (!res.estado)
+                    ColorMensaje = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#990000"));
+                Mensaje = res.menasje;
+                EjecutarObtenerProductos(null);
+                EjecutarRestablecerEntradas();
+            }catch (Exception ex)
+            {
+                ColorMensaje = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#990000"));
+                Mensaje = ex.Message;
+            }
+            finally
+            {
+                tiempo.Interval = 10000;
+                tiempo.Enabled = true;
+            }
         }
         private async Task EjecutarActualizarAnchoActual(object arg)
         {
@@ -417,10 +481,18 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             Compra = "Costo de compra*";
             Venta = "Precio de venta*";
             Cantidad = "Cantidad*";
+            Ingreso = null;
+            Vencimiento = null;
+            BusquedaIngreso = null;
             ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
             ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
             ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
             ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+        }
+        private void ResetearMensaje(object source, ElapsedEventArgs e)
+        {
+            tiempo.Enabled = false;
+            Mensaje = "";
         }
         #endregion
     }
