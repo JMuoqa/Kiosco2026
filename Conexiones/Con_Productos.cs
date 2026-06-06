@@ -332,6 +332,7 @@ namespace Conexiones
                 }
             }
         }
+        //Puede que esta funcion haga lo mismo que la de obtener ultimo lote por codigo
         public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_BusquedaProductoPorCodigo(string codigo)
         {
             using (var cliente = new HttpClient())
@@ -365,6 +366,41 @@ namespace Conexiones
                     Debug.WriteLine(ex.Message);
                     return (false, ex.Message, new List<Productos>());
                 } 
+            }
+        }
+        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_ObtenerUltLotePorCodigo(string codigo)
+        {
+            using (var cliente = new HttpClient())
+            {
+                try
+                {
+                    string token = ObtenerTokenJWT();
+                    var respuesta = await cliente.GetAsync($"https://muoqa.com/cliente-kiosco2026/obtener-ultimo-lote?codigo={codigo}&token={token}");
+                    if(respuesta.IsSuccessStatusCode)
+                    {
+                        string resultado = await respuesta.Content.ReadAsStringAsync();
+                        var datos = JsonSerializer.Deserialize<ResProductosDos>(resultado);
+                        List<Categorias> listaCompleta = await OrganizarCategorias();
+                        for (int i = 0; i < datos.Productos.Count; i++)
+                        {
+                            for (int j = 0; j < listaCompleta.Count; j++)
+                            {
+                                if (listaCompleta[j].ID == datos.Productos[i].IDCategoria)
+                                {
+                                    datos.Productos[i].Categoria = listaCompleta[j].Nombre;
+                                    break;
+                                }
+                            }
+                        }
+                        return (datos.estado, datos.mensaje, datos.Productos);
+                    }
+                    return (false, "Hubo un error en la respuesta", new List<Productos>());
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    return (false, ex.Message, new List<Productos>());
+                }
             }
         }
         public string ObtenerTokenJWT()

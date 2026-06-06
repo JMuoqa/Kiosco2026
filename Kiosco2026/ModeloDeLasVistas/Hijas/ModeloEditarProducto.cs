@@ -47,9 +47,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             Busqueda = "Buscar por nombre";
         }
         #region Propiedades
-
         private System.Timers.Timer tiempo;
-        
         #region Columnas privadas
         private double _eColumna_uno;
         private double _eColumna_dos;

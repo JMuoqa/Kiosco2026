@@ -1,0 +1,30 @@
+﻿<Window x:Class="Kiosco2026.Vistas.VENTAS.FinalizarVenta"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Kiosco2026.Vistas.VENTAS"
+        mc:Ignorable="d"
+        Title="FinalizarVenta" Height="160" Width="900">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0">
+            <TextBox Style="{StaticResource entrada_form}" Grid.Column="0"></TextBox>
+        </StackPanel>
+        <StackPanel Grid.Column="1">
+            <RadioButton Style="{StaticResource boton_buscar}">
+                <TextBlock Style="{StaticResource texto_botones_uno}">
+                    Pago Total
+                </TextBlock>
+            </RadioButton>
+            <RadioButton Style="{StaticResource boton_confirmar}">
+                <TextBlock Style="{StaticResource texto_botones_uno}">
+                    Guardar
+                </TextBlock>
+            </RadioButton>
+        </StackPanel>
+    </Grid>
+</Window>

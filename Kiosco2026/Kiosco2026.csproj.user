@@ -2,19 +2,25 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
-    <Compile Update="Vistas\AdministrarCategorias.xaml.cs">
+    <Compile Update="Vistas\STOCK\AdministrarCategorias.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Vistas\AgregarCategoria.xaml.cs">
+    <Compile Update="Vistas\STOCK\AgregarCategoria.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Vistas\AnadirProducto.xaml.cs">
+    <Compile Update="Vistas\STOCK\AnadirProducto.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Vistas\EditarLoteProducto.xaml.cs">
+    <Compile Update="Vistas\STOCK\EditarLoteProducto.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Vistas\EditarProductos.xaml.cs">
+    <Compile Update="Vistas\STOCK\EditarProductos.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Vistas\VENTAS\FinalizarVenta.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Vistas\VENTAS\VentasPrincipal.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

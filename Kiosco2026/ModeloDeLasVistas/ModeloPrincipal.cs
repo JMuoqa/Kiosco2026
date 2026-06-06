@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ObjectiveC;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace Kiosco2026.ModeloDeLasVistas
             MostrarAdministrarCategorias = new ComandoModeloDeVista(EjecutarMostrarAdministrarCategorias);
             MostrarEdicionProducto = new ComandoModeloDeVista(EjecutarMostrarEdicionProducto);
             IniciarSession = new ComandoModeloDeVista(EjecutarIniciarSession);
+            MostrarVentaPrincipal = new ComandoModeloDeVista(EjecutarMostrarVentaPrincipal);
             _aut = new AdminAut();
             EjecutarIniciarSession(null);
         }
@@ -50,6 +52,13 @@ namespace Kiosco2026.ModeloDeLasVistas
         public ICommand MostrarEdicionProducto { get; }
         public ICommand MostrarAdministrarCategorias { get; }
         public ICommand IniciarSession { get; }
+        public ICommand MostrarVentaPrincipal { get; }
+        private async Task EjecutarMostrarVentaPrincipal(object arg)
+        {
+            //El nombre del modelo esta mal "redactado" seria la ventana principal de la sección ventas
+            VistaHijaActual = new ModeloVentasPrincipales();
+            NombreVentana = "Ventas | Principal";
+        }
         private async Task EjecutarMostrarVistaAdicionProducto(object arg)
         {
             VistaHijaActual = new ModeloAnadirProducto();
@@ -76,7 +85,7 @@ namespace Kiosco2026.ModeloDeLasVistas
             string codigo = res.datosUsuario;
             bool tarea = await ActualizarCodigo(codigo);
             if (tarea)
-                EjecutarMostrarVistaAdicionProducto(null);
+                EjecutarMostrarVentaPrincipal(null);
         }
         private async Task<bool> ActualizarCodigo(string codigoNuevo)
         {

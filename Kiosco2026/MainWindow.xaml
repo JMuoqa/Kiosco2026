@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:Kiosco2026"
         xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
         xmlns:modeloHijas="clr-namespace:Kiosco2026.ModeloDeLasVistas.Hijas"
-        xmlns:vistas="clr-namespace:Kiosco2026.Vistas"
+        xmlns:vistasStok="clr-namespace:Kiosco2026.Vistas"
+        xmlns:vistasVentas="clr-namespace:Kiosco2026.Vistas.VENTAS"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Background="Transparent"
@@ -14,13 +15,16 @@
         Title="Kiosco" Height="900" Width="1440">
     <Window.Resources>
         <DataTemplate DataType="{x:Type modeloHijas:ModeloAnadirProducto}">
-            <vistas:AnadirProducto/>
+            <vistasStok:AnadirProducto/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type modeloHijas:ModeloEditarProducto}">
-            <vistas:EditarProductos/>
+            <vistasStok:EditarProductos/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type modeloHijas:ModeloAdministrarCategorias}">
-            <vistas:AdministrarCategorias/>
+            <vistasStok:AdministrarCategorias/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type modeloHijas:ModeloVentasPrincipales}">
+            <vistasVentas:VentasPrincipal/>
         </DataTemplate>
     </Window.Resources>
     <Grid x:Name="ContenidoPrincipal" Background="#E9E9E9">
@@ -35,11 +39,11 @@
             </Grid.ColumnDefinitions>
             <Border Grid.Column="0" Background="#FFFFFF" CornerRadius="0, 20, 0 ,0">
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Style="{StaticResource titulosNav}">VENTAS</TextBlock>
-                    <RadioButton Style="{StaticResource botones_nav}">
+                    <TextBlock Style="{StaticResource titulosNav}">PUNTO DE VENTA</TextBlock>
+                    <RadioButton Style="{StaticResource botones_nav}" Command="{Binding MostrarVentaPrincipal}">
                         <StackPanel Orientation="Horizontal">
                             <fa:IconImage Icon="DollarSign" Style="{StaticResource iconos_menu}"/>
-                            <TextBlock Style="{StaticResource texto_botones_nav}">Registrar venta</TextBlock>
+                            <TextBlock Style="{StaticResource texto_botones_nav}">Principal</TextBlock>
                         </StackPanel>
                     </RadioButton>
                     <RadioButton Style="{StaticResource botones_nav}">
@@ -89,37 +93,6 @@
                             </Grid.ColumnDefinitions>
                             <TextBlock FontSize="22" FontWeight="Bold" FontFamily="Roboto Flex" VerticalAlignment="Center"
                                        Text="{Binding NombreVentana}"></TextBlock>
-                            <Button Grid.Column="1">
-                                <Button.Style>
-                                    <Style TargetType="Button">
-                                        <Setter Property="Background" Value="Transparent"/>
-                                        <Setter Property="BorderThickness" Value="0"/>
-                                        <Setter Property="Width" Value="40"/>
-                                        <Setter Property="Height" Value="40"/>
-                                        <Setter Property="Cursor" Value="Hand"/>
-                                        <Style.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#BEE6FD"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                                <Button.Template>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border Background="{TemplateBinding Background}"
-                                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                                    CornerRadius="20">
-                                            <ContentPresenter 
-                                                    RecognizesAccessKey="True"
-                                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                    Margin="{TemplateBinding Padding}" />
-                                        </Border>
-                                    </ControlTemplate>
-                                </Button.Template>
-                                <fa:IconImage  Icon="CaretLeft" Width="15" Margin="0, 0, 5, 0"/>
-                            </Button>
                         </Grid>
                     </Border>
                     <Border Grid.Column="1" CornerRadius="20" Background="#FFFFFF" Margin="15, 0, 30, 0">
@@ -132,8 +105,9 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="40"/>
                                 </Grid.ColumnDefinitions>
-                                <Button Grid.Column="1">
+                                <Button Grid.Column="2">
                                     <Button.Style>
                                         <Style TargetType="Button">
                                             <Setter Property="Background" Value="Transparent"/>
@@ -163,6 +137,37 @@
                                         </ControlTemplate>
                                     </Button.Template>
                                     <fa:IconImage  Icon="Gear" Width="20"/>
+                                </Button>
+                                <Button Grid.Column="1">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Width" Value="40"/>
+                                            <Setter Property="Height" Value="40"/>
+                                            <Setter Property="Cursor" Value="Hand"/>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#BEE6FD"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    CornerRadius="20">
+                                                <ContentPresenter 
+                                                    RecognizesAccessKey="True"
+                                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                    Margin="{TemplateBinding Padding}" />
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                    <fa:IconImage  Icon="Print" Width="20"/>
                                 </Button>
                             </Grid>
                         </Grid>

@@ -13,6 +13,7 @@ namespace Dominio
         {
             return await _productos.Con_ObtenerCategoriasGenerales();
         }
+        
         public async Task<(bool estado, string mensaje)> CargarProducto(ProductosDto productoDto)
         {
             double precioVenta;
@@ -75,6 +76,10 @@ namespace Dominio
         public async Task<(bool estado, string mensaje, List<Productos> lista)> BusquedaProductoPorCodigo(string codigo)
         {
             return await _productos.Con_BusquedaProductoPorCodigo(codigo);
+        }
+        public async Task<(bool estado, string mensaje, List<Productos> lista)> ObtenerUltLotePorCodigo(string codigo)
+        {
+            return await _productos.Con_ObtenerUltLotePorCodigo(codigo);
         }
         public async Task<(bool estado, string mensaje, List<Categorias> lista)> BusquedaCategorias(string busqueda) 
         {

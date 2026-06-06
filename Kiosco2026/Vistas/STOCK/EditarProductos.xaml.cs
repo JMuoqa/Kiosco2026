@@ -73,7 +73,6 @@ namespace Kiosco2026.Vistas
             Productos pr = btn.Tag as Productos;
             _prSelecionado = pr;
         }
-
         private void cmb_categorias_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             if ((e.OriginalSource is TextBox || e.OriginalSource is Border) || e.OriginalSource is TextBlock)
