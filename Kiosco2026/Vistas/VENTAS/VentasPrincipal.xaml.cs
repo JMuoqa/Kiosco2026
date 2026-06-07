@@ -40,5 +40,12 @@ namespace Kiosco2026.Vistas.VENTAS
             if (!char.IsNumber(e.Text[0]))
                 e.Handled = true;
         }
+
+        private void RadioButton_Click(object sender, RoutedEventArgs e)
+        {
+            FinalizarVenta window = new FinalizarVenta();
+            window.Owner = Application.Current.MainWindow;
+            window.Show();
+        }
     }
 }

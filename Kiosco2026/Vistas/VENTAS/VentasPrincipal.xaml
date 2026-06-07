@@ -181,7 +181,7 @@
                             <ComboBoxItem Content="Debito" Foreground="#000000"/>
                         </ComboBox>
                         <RadioButton Style="{StaticResource boton_confirmar}" Margin="0, 5"
-                                     Command="{Binding RegistrarVenta}">
+                                     Click="RadioButton_Click">
                             <TextBlock Style="{StaticResource texto_botones_uno}"> Vender </TextBlock>
                         </RadioButton>
                     </StackPanel>
