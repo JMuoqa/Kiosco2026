@@ -2,7 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Style x:Key="boton_buscar" TargetType="RadioButton">
         <Setter Property="Background" Value="#E9E9E9"/>
-        <!--#ff9500-->
         <Setter Property="Height" Value="39"/>
         <Setter Property="Margin" Value="10"/>
         <Setter Property="Cursor" Value="Hand"/>
@@ -16,8 +15,16 @@
                         </ContentPresenter>
                     </Border>
                 </ControlTemplate>
-            </Setter.Value>
+            </Setter.Value> 
         </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Background" Value="#D6D6D6"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="true">
+                <Setter Property="Background" Value="#BFBFBF"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
     <Style x:Key="boton_confirmar" TargetType="RadioButton">
         <Setter Property="Background" Value="#009933"/>
@@ -36,6 +43,14 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Background" Value="#007A29"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="true">
+                <Setter Property="Background" Value="#005C1F"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
     <Style x:Key="boton_cancelar" TargetType="RadioButton">
         <Setter Property="Background" Value="#990000"/>
@@ -54,6 +69,14 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Background" Value="#B30000"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="true">
+                <Setter Property="Background" Value="#660000"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
     <Style x:Key="boton_neutral" TargetType="RadioButton">
         <Setter Property="Background" Value="#ff9500"/>
@@ -72,6 +95,14 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter Property="Background" Value="#FFAA33"/>
+            </Trigger>
+            <Trigger Property="IsPressed" Value="true">
+                <Setter Property="Background" Value="#CC7700"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
     <Style x:Key="boton_transparente" TargetType="RadioButton">
         <Setter Property="Background" Value="Transparent"/>

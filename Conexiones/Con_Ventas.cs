@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Conexiones
 {
+    /*
     public class Con_Ventas
     {
         public async Task<(bool estado, string mensaje)> Con_RegistrarVenta(List<Productos> pr, Ventas venta)
@@ -51,5 +52,5 @@ namespace Conexiones
             Configuracion configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             return configuracion.CodigoSeguridad;
         }
-    }
+    }*/
 }
