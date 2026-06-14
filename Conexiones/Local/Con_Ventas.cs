@@ -1,4 +1,5 @@
 ﻿using Entidades;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,34 +10,27 @@ using System.Threading.Tasks;
 
 namespace Conexiones
 {
-    public class Con_Ventas
+    public class Con_Ventas : ConexionMySQL
     {
         public async Task<(bool estado, string mensaje)> Con_RegistrarVenta(List<Productos> pr, Ventas venta)
         {
-            using (var cliente = new HttpClient()) 
+            using (var conexion = new MySqlConnection(cadenaDeConexion))
             {
                 try
                 {
-                    var json = JsonSerializer.Serialize(new
-                    {
-                        listaItems = pr,
-                        cantidadTotal = venta.CantidadProductos,
-                        precioTotal = venta.Total,
-                        formaPago = venta.FormaDePago,
-                        fecha = venta.Fecha,
-                        token = ObtenerTokenJWT()
-                    });
-                    var contenido = new StringContent(json, Encoding.UTF8, "application/json");
-                    var respuesta = await cliente.PostAsync("https://muoqa.com/cliente-kiosco2026/registrar-venta", contenido);
-                    if (respuesta.IsSuccessStatusCode)
-                    {
-                        string resultado = await respuesta.Content.ReadAsStringAsync();
-                        var datos = JsonSerializer.Deserialize<ResProductos>(resultado);
-                        return (datos.estado, datos.mensaje);
-                    }
-                    return (false, "Algo salio mal");
+                    string registrarUsuario = "INSERT INTO ventas (fecha, items, cantidad_total_productos, forma_pago, total, id_usuario) VALUES( @fecha, @items, @cantidad_total, @forma_pago, @total);";
+                    MySqlCommand cmd = new MySqlCommand(registrarUsuario, conexion);
+                    cmd.Parameters.AddWithValue("@fecha", venta.Fecha);
+                    cmd.Parameters.AddWithValue("@items", pr.Count);
+                    cmd.Parameters.AddWithValue("@cantidad_total", venta.CantidadProductos);
+                    cmd.Parameters.AddWithValue("@forma_pago", venta.FormaDePago);
+                    cmd.Parameters.AddWithValue("@total", venta.Total);
+                    conexion.Open(); 
+                    var resultado = cmd.ExecuteNonQuery();
+                    Debug.WriteLine(resultado);
+                    return (true, "Pruebas");
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
 
                     Debug.WriteLine(ex.Message);

@@ -1,4 +1,5 @@
 ﻿using Entidades;
+using MySql.Data.MySqlClient;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using System.Text;
@@ -6,36 +7,42 @@ using System.Text.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace Conexiones
 {
-    public class Con_Productos
+    public class Con_Productos : ConexionMySQL
     {
+        #region Con_CargarProducto
         public async Task<(bool estado, string mensaje)> Con_CargarProducto(Productos producto)
         {
-            using (var cliente = new HttpClient()) 
+            using(var con = new MySqlConnection(cadenaDeConexion))
             {
                 try
                 {
-                    var json = JsonSerializer.Serialize(new
-                    {
-                        nombre = producto.Nombre,
-                        categoria = producto.Categoria,
-                        codigo = producto.Codigo,
-                        venta = producto.Venta,
-                        compra = producto.Compra,
-                        cantidad = producto.Cantidad,
-                        proveedor = producto.Proveedor,
-                        ingreso = producto.Ingreso,
-                        vencimiento = producto.Vencimiento,
-                        token = ObtenerTokenJWT()
-                    });
-                    var contenido = new StringContent(json, Encoding.UTF8, "application/json");
-                    var respuesta = await cliente.PostAsync("https://muoqa.com/cliente-kiosco2026/cargar-producto", contenido);
-                    if (respuesta.IsSuccessStatusCode)
-                    {
-                        string resultado = await respuesta.Content.ReadAsStringAsync();
-                        var datos = JsonSerializer.Deserialize<ResProductos>(resultado);
-                        return (datos.estado, datos.mensaje);
-                    }
-                    return (false, "Algo salio mal");
+                    con.Open();
+                    int idCategoriaExistente = await Con_ObtenerCategoriaProducto(con, producto.Codigo);
+                    int idCategoriaFinal = await Con_ObtenerIDCategoria(con, producto.Categoria);
+                    if (idCategoriaExistente > 0  && idCategoriaExistente != idCategoriaFinal)
+                        return (estado: false, mensaje: "El producto ya está registrado y"+
+                            " la categoría que intentas asignar no coincide con la categoría"+
+                            " existente. Para continuar, puedes cambiar la categoría del"+
+                            " producto que estás intentando cargar o actualizar la categoría del producto ya registrado.");
+                    int IDCategoria = idCategoriaFinal;
+                    string insertarProductos = "INSERT INTO Productos (Nombre, IDCategoria, Codigo, Venta, Compra, Cantidad, Proveedor, Mostrar, Ingreso, Vencimiento)"+
+                        " VALUES(@nombre, @categoria, @codigo, @venta, @compra, @cantidad, @proveedor, @mostrar, @ingreso, @vencimiento);";
+                    MySqlCommand cmd = new MySqlCommand(insertarProductos, con);
+                    cmd.Parameters.AddWithValue("@nombre", producto.Nombre);
+                    cmd.Parameters.AddWithValue("@categoria", producto.Categoria);
+                    cmd.Parameters.AddWithValue("@categoria", producto.Categoria);
+                    cmd.Parameters.AddWithValue("@codigo", producto.Codigo);
+                    cmd.Parameters.AddWithValue("@venta", producto.Venta);
+                    cmd.Parameters.AddWithValue("@compra", producto.Compra);
+                    cmd.Parameters.AddWithValue("@cantidad", producto.Cantidad);
+                    cmd.Parameters.AddWithValue("@proveedor", producto.Proveedor);
+                    cmd.Parameters.AddWithValue("@mostrar", producto.Mostrar);
+                    cmd.Parameters.AddWithValue("@ingreso", producto.Ingreso);
+                    cmd.Parameters.AddWithValue("@vencimiento", producto.Vencimiento);
+                    var resultado = cmd.ExecuteNonQuery();
+                    Debug.WriteLine(resultado);
+                    return (true, "Pruebas");
+
                 }
                 catch (Exception ex)
                 {
@@ -44,33 +51,61 @@ namespace Conexiones
                 }
             }
         }
+        private async Task<int> Con_ObtenerIDCategoria(MySqlConnection con, string nombreCategoria)
+        {
+            string obtenerID = "SELECT ID FROM Categorias WHERE Nombre = @nombre";
+            MySqlCommand cmd = new MySqlCommand(obtenerID, con);
+            cmd.Parameters.AddWithValue("@nombre", nombreCategoria);
+            int n = -1;
+            using(MySqlDataReader datos = cmd.ExecuteReader())
+            {
+                if (datos.Read())
+                {
+                    n = Convert.ToInt32(datos["ID"]);
+                }
+            }
+            return n;
+            
+        }
+        private async Task<int> Con_ObtenerCategoriaProducto(MySqlConnection con, string codigo)
+        {
+            string query = "SELECT IDCategoria FROM Productos WHERE Codigo = @codigo";
+            MySqlCommand cmd = new MySqlCommand(query, con);
+            cmd.Parameters.AddWithValue("@codigo", codigo);
+            int n = -1;
+            using (MySqlDataReader datos = cmd.ExecuteReader())
+            {
+                if (datos.Read())
+                {
+                    n = Convert.ToInt32(datos["IDCategoria"]);
+                }
+            }
+            return n;
+        }
+        #endregion
+        #region Con_EditarProductoPorCodigo
         public async Task<(bool estado, string mensaje)> Con_EditarProductoPorCodigo(Productos producto)
         {
-            using (var cliente = new HttpClient()) 
+            using (MySqlConnection con = new MySqlConnection(cadenaDeConexion))
             {
                 try
                 {
-                    var json = JsonSerializer.Serialize(new
-                    {
-                        nombre = producto.Nombre,
-                        categoria = producto.Categoria,
-                        compra = producto.Compra,
-                        codigo = producto.Codigo,
-                        venta = producto.Venta,
-                        mostrar = producto.Mostrar,
-                        idProducto = producto.ID,
-                        token = ObtenerTokenJWT()
-                    });
-                    var contenido = new StringContent(json, Encoding.UTF8, "application/json");
-                    var respuesta = await cliente.PutAsync("https://muoqa.com/cliente-kiosco2026/editar-producto", contenido);
-                    if (respuesta.IsSuccessStatusCode)
-                    {
-                        string resultado = await respuesta.Content.ReadAsStringAsync();
-                        var datos = JsonSerializer.Deserialize<ResProductos>(resultado);
-                        return (datos.estado, datos.mensaje);
-
-                    }
-                    return (false, "Algo salio mal");
+                    int idCategoriaFinal = await Con_ObtenerIDCategoria(con, producto.Categoria);
+                    string editarTodosLosLotes = "UPDATE Productos SET Nombre = @nombre, IDCategoria = @categoria WHERE Codigo = @codigo;";
+                    MySqlCommand cmd = new MySqlCommand(editarTodosLosLotes, con);
+                    cmd.Parameters.AddWithValue("@nombre", producto.Nombre);
+                    cmd.Parameters.AddWithValue("@categoria", producto.Categoria);
+                    cmd.Parameters.AddWithValue("@codigo", producto.Codigo);
+                    string editarProducto = "UPDATE Productos SET Compra = @compra, Venta = @venta, Mostrar = @mostrar WHERE ID = @id;";
+                    MySqlCommand cmd2 = new MySqlCommand(editarProducto, con);
+                    cmd2.Parameters.AddWithValue("@compra", producto.Compra);
+                    cmd2.Parameters.AddWithValue("@venta", producto.Venta);
+                    cmd2.Parameters.AddWithValue("@mostrar", producto.Mostrar);
+                    cmd2.Parameters.AddWithValue("@id", producto.ID);
+                    con.Open();
+                    var resultado = cmd.ExecuteNonQuery();
+                    var resultado2 = cmd2.ExecuteNonQuery();
+                    return (true, "Pruebas");
                 }
                 catch (Exception ex)
                 {
@@ -79,42 +114,52 @@ namespace Conexiones
                 }
             }
         }
+        #endregion
+        #region Con_EditarLote
         public async Task<(bool estado, string mensaje)> Con_EditarLote(Productos producto)
         {
-            using (var cliente = new HttpClient())
+            using (var con = new MySqlConnection(cadenaDeConexion))
             {
                 try
                 {
-                    var json = JsonSerializer.Serialize(new
-                    {
-                        nombre = producto.Nombre,
-                        compra = producto.Compra,
-                        venta = producto.Venta,
-                        cantidad = producto.Cantidad,
-                        ingreso = producto.Ingreso,
-                        vencimiento = producto.Vencimiento,
-                        idLote = producto.ID,
-                        token = ObtenerTokenJWT()
-                    });
-                    var contenido = new StringContent(json, Encoding.UTF8, "application/json");
-                    var respuesta = await cliente.PutAsync("https://muoqa.com/cliente-kiosco2026/editar-lote", contenido);
-                    if (respuesta.IsSuccessStatusCode)
-                    {
-                        string resultado = await respuesta.Content.ReadAsStringAsync();
-                        var datos = JsonSerializer.Deserialize<ResProductos>(resultado);
-                        return (datos.estado, datos.mensaje);
-                    }
-                    return (false, "Algo salio mal");
+
+                    string editarLote = "UPDATE Productos SET Nombre = @nombre, Compra = @compra, Venta = @venta, Cantidad = @cantidad, Ingreso = @ingreso,"+
+                        " Vencimiento = @vencimiento WHERE ID = @id;";
+                    MySqlCommand cmd = new MySqlCommand(editarLote, con);
+                    cmd.Parameters.AddWithValue("@nombre", producto.Nombre);
+                    cmd.Parameters.AddWithValue("@compra", producto.Compra);
+                    cmd.Parameters.AddWithValue("@venta", producto.Venta);
+                    cmd.Parameters.AddWithValue("@cantidad", producto.Cantidad);
+                    cmd.Parameters.AddWithValue("@ingreso", producto.Ingreso);
+                    cmd.Parameters.AddWithValue("@vencimiento", producto.Vencimiento);
+                    cmd.Parameters.AddWithValue("@id", producto.ID);
+                    con.Open();
+                    var resultado = cmd.ExecuteNonQuery();
+                    return (true, "Pruebas");
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
                     return (false, ex.Message);
                 }
             }
         }
+        #endregion
+        #region Con_CargarCategoria
         public async Task<(bool estado, string mensaje)> Con_CargarCategoria(Categorias categoria)
         {
+            using (var con = new MySqlConnection(cadenaDeConexion))
+            {
+                try
+                {
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    return (false, ex.Message);
+                }
+            }
             using (var cliente = new HttpClient())
             {
                 try
@@ -126,7 +171,7 @@ namespace Conexiones
                     });
                     var contenido = new StringContent(json, Encoding.UTF8, "application/json");
                     var respuesta = await cliente.PostAsync("https://muoqa.com/cliente-kiosco2026/cargar-categoria", contenido);
-                    if (respuesta.IsSuccessStatusCode) 
+                    if (respuesta.IsSuccessStatusCode)
                     {
                         string resultado = await respuesta.Content.ReadAsStringAsync();
                         var datos = JsonSerializer.Deserialize<ResProductos>(resultado);
@@ -141,6 +186,7 @@ namespace Conexiones
                 }
             }
         }
+        #endregion
         public async Task<(bool estado, string mensaje)> Con_EditarCategoria(Categorias categoria)
         {
             using (var cliente = new HttpClient())
