@@ -2,6 +2,7 @@
 using MySql.Data.MySqlClient;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Text.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -152,32 +153,13 @@ namespace Conexiones
             {
                 try
                 {
-
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                    return (false, ex.Message);
-                }
-            }
-            using (var cliente = new HttpClient())
-            {
-                try
-                {
-                    var json = JsonSerializer.Serialize(new
-                    {
-                        nombre = categoria.Nombre,
-                        token = ObtenerTokenJWT()
-                    });
-                    var contenido = new StringContent(json, Encoding.UTF8, "application/json");
-                    var respuesta = await cliente.PostAsync("https://muoqa.com/cliente-kiosco2026/cargar-categoria", contenido);
-                    if (respuesta.IsSuccessStatusCode)
-                    {
-                        string resultado = await respuesta.Content.ReadAsStringAsync();
-                        var datos = JsonSerializer.Deserialize<ResProductos>(resultado);
-                        return (datos.estado, datos.mensaje);
-                    }
-                    return (false, "Algo salio mal");
+                    con.Open();    
+                    string cargarCategoria = "INSERT INTO Categorias (Nombre, Mostrar) VALUES(@nombre, \"si\");";
+                    MySqlCommand cmd = new MySqlCommand(cargarCategoria, con);
+                    cmd.Parameters.AddWithValue("@nombre", categoria.Nombre);
+                    var resultado = cmd.ExecuteNonQuery();
+                    Debug.WriteLine(resultado);
+                    return (true, "Pruebas");
                 }
                 catch (Exception ex)
                 {
@@ -189,73 +171,49 @@ namespace Conexiones
         #endregion
         public async Task<(bool estado, string mensaje)> Con_EditarCategoria(Categorias categoria)
         {
-            using (var cliente = new HttpClient())
+            using (var con = new MySqlConnection(cadenaDeConexion)) 
             {
                 try
                 {
-                    var json = JsonSerializer.Serialize(new
-                    {
-                        id = categoria.ID,
-                        nombre = categoria.Nombre,
-                        mostrar = categoria.Mostrar,
-                        token = ObtenerTokenJWT()
-                    });
-                    var contenido = new StringContent(json, Encoding.UTF8, "application/json");
-                    var respuesta = await cliente.PostAsync("https://muoqa.com/cliente-kiosco2026/editar-categoria", contenido);
-                    if (respuesta.IsSuccessStatusCode)
-                    {
-                        string resultado = await respuesta.Content.ReadAsStringAsync();
-                        Debug.WriteLine(resultado);
-                        var datos = JsonSerializer.Deserialize<ResProductos>(resultado);
-                        return (datos.estado, datos.mensaje);
-                    }
-                    return (false, "Algo salio mal");
+                    con.Open();
+                    string insertarCategoria = "UPDATE Categorias SET Nombre = @nombre, Mostrar = @mostrar WHERE ID = @id";
+                    MySqlCommand cmd = new MySqlCommand(insertarCategoria, con);
+                    cmd.Parameters.AddWithValue("@nombre", categoria.Nombre);
+                    cmd.Parameters.AddWithValue("@mostrar", categoria.Mostrar);
+                    cmd.Parameters.AddWithValue("@id", categoria.ID);
+                    var resultado = cmd.ExecuteNonQuery();
+                    Debug.WriteLine(resultado);
+                    return (true, "Pruebas");
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
                     return (false, ex.Message);
                 }
-            }  
+            }
         }
         public async Task<(bool estado, string mensaje, List<Categorias> lista)> Con_ObtenerCategoriasGenerales()
         {
-            using (var cliente = new HttpClient()) 
+            using (var con = new MySqlConnection(cadenaDeConexion))
             {
                 try
                 {
-                    string token = ObtenerTokenJWT();
-                    var respuesta = await cliente.GetAsync($"https://muoqa.com/cliente-kiosco2026/obtener-categorias?token={token}");
-                    if (respuesta.IsSuccessStatusCode) 
+                    con.Open();
+                    string obtenerCategorias = "SELECT ID, Nombre FROM Categorias WHERE AND Mostrar = \"si\"";
+                    MySqlCommand cmd = new MySqlCommand(obtenerCategorias, con);
+                    List<Categorias> categoriasObtenidas = new List<Categorias>();
+                    using (MySqlDataReader lector = cmd.ExecuteReader())
                     {
-                        string resultado = await respuesta.Content.ReadAsStringAsync();
-                        var datos = JsonSerializer.Deserialize<ResCategorias>(resultado);
-                        return (datos.estado, datos.mensaje, datos.Categorias);
+                        while (lector.Read())
+                        {
+                            categoriasObtenidas.Add(new Categorias
+                            {
+                                ID = lector.GetInt32("ID"),
+                                Nombre = lector.GetString("Nombre")
+                            });
+                        }
                     }
-                    return (false, "Hubo un error en la respuesta", new List<Categorias>());
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                    return (false, ex.Message, new List<Categorias>());
-                }
-            }
-        }
-        public async Task<(bool estado, string mensaje, List<Categorias> lista)> Con_ObtenerCategoriasClientes()
-        {
-            using (var cliente = new HttpClient()) 
-            {
-                try
-                {
-                    string token = ObtenerTokenJWT();
-                    var respuesta = await cliente.GetAsync($"https://muoqa.com/cliente-kiosco2026/obtener-categorias-clientes?token={token}");
-                    if (respuesta.IsSuccessStatusCode)
-                    {
-                        string resultado = await respuesta.Content.ReadAsStringAsync();
-                        var datos = JsonSerializer.Deserialize<ResCategorias>(resultado);
-                        return (datos.estado, datos.mensaje, datos.Categorias);
-                    }
-                    return (false, "Hubo un error en la respuesta", new List<Categorias>());
+                    return (true, "Pruebas", categoriasObtenidas);
                 }
                 catch (Exception ex)
                 {
@@ -266,21 +224,32 @@ namespace Conexiones
         }
         public async Task<(bool estado, string mensaje, List<Categorias> lista)> Con_BusquedaCategorias(string busqueda)
         {
-            using (var cliente = new HttpClient()) 
+            using (var con = new MySqlConnection(cadenaDeConexion))
             {
                 try
                 {
-                    Debug.WriteLine(busqueda);
-                    string token = ObtenerTokenJWT();
-                    var respuesta = await cliente.GetAsync($"https://muoqa.com/cliente-kiosco2026/busqueda-categorias?token={token}&busqueda={busqueda}");
-                    if (respuesta.IsSuccessStatusCode) 
+                    con.Open();
+                    if (!string.IsNullOrEmpty(busqueda))
+                        busqueda = $"%{busqueda}%";
+                    string obtenerCategorias = "SELECT ID, Nombre, Mostrar FROM Categorias WHERE (Nombre LIKE @nombre  OR  @nombre = \"\")";
+                    MySqlCommand cmd = new MySqlCommand(obtenerCategorias, con);
+                    cmd.Parameters.AddWithValue("@nombre", busqueda);
+                    List<Categorias> categoriasObtenidas = new List<Categorias>();
+                    using (MySqlDataReader lector = cmd.ExecuteReader())
                     {
-                        string resultado = await respuesta.Content.ReadAsStringAsync();
-                        var datos = JsonSerializer.Deserialize<ResCategorias>(resultado);
-                        return (datos.estado, datos.mensaje, datos.Categorias);
+                        while (lector.Read())
+                        {
+                            categoriasObtenidas.Add(new Categorias
+                            {
+                                ID = lector.GetInt32("ID"),
+                                Nombre = lector.GetString("Nombre"),
+                                Mostrar = lector.GetString("Mostrar")
+                            });
+                        }
                     }
-                    return (false, "Hubo un error en la respuesta", new List<Categorias>());
-                }catch(Exception ex)
+                    return (true, "Pruebas", categoriasObtenidas);
+                }
+                catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
                     return (false, ex.Message, new List<Categorias>());
@@ -289,6 +258,7 @@ namespace Conexiones
         }
         public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_BusquedaProductos(string busqueda)
         {
+
             using (var cliente = new HttpClient()) 
             {
                 try
@@ -327,9 +297,9 @@ namespace Conexiones
         private async Task<List<Categorias>> OrganizarCategorias()
         {
             var consultaCategorias = await Con_ObtenerCategoriasGenerales();
-            var consultaCategoriasClientes = await Con_ObtenerCategoriasClientes();
+            var consultaCategoriasClientes = new List<Categorias>();//await Con_ObtenerCategoriasClientes();
             List<Categorias> listaGeneral = consultaCategorias.lista;
-            List<Categorias> listaCliente = consultaCategoriasClientes.lista;
+            List<Categorias> listaCliente = consultaCategoriasClientes; //.lista;
             List<Categorias> listaCompleta = new List<Categorias>();
             for (int i = 0; i < listaGeneral.Count; i++)
             {

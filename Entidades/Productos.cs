@@ -82,7 +82,6 @@
     public class ProductosDto
     {
         public string ID { get; set; }
-        public string IDUsuario { get; set; }
         public string Nombre { get; set; }
         public string Categoria { get; set; }
         public string Codigo { get; set; }
@@ -102,7 +101,6 @@
             this.Nombre = cat;
         }
         public int ID { get; set; }
-        public int IDUsuario { get; set; }
         public string Nombre { get; set; }
         public string Mostrar { get; set; }
     }
