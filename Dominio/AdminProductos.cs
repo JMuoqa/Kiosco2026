@@ -9,11 +9,6 @@ namespace Dominio
     public class AdminProductos
     {
         private Con_Productos _productos = new Con_Productos();
-        public async Task<(bool estado, string mensaje, List<Categorias> lista)> ObtenerCategoriasGenerales()
-        {
-            return await _productos.Con_ObtenerCategoriasGenerales();
-        }
-        
         public async Task<(bool estado, string mensaje)> CargarProducto(ProductosDto productoDto)
         {
             double precioVenta;
@@ -73,29 +68,25 @@ namespace Dominio
             if (string.IsNullOrWhiteSpace(producto.Venta) || producto.Venta == "Precio de venta*")
                 throw new Exception("El campo 'Venta' esta vacio");
         }
-        public async Task<(bool estado, string mensaje, List<Productos> lista)> BusquedaProductoPorCodigo(string codigo)
+        public async Task<(bool estado, string mensaje, List<Productos> lista)> BusquedaProductoPorCodigoUltLote(string codigo)
         {
-            return await _productos.Con_BusquedaProductoPorCodigo(codigo);
-        }
-        public async Task<(bool estado, string mensaje, List<Productos> lista)> ObtenerUltLotePorCodigo(string codigo)
-        {
-            return await _productos.Con_ObtenerUltLotePorCodigo(codigo);
+            return await _productos.Con_BusquedaPorCodigoUltLote(codigo);
         }
         public async Task<(bool estado, string mensaje, List<Categorias> lista)> BusquedaCategorias(string busqueda) 
         {
             return await _productos.Con_BusquedaCategorias(busqueda);
         }
-        public async Task<(bool estado, string mensaje, List<Productos> lista)> BusquedaProductos(string busqueda)
+        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_ObtenerUltLotePorNombre(string busqueda)
         {
-            return await _productos.Con_BusquedaProductos(busqueda);
+            return await _productos.Con_ObtenerUltLotePorNombre(busqueda);
         }
         public async Task<(bool estado, string mensaje, List<Productos> lista)> BusquedaPorIngreso(string codigo, DateTime? busqueda)
         {
-            return await _productos.Con_ProductosPorIngreso(codigo, busqueda);
+            return await _productos.Con_LotesPorIngreso(codigo, busqueda);
         }
         public async Task<(bool estado, string mensaje, List<Categorias> lista)> ObtenerCategoriasCliente()
         {
-            return await _productos.Con_ObtenerCategoriasClientes();
+            return await _productos.Con_ObtenerCategorias();
         }
         public async Task<(bool estado, string mensaje)> CargarCategoria(Categorias categoria)
         {

@@ -31,7 +31,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
             LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
             EditarProducto = new ComandoModeloDeVista(EjecutarEditarProducto);
-            BusquedaPorCodigo = new ComandoModeloDeVista(EjecutarBusquedaPorCodigo);
+            BusquedaPorCodigo = new ComandoModeloDeVista(EjecutarBusquedaPorCodigoUltLote);
             ResetearBusqueda = new ComandoModeloDeVista(ResetearTabla);
             _adminProductos = new AdminProductos();
             ColoresEntradas = new ColoresProductos();
@@ -471,17 +471,17 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             ColoresEntradas.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
             if (Busqueda != "Buscar por nombre")
                 valor = Busqueda;
-            var res = await _adminProductos.BusquedaProductos(valor);
+            var res = await _adminProductos.Con_ObtenerUltLotePorNombre(valor);
             ListaProductos = new ObservableCollection<Productos>(res.lista);
         }
-        private async Task EjecutarBusquedaPorCodigo(object obj)
+        private async Task EjecutarBusquedaPorCodigoUltLote(object obj)
         {
             Busqueda = "Buscar por nombre";
             ColoresEntradas.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
             string valor = "";
             if(BusquedaCodigo != "Buscar por codigo")
                 valor = BusquedaCodigo;
-            var res = await _adminProductos.BusquedaProductoPorCodigo(valor);
+            var res = await _adminProductos.BusquedaProductoPorCodigoUltLote(valor);
             ListaProductos = new ObservableCollection<Productos>(res.lista);
         }
         private async Task EjecutarActualizarAnchoActual(object arg)

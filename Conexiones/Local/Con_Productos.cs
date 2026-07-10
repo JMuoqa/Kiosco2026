@@ -169,6 +169,7 @@ namespace Conexiones
             }
         }
         #endregion
+        #region Con_EditarCategoria
         public async Task<(bool estado, string mensaje)> Con_EditarCategoria(Categorias categoria)
         {
             using (var con = new MySqlConnection(cadenaDeConexion)) 
@@ -192,7 +193,9 @@ namespace Conexiones
                 }
             }
         }
-        public async Task<(bool estado, string mensaje, List<Categorias> lista)> Con_ObtenerCategoriasGenerales()
+        #endregion
+        #region Con_ObtenerCategoriasGenerales
+        public async Task<(bool estado, string mensaje, List<Categorias> lista)> Con_ObtenerCategorias()
         {
             using (var con = new MySqlConnection(cadenaDeConexion))
             {
@@ -222,6 +225,8 @@ namespace Conexiones
                 }
             }
         }
+        #endregion
+        #region Con_BusquedaCategorias
         public async Task<(bool estado, string mensaje, List<Categorias> lista)> Con_BusquedaCategorias(string busqueda)
         {
             using (var con = new MySqlConnection(cadenaDeConexion))
@@ -256,90 +261,52 @@ namespace Conexiones
                 }
             }
         }
-        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_BusquedaProductos(string busqueda)
+        #endregion
+        #region Con_BusquedaPorCodigoUltLote
+        //Esta es para obtener el ultimo producto cargado, buscandolo apartir del codigo de barras
+        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_BusquedaPorCodigoUltLote(string busqueda)
         {
-
-            using (var cliente = new HttpClient()) 
+            using (var con = new MySqlConnection())
             {
                 try
                 {
-                    string token = ObtenerTokenJWT();
-                    var respuesta = await cliente.GetAsync($"https://muoqa.com/cliente-kiosco2026/busqueda-productos?token={token}&busqueda={busqueda}");
-                    if (respuesta.IsSuccessStatusCode)
+                    if (string.IsNullOrWhiteSpace(busqueda))
+                        throw new Exception("El codigo no esta definido");
+                    con.Open();
+                    // Aca selecciono el ultimo producto cargado de tal codigo de barras
+                    string soli = "SELECT * FROM ( SELECT p.*, ROW_NUMBER() OVER (PARTITION BY Codigo ORDER BY Ingreso DESC) AS rn FROM Productos p) t WHERE rn = 1 AND Codigo = @codigo;";
+                    MySqlCommand cmd = new MySqlCommand(soli, con);
+                    cmd.Parameters.AddWithValue("@codigo", busqueda);
+                    List<Productos> productos = new List<Productos>();
+                    using (MySqlDataReader lector = cmd.ExecuteReader())
                     {
-                        string resultado = await respuesta.Content.ReadAsStringAsync();
-                        var datos = JsonSerializer.Deserialize<ResProductosDos>(resultado);
-                        //Aca se obtiene el nombre de la categoria ya que en la tabla productos solo guardamos el ID de la categoria
-                        List<Categorias> listaCompleta = await OrganizarCategorias();
-                        for(int i = 0; i < datos.Productos.Count; i++)
+                        while (lector.Read())
                         {
-                            for (int j = 0; j < listaCompleta.Count; j++)
+                            productos.Add(new Productos()
                             {
-                                if (listaCompleta[j].ID == datos.Productos[i].IDCategoria)
-                                {
-                                    datos.Productos[i].Categoria = listaCompleta[j].Nombre;
-                                    break;
-                                }
+                                ID = lector.GetInt32("ID"),
+                                Mostrar = lector.GetString("Mostrar"),
+                                Nombre = lector.GetString("Nombre"),
+                                Codigo = lector.GetString("Codigo"),
+                                Compra = lector.GetString("Compra"),
+                                Venta = lector.GetString("Venta"),
+                                Cantidad = lector.GetInt32("Cantidad"),
+                            });
+                        }
+                    }
+                    List<Categorias> listaCompleta = await OrganizarCategorias();
+                    for (int i = 0; i < productos.Count; i++)
+                    {
+                        for (int j = 0; j < listaCompleta.Count; j++)
+                        {
+                            if (listaCompleta[j].ID == productos[i].IDCategoria)
+                            {
+                                productos[i].Categoria = listaCompleta[j].Nombre;
+                                break;
                             }
                         }
-                        return (datos.estado, datos.mensaje, datos.Productos);
                     }
-                    return (false, "Hubo un error en la respuesta", new List<Productos>());
-                }
-                catch (Exception ex) 
-                {
-                    Debug.WriteLine(ex.Message);
-                    return (false, ex.Message, new List<Productos>());
-                }
-            }
-        }
-        //Esta sirve para resumir la busqueda de categorias
-        private async Task<List<Categorias>> OrganizarCategorias()
-        {
-            var consultaCategorias = await Con_ObtenerCategoriasGenerales();
-            var consultaCategoriasClientes = new List<Categorias>();//await Con_ObtenerCategoriasClientes();
-            List<Categorias> listaGeneral = consultaCategorias.lista;
-            List<Categorias> listaCliente = consultaCategoriasClientes; //.lista;
-            List<Categorias> listaCompleta = new List<Categorias>();
-            for (int i = 0; i < listaGeneral.Count; i++)
-            {
-                listaCompleta.Add(listaGeneral[i]);
-            }
-            for (int i = 0; i < listaCliente.Count; i++)
-            {
-                listaCompleta.Add(listaCliente[i]);
-            }
-            return listaCompleta;
-        }
-
-        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_ProductosPorIngreso(string codigo, DateTime? busqueda)
-        {
-            using (var cliente = new HttpClient())
-            {
-                try
-                {
-                    string token = ObtenerTokenJWT();
-                    var respuesta = await cliente.GetAsync($"https://muoqa.com/cliente-kiosco2026/obtener-productos-por-ingreso?token={token}&codigo={codigo}&busqueda={busqueda}");
-                    if (respuesta.IsSuccessStatusCode)
-                    {
-                        string resultado = await respuesta.Content.ReadAsStringAsync();
-                        var datos = JsonSerializer.Deserialize<ResProductosDos>(resultado);
-                        //Aca se obtiene el nombre de la categoria ya que en la tabla productos solo guardamos el ID de la categoria
-                        List<Categorias> listaCompleta = await OrganizarCategorias();
-                        for (int i = 0; i < datos.Productos.Count; i++)
-                        {
-                            for (int j = 0; j < listaCompleta.Count; j++)
-                            {
-                                if (listaCompleta[j].ID == datos.Productos[i].IDCategoria)
-                                {
-                                    datos.Productos[i].Categoria = listaCompleta[j].Nombre;
-                                    break;
-                                }
-                            }
-                        }
-                        return (datos.estado, datos.mensaje, datos.Productos);
-                    }
-                    return (false, "Hubo un error en la respuesta", new List<Productos>());
+                    return (true, "Pruebas", productos);
                 }
                 catch (Exception ex)
                 {
@@ -348,69 +315,51 @@ namespace Conexiones
                 }
             }
         }
-        //Puede que esta funcion haga lo mismo que la de obtener ultimo lote por codigo
-        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_BusquedaProductoPorCodigo(string codigo)
+        #endregion
+        #region Con_LotesPorIngreso
+        //Aca realizamos las busqueda por lotes
+        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_LotesPorIngreso(string codigo, DateTime? busqueda)
         {
-            using (var cliente = new HttpClient())
+            using (var con = new MySqlConnection(cadenaDeConexion))
             {
                 try
                 {
-                    string token = ObtenerTokenJWT();
-                    var respuesta = await cliente.GetAsync($"https://muoqa.com/cliente-kiosco2026/busqueda-por-codigo?codigo={codigo}&token={token}");
-                    if (respuesta.IsSuccessStatusCode)
+                    con.Open();
+                    string obtenerLotes = "SELECT * FROM Productos WHERE Codigo = @codigo AND (Ingreso >= @busqueda OR @busqueda IS NULL);";
+                    MySqlCommand cmd = new MySqlCommand(obtenerLotes, con);
+                    cmd.Parameters.AddWithValue("@codigo", codigo);
+                    cmd.Parameters.AddWithValue("@busqueda", busqueda); 
+                    List<Productos> productos = new List<Productos>();
+                    using (MySqlDataReader lector = cmd.ExecuteReader())
                     {
-                        string resultado = await respuesta.Content.ReadAsStringAsync();
-                        var datos = JsonSerializer.Deserialize<ResProductosDos>(resultado);
-                        List<Categorias> listaCompleta = await OrganizarCategorias();
-                        for (int i = 0; i < datos.Productos.Count; i++)
+                        while (lector.Read())
                         {
-                            for (int j = 0; j < listaCompleta.Count; j++)
+                            productos.Add(new Productos()
                             {
-                                if (listaCompleta[j].ID == datos.Productos[i].IDCategoria)
-                                {
-                                    datos.Productos[i].Categoria = listaCompleta[j].Nombre;
-                                    break;
-                                }
+                                ID = lector.GetInt32("ID"),
+                                Mostrar = lector.GetString("Mostrar"),
+                                Nombre = lector.GetString("Nombre"),
+                                Compra = lector.GetString("Compra"),
+                                Venta = lector.GetString("Venta"),
+                                Ingreso = lector.GetDateTime("Ingreso"),
+                                Vencimiento = lector.GetDateTime("Vencimiento"),
+                                Cantidad = lector.GetInt32("Cantidad"),
+                            });
+                        }
+                    }
+                    List<Categorias> listaCompleta = await OrganizarCategorias();
+                    for (int i = 0; i < productos.Count; i++)
+                    {
+                        for (int j = 0; j < listaCompleta.Count; j++)
+                        {
+                            if (listaCompleta[j].ID == productos[i].IDCategoria)
+                            {
+                                productos[i].Categoria = listaCompleta[j].Nombre;
+                                break;
                             }
                         }
-                        return (datos.estado, datos.mensaje, datos.Productos);
                     }
-                    return (false, "Hubo un error en la respuesta", new List<Productos>());
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                    return (false, ex.Message, new List<Productos>());
-                } 
-            }
-        }
-        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_ObtenerUltLotePorCodigo(string codigo)
-        {
-            using (var cliente = new HttpClient())
-            {
-                try
-                {
-                    string token = ObtenerTokenJWT();
-                    var respuesta = await cliente.GetAsync($"https://muoqa.com/cliente-kiosco2026/obtener-ultimo-lote?codigo={codigo}&token={token}");
-                    if(respuesta.IsSuccessStatusCode)
-                    {
-                        string resultado = await respuesta.Content.ReadAsStringAsync();
-                        var datos = JsonSerializer.Deserialize<ResProductosDos>(resultado);
-                        List<Categorias> listaCompleta = await OrganizarCategorias();
-                        for (int i = 0; i < datos.Productos.Count; i++)
-                        {
-                            for (int j = 0; j < listaCompleta.Count; j++)
-                            {
-                                if (listaCompleta[j].ID == datos.Productos[i].IDCategoria)
-                                {
-                                    datos.Productos[i].Categoria = listaCompleta[j].Nombre;
-                                    break;
-                                }
-                            }
-                        }
-                        return (datos.estado, datos.mensaje, datos.Productos);
-                    }
-                    return (false, "Hubo un error en la respuesta", new List<Productos>());
+                    return (true, "Pruebas", productos);
                 }
                 catch (Exception ex)
                 {
@@ -419,6 +368,65 @@ namespace Conexiones
                 }
             }
         }
+        #endregion
+        #region Con_ObtenerUltLotePorNombre
+        //Esta es para buscar productos para editar cuando se busca por nombre
+        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_ObtenerUltLotePorNombre(string nombre)
+        {
+            using (var con = new MySqlConnection(cadenaDeConexion))
+            {
+                try
+                {
+                    con.Open();
+                    string obtenerUltLote = "SELECT ult.ID, ult.IDUsuario, ult.IDCategoria, ult.Nombre, ult.Codigo, ult.Compra, ult.Venta," +
+                        " ult.Proveedor, ult.Mostrar, ult.Ingreso, ult.Vencimiento, tot.Cantidad" +
+                        " FROM ( SELECT ID, IDUsuario, IDCategoria, Nombre, Codigo, Compra, Venta, Proveedor, Mostrar, Ingreso, Vencimiento" +
+                        " FROM ( SELECT p.*, ROW_NUMBER() OVER (PARTITION BY Codigo ORDER BY Ingreso DESC) AS rn FROM Productos p ) t" +
+                        " WHERE rn = 1 AND (Nombre LIKE @nombre OR @nombre = \"\") )ult JOIN( SELECT Codigo, CAST(SUM(Cantidad) AS SIGNED) AS Cantidad" +
+                        " FROM Productos WHERE GROUP BY Codigo ) tot ON ult.Codigo = tot.Codigo;";
+                    MySqlCommand cmd = new MySqlCommand(obtenerUltLote, con);
+                    cmd.Parameters.AddWithValue("@nombre", nombre);
+                    List<Productos> productos = new List<Productos>();
+                    using (MySqlDataReader lector = cmd.ExecuteReader())
+                    {
+                        while (lector.Read())
+                        {
+                            productos.Add(new Productos()
+                            {
+                                ID = lector.GetInt32("ID"),
+                                Mostrar = lector.GetString("Mostrar"),
+                                Nombre = lector.GetString("Nombre"),
+                                Compra = lector.GetString("Compra"),
+                                Venta = lector.GetString("Venta"),
+                                Ingreso = lector.GetDateTime("Ingreso"),
+                                Vencimiento = lector.GetDateTime("Vencimiento"),
+                                Cantidad = lector.GetInt32("Cantidad"),
+                            });
+                        }
+                    }
+                    var listaCate = await Con_ObtenerCategorias();
+                    List<Categorias> listaCompleta = listaCate.lista;
+                    for (int i = 0; i < productos.Count; i++)
+                    {
+                        for (int j = 0; j < listaCompleta.Count; j++)
+                        {
+                            if (listaCompleta[j].ID == productos[i].IDCategoria)
+                            {
+                                productos[i].Categoria = listaCompleta[j].Nombre;
+                                break;
+                            }
+                        }
+                    }
+                    return (true, "Pruebas", productos);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    return (false, ex.Message, new List<Productos>());
+                }
+            }
+        }
+        #endregion
         public string ObtenerTokenJWT()
         {
             string ruta = "config.json";
