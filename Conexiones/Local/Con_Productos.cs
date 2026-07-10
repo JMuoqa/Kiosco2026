@@ -20,6 +20,7 @@ namespace Conexiones
                     con.Open();
                     int idCategoriaExistente = await Con_ObtenerCategoriaProducto(con, producto.Codigo);
                     int idCategoriaFinal = await Con_ObtenerIDCategoria(con, producto.Categoria);
+                    Debug.WriteLine(idCategoriaExistente + "-" + idCategoriaFinal);
                     if (idCategoriaExistente > 0  && idCategoriaExistente != idCategoriaFinal)
                         return (estado: false, mensaje: "El producto ya está registrado y"+
                             " la categoría que intentas asignar no coincide con la categoría"+
@@ -27,17 +28,15 @@ namespace Conexiones
                             " producto que estás intentando cargar o actualizar la categoría del producto ya registrado.");
                     int IDCategoria = idCategoriaFinal;
                     string insertarProductos = "INSERT INTO Productos (Nombre, IDCategoria, Codigo, Venta, Compra, Cantidad, Proveedor, Mostrar, Ingreso, Vencimiento)"+
-                        " VALUES(@nombre, @categoria, @codigo, @venta, @compra, @cantidad, @proveedor, @mostrar, @ingreso, @vencimiento);";
+                        " VALUES(@nombre, @categoria, @codigo, @venta, @compra, @cantidad, @proveedor, \"SI\", @ingreso, @vencimiento);";
                     MySqlCommand cmd = new MySqlCommand(insertarProductos, con);
                     cmd.Parameters.AddWithValue("@nombre", producto.Nombre);
-                    cmd.Parameters.AddWithValue("@categoria", producto.Categoria);
-                    cmd.Parameters.AddWithValue("@categoria", producto.Categoria);
+                    cmd.Parameters.AddWithValue("@categoria", IDCategoria);
                     cmd.Parameters.AddWithValue("@codigo", producto.Codigo);
                     cmd.Parameters.AddWithValue("@venta", producto.Venta);
                     cmd.Parameters.AddWithValue("@compra", producto.Compra);
                     cmd.Parameters.AddWithValue("@cantidad", producto.Cantidad);
                     cmd.Parameters.AddWithValue("@proveedor", producto.Proveedor);
-                    cmd.Parameters.AddWithValue("@mostrar", producto.Mostrar);
                     cmd.Parameters.AddWithValue("@ingreso", producto.Ingreso);
                     cmd.Parameters.AddWithValue("@vencimiento", producto.Vencimiento);
                     var resultado = cmd.ExecuteNonQuery();
@@ -194,7 +193,7 @@ namespace Conexiones
             }
         }
         #endregion
-        #region Con_ObtenerCategoriasGenerales
+        #region Con_ObtenerCategorias
         public async Task<(bool estado, string mensaje, List<Categorias> lista)> Con_ObtenerCategorias()
         {
             using (var con = new MySqlConnection(cadenaDeConexion))
@@ -202,7 +201,7 @@ namespace Conexiones
                 try
                 {
                     con.Open();
-                    string obtenerCategorias = "SELECT ID, Nombre FROM Categorias WHERE AND Mostrar = \"si\"";
+                    string obtenerCategorias = "SELECT ID, Nombre FROM Categorias WHERE Mostrar = \"si\"";
                     MySqlCommand cmd = new MySqlCommand(obtenerCategorias, con);
                     List<Categorias> categoriasObtenidas = new List<Categorias>();
                     using (MySqlDataReader lector = cmd.ExecuteReader())
@@ -266,7 +265,7 @@ namespace Conexiones
         //Esta es para obtener el ultimo producto cargado, buscandolo apartir del codigo de barras
         public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_BusquedaPorCodigoUltLote(string busqueda)
         {
-            using (var con = new MySqlConnection())
+            using (var con = new MySqlConnection(cadenaDeConexion))
             {
                 try
                 {
@@ -288,13 +287,14 @@ namespace Conexiones
                                 Mostrar = lector.GetString("Mostrar"),
                                 Nombre = lector.GetString("Nombre"),
                                 Codigo = lector.GetString("Codigo"),
-                                Compra = lector.GetString("Compra"),
-                                Venta = lector.GetString("Venta"),
+                                Compra = lector.GetDecimal("Compra").ToString(),
+                                Venta = lector.GetDecimal("Venta").ToString(),
                                 Cantidad = lector.GetInt32("Cantidad"),
                             });
                         }
                     }
-                    List<Categorias> listaCompleta = await OrganizarCategorias();
+                    var listaCate = await Con_ObtenerCategorias();
+                    List<Categorias> listaCompleta = listaCate.lista;
                     for (int i = 0; i < productos.Count; i++)
                     {
                         for (int j = 0; j < listaCompleta.Count; j++)
@@ -347,7 +347,8 @@ namespace Conexiones
                             });
                         }
                     }
-                    List<Categorias> listaCompleta = await OrganizarCategorias();
+                    var listaCate = await Con_ObtenerCategorias();
+                    List<Categorias> listaCompleta = listaCate.lista;
                     for (int i = 0; i < productos.Count; i++)
                     {
                         for (int j = 0; j < listaCompleta.Count; j++)
@@ -378,12 +379,12 @@ namespace Conexiones
                 try
                 {
                     con.Open();
-                    string obtenerUltLote = "SELECT ult.ID, ult.IDUsuario, ult.IDCategoria, ult.Nombre, ult.Codigo, ult.Compra, ult.Venta," +
+                    string obtenerUltLote = "SELECT ult.ID, ult.IDCategoria, ult.Nombre, ult.Codigo, ult.Compra, ult.Venta," +
                         " ult.Proveedor, ult.Mostrar, ult.Ingreso, ult.Vencimiento, tot.Cantidad" +
-                        " FROM ( SELECT ID, IDUsuario, IDCategoria, Nombre, Codigo, Compra, Venta, Proveedor, Mostrar, Ingreso, Vencimiento" +
+                        " FROM ( SELECT ID, IDCategoria, Nombre, Codigo, Compra, Venta, Proveedor, Mostrar, Ingreso, Vencimiento" +
                         " FROM ( SELECT p.*, ROW_NUMBER() OVER (PARTITION BY Codigo ORDER BY Ingreso DESC) AS rn FROM Productos p ) t" +
                         " WHERE rn = 1 AND (Nombre LIKE @nombre OR @nombre = \"\") )ult JOIN( SELECT Codigo, CAST(SUM(Cantidad) AS SIGNED) AS Cantidad" +
-                        " FROM Productos WHERE GROUP BY Codigo ) tot ON ult.Codigo = tot.Codigo;";
+                        " FROM Productos GROUP BY Codigo ) tot ON ult.Codigo = tot.Codigo;";
                     MySqlCommand cmd = new MySqlCommand(obtenerUltLote, con);
                     cmd.Parameters.AddWithValue("@nombre", nombre);
                     List<Productos> productos = new List<Productos>();
@@ -396,8 +397,8 @@ namespace Conexiones
                                 ID = lector.GetInt32("ID"),
                                 Mostrar = lector.GetString("Mostrar"),
                                 Nombre = lector.GetString("Nombre"),
-                                Compra = lector.GetString("Compra"),
-                                Venta = lector.GetString("Venta"),
+                                Compra = lector.GetDecimal("Compra").ToString(),
+                                Venta = lector.GetDecimal("Venta").ToString(),
                                 Ingreso = lector.GetDateTime("Ingreso"),
                                 Vencimiento = lector.GetDateTime("Vencimiento"),
                                 Cantidad = lector.GetInt32("Cantidad"),

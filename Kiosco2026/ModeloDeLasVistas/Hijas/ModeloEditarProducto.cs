@@ -472,6 +472,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             if (Busqueda != "Buscar por nombre")
                 valor = Busqueda;
             var res = await _adminProductos.Con_ObtenerUltLotePorNombre(valor);
+            Debug.WriteLine(res);
             ListaProductos = new ObservableCollection<Productos>(res.lista);
         }
         private async Task EjecutarBusquedaPorCodigoUltLote(object obj)
@@ -512,20 +513,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private async Task EjecutarObtenerCategoriasGenerales(object arg)
         {
-            var respuesta = await _adminProductos.ObtenerCategoriasGenerales();
-            var respuestaDos = await _adminProductos.ObtenerCategoriasCliente();
-            List<Categorias> listaGeneral = respuesta.lista;
-            List<Categorias> listaCliente = respuestaDos.lista;
-            List<Categorias> listaCompleta = new List<Categorias>();
-            for (int i = 0; i < listaGeneral.Count; i++)
-            {
-                listaCompleta.Add(listaGeneral[i]);
-            }
-            for (int i = 0; i < listaCliente.Count; i++)
-            {
-                listaCompleta.Add(listaCliente[i]);
-            }
-            ListaCategorias = new ObservableCollection<Categorias>(listaCompleta);
+            var respuesta = await _adminProductos.ObtenerCategoriasCliente();
+            List<Categorias> lista = respuesta.lista;
+            ListaCategorias = new ObservableCollection<Categorias>(lista);
         }
         private async Task EjecutarValoresPredeterminados(object arg)
         {

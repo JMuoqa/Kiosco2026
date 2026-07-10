@@ -76,6 +76,7 @@ namespace Kiosco2026.ModeloDeLasVistas
         }
         private async Task EjecutarIniciarSession(object arg)
         {
+            /*
             UsuarioMuoqa usr = new UsuarioMuoqa
             {
                 Usuario = "Muoqa",
@@ -83,8 +84,8 @@ namespace Kiosco2026.ModeloDeLasVistas
             };
             var res = await _aut.Con_IniciarSesion(usr);
             string codigo = res.datosUsuario;
-            bool tarea = await ActualizarCodigo(codigo);
-            if (tarea)
+            bool tarea = await ActualizarCodigo(codigo);*/
+            if (true)
                 EjecutarMostrarVentaPrincipal(null);
         }
         private async Task<bool> ActualizarCodigo(string codigoNuevo)

@@ -181,7 +181,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private async Task EjecutarObtenerCategoriasGenerales(object arg)
         {
             var respuesta = await _adminProductos.ObtenerCategoriasCliente();
-            List<Categorias> lista = respuesta.lista;
+            Debug.WriteLine(respuesta);
+            List<Categorias> lista = respuesta.lista; 
+            lista.Insert(0, new Categorias { Nombre = "Categoria*" });
             ListaCategorias = new ObservableCollection<Categorias>(lista);
         }
         private async Task EjecutarCargarProducto(object arg)
@@ -211,6 +213,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     Vencimiento = this.Vencimiento
                 };
                 var respuesta = await _adminProductos.CargarProducto(producto);
+                Debug.WriteLine(respuesta);
                 if (respuesta.estado){
                     ColorMensaje = _colores.ColorExito;
                     PostCarga();

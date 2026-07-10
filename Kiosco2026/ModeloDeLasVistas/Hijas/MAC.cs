@@ -4,6 +4,7 @@ using Kiosco2026.Clases.Colores;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -93,6 +94,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     Nombre = NombreCargar
                 };
                 var respuesta = await _adminProductos.CargarCategoria(cate);
+                Debug.WriteLine(respuesta);
                 if (respuesta.estado){
                     ColorMensaje = _colores.ColorExito;
                     EjecutarPostCarga();
