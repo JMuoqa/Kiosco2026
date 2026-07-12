@@ -19,40 +19,34 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
 {
     public class ModeloAnadirProducto : ModeloDeVistaBase
     {
-        public ModeloAnadirProducto()
-        {
-            ColoresEntradas = new ColoresProductos();
-            ObtenerCategoriasGenerales = new ComandoModeloDeVista(EjecutarObtenerCategoriasGenerales);
-            CargarProducto = new ComandoModeloDeVista(EjecutarCargarProducto);
-            ValoresPredeterminados = new ComandoModeloDeVista(EjecutarValoresPredeterminados);
-            GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
-            LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
-            SelectionChanged = new ComandoModeloDeVista(EjecutarSelected);
-            _colores = new ColoresTexto();
-            _adminProductos = new AdminProductos();
-            ColorMensaje = _colores.Normal;
-            tiempo = new System.Timers.Timer();
-            tiempo.Elapsed += ResetearMensaje;
-            tiempo.Enabled = false;
-            tiempo.AutoReset = true;
-        }
         #region Propiedades
         private System.Timers.Timer tiempo;
         private string _nombre;
         private string _codigo;
         private Categorias _categoria;
         private ColoresTexto _colores;
+        private ComboBox _cmbCat;
         private string _colorMensaje;
         private string _venta;
         private string _compra;
         private string _cantidad;
         private string _mensaje;
         private string _proveedor;
+        private string _productoNuevo;
         private DateTime _ingreso;
         private DateTime _vencimiento;
         private AdminProductos _adminProductos;
         private ObservableCollection<Categorias> _listaCategorias;
         private ColoresProductos _coloresEntradas;
+        public string ProductoNuevo
+        {
+            get => _productoNuevo;
+            set
+            {
+                _productoNuevo = value;
+                OnPropertyChanged(nameof(ProductoNuevo));
+            }
+        }
         public ColoresProductos ColoresEntradas
         {
             get => _coloresEntradas;
@@ -170,6 +164,29 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 OnPropertyChanged(nameof(ListaCategorias));
             }
         }
+        #endregion
+        public ModeloAnadirProducto()
+        {
+            ColoresEntradas = new ColoresProductos();
+            ObtenerCategoriasGenerales = new ComandoModeloDeVista(EjecutarObtenerCategoriasGenerales);
+            CargarProducto = new ComandoModeloDeVista(EjecutarCargarProducto);
+            ValoresPredeterminados = new ComandoModeloDeVista(EjecutarValoresPredeterminados);
+            GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
+            LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
+            SelectionChanged = new ComandoModeloDeVista(EjecutarSelected);
+            ComprobarExistencia = new ComandoModeloDeVista(EjecutarComprobarExistencia);
+            GuardarCmb = new ComandoModeloDeVista(EjecutarGuardarCmb);
+            _colores = new ColoresTexto();
+            _adminProductos = new AdminProductos();
+            _cmbCat = new ComboBox();
+            ColorMensaje = _colores.Normal;
+            tiempo = new System.Timers.Timer();
+            tiempo.Elapsed += ResetearMensaje;
+            tiempo.Enabled = false;
+            tiempo.AutoReset = true;
+        }
+        #region Comandos
+        public ICommand ComprobarExistencia { get; }
         public ICommand ObtenerCategoriasGenerales { get; }
         public ICommand CargarProducto { get; }
         public ICommand ValoresPredeterminados { get; }
@@ -177,7 +194,57 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand GotFocus { get; }
         public ICommand LostFocus { get; }
         public ICommand SelectionChanged { get; }
-        #endregion 
+        public ICommand GuardarCmb { get; }
+        #endregion
+        #region Funciones
+        private async Task EjecutarGuardarCmb(object arg)
+        {
+            ComboBox cmb = (ComboBox)arg;
+            _cmbCat = cmb;
+        }
+        private async Task EjecutarComprobarExistencia(object arg)
+        {
+            try
+            {
+                var e = (KeyEventArgs)arg;
+                if (e.Key == Key.Enter)
+                {
+                    var res = await _adminProductos.RevisarExistenciaProducto(Codigo);
+                    if (!res.estado)
+                        throw new Exception("Ocurrio un error. Contacta a soporte para solucionarlo");
+                    if (res.existencia)
+                    {
+                        ProductoNuevo = res.mensaje;
+                        Codigo = res.producto.Codigo;
+                        Nombre = res.producto.Nombre;
+                        Proveedor = res.producto.Proveedor;
+                        ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+                        ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+                        ColoresEntradas.Proveedor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+                        for (int i = 0; i < _cmbCat.Items.Count; i++)
+                        {
+                            Categorias cate = (Categorias)_cmbCat.Items[i];
+                            if (cate.ID == res.producto.IDCategoria)
+                                _cmbCat.SelectedIndex = i;
+                        }
+                    }
+                    else
+                    {
+                        ProductoNuevo = res.mensaje;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ColorMensaje = _colores.ColorError;
+                Mensaje = ex.Message;
+            }
+            finally
+            {
+                tiempo.Interval = 10000;
+                tiempo.Enabled = true;
+            }
+        }
         private async Task EjecutarObtenerCategoriasGenerales(object arg)
         {
             var respuesta = await _adminProductos.ObtenerCategoriasCliente();
@@ -213,7 +280,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     Vencimiento = this.Vencimiento
                 };
                 var respuesta = await _adminProductos.CargarProducto(producto);
-                Debug.WriteLine(respuesta);
                 if (respuesta.estado){
                     ColorMensaje = _colores.ColorExito;
                     PostCarga();
@@ -230,10 +296,12 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             }
             finally
             {
+                ProductoNuevo = "";
                 tiempo.Interval = 10000;
                 tiempo.Enabled = true;
             }
         }
+        #endregion
         #region Grafica
 
         private void ResetearMensaje(object source, ElapsedEventArgs e)

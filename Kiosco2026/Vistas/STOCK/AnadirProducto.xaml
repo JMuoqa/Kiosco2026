@@ -23,8 +23,8 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Vertical" Grid.Column="0">
-                <TextBox x:Name="entrada_codigo" Style="{StaticResource entrada_form}" Text="{Binding Codigo}" 
-                         Foreground="{Binding ColoresEntradas.Codigo}">
+                <TextBox x:Name="entrada_codigo" Style="{StaticResource entrada_form}" Text="{Binding Codigo, UpdateSourceTrigger=PropertyChanged}" 
+                         Foreground="{Binding ColoresEntradas.Codigo}" >
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="GotFocus">
                             <i:InvokeCommandAction Command="{Binding GotFocus}" 
@@ -33,6 +33,10 @@
                         <i:EventTrigger EventName="LostFocus">
                             <i:InvokeCommandAction Command="{Binding LostFocus}" 
                                CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="KeyDown">
+                            <i:InvokeCommandAction Command="{Binding ComprobarExistencia}"
+                                                   PassEventArgsToCommand="True"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </TextBox>
@@ -60,6 +64,10 @@
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding SelectionChanged}"
                                                    CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ComboBox}}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="Loaded">
+                            <i:InvokeCommandAction Command="{Binding GuardarCmb}" 
+                                                           CommandParameter="{Binding ElementName=cmb_categorias}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <ComboBox.ItemTemplate>
@@ -161,6 +169,8 @@
                 </RadioButton>
                 <TextBlock Margin="10" FontFamily="Roboto Flex" 
                            FontSize="16" Text="{Binding Mensaje}" Foreground="{Binding ColorMensaje}" TextWrapping="Wrap" ></TextBlock>
+                <TextBlock Margin="10" FontFamily="Roboto Flex" 
+                           FontSize="16" Text="{Binding ProductoNuevo}" Foreground="#ff9500" TextWrapping="Wrap" ></TextBlock>
             </StackPanel>
         </Grid>
     </Border>

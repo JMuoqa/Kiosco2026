@@ -83,9 +83,50 @@ namespace Conexiones
         }
         #endregion
         #region Con_RevisarExistenciaProducto
-        private async Task<bool> Con_RevisarExistenciaProducto(MySqlConnection con, string codigo)
+        public async Task<(bool estado, bool existencia, string mensaje, Productos producto)> Con_RevisarExistenciaProducto(string codigo)
         {
-
+            using (MySqlConnection con = new MySqlConnection(cadenaDeConexion))
+            {
+                try
+                {
+                    con.Open();
+                    string revisarExistencia = "SELECT * FROM ( SELECT p.*, ROW_NUMBER() OVER (PARTITION BY Codigo ORDER BY Ingreso DESC) AS rn FROM Productos p) t WHERE rn = 1 AND Codigo = @codigo;";
+                    MySqlCommand cmd = new MySqlCommand(revisarExistencia, con);
+                    cmd.Parameters.AddWithValue("@codigo", codigo);
+                    Productos pObtenido = new Productos();
+                    //Aca tendria que iterar 1 sola vez, nose si es la forma mas optima para hacerlo
+                    using (MySqlDataReader lector = cmd.ExecuteReader())
+                    {
+                        while (lector.Read())
+                        {
+                            pObtenido = new Productos()
+                            {
+                                Codigo = lector.GetString("Codigo"),
+                                Nombre = lector.GetString("Nombre"),
+                                Proveedor = lector.GetString("Proveedor"),
+                                IDCategoria = lector.GetInt32("IDCategoria"),
+                            };
+                            var listaCate = await Con_ObtenerCategorias();
+                            List<Categorias> listaCompleta = listaCate.lista;
+                            for (int j = 0; j < listaCompleta.Count; j++)
+                            {
+                                if (listaCompleta[j].ID == pObtenido.IDCategoria)
+                                {
+                                    pObtenido.Categoria = listaCompleta[j].Nombre;
+                                    break;
+                                }
+                            }
+                            return (true, true, "Producto existente en el sistema", pObtenido);
+                        }
+                    }
+                    return (true, false, "Registrando un producto nuevo", new Productos());
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                    return (false, false, ex.Message,new Productos());
+                }
+            }
         }
         #endregion
         #region Con_EditarProductoPorCodigo
@@ -383,6 +424,7 @@ namespace Conexiones
             {
                 try
                 {
+                    Debug.WriteLine("Con_Productos - Con_ObtenerUltLotePorNombre. nombre: " + nombre);
                     con.Open();
                     string obtenerUltLote = "SELECT ult.ID, ult.IDCategoria, ult.Nombre, ult.Codigo, ult.Compra, ult.Venta," +
                         " ult.Proveedor, ult.Mostrar, ult.Ingreso, ult.Vencimiento, tot.Cantidad" +
@@ -402,16 +444,22 @@ namespace Conexiones
                                 ID = lector.GetInt32("ID"),
                                 Mostrar = lector.GetString("Mostrar"),
                                 Nombre = lector.GetString("Nombre"),
+                                IDCategoria = lector.GetInt32("IDCategoria"),
                                 Compra = lector.GetDecimal("Compra").ToString(),
                                 Venta = lector.GetDecimal("Venta").ToString(),
                                 Ingreso = lector.GetDateTime("Ingreso"),
                                 Vencimiento = lector.GetDateTime("Vencimiento"),
                                 Cantidad = lector.GetInt32("Cantidad"),
+                                Codigo = lector.GetString("Codigo")
                             });
                         }
                     }
                     var listaCate = await Con_ObtenerCategorias();
                     List<Categorias> listaCompleta = listaCate.lista;
+                    Debug.WriteLine("Con_Productos - Con_ObtenerUltLotePorNombre. productos: " + productos.Count);
+                    Debug.WriteLine("Con_Productos - Con_ObtenerUltLotePorNombre. productos[0].Categoria: " + productos.Count);
+                    Debug.WriteLine("Con_Productos - Con_ObtenerUltLotePorNombre. listaCompleta: " + listaCompleta.Count);
+                    Debug.WriteLine("Con_Productos - Con_ObtenerUltLotePorNombre. listaCompleta[0].Nombre: " + listaCompleta[0].Nombre);
                     for (int i = 0; i < productos.Count; i++)
                     {
                         for (int j = 0; j < listaCompleta.Count; j++)

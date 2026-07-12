@@ -472,7 +472,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             if (Busqueda != "Buscar por nombre")
                 valor = Busqueda;
             var res = await _adminProductos.Con_ObtenerUltLotePorNombre(valor);
-            Debug.WriteLine(res);
+            Debug.WriteLine("ModeloEditar Producto - EjecutarObtenerProductos: " + res.lista[0].Categoria);
             ListaProductos = new ObservableCollection<Productos>(res.lista);
         }
         private async Task EjecutarBusquedaPorCodigoUltLote(object obj)
