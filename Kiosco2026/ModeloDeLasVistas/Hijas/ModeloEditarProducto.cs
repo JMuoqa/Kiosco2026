@@ -493,23 +493,24 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             else
                 anchoActual = (double)arg;
             double nueve = (anchoActual * 9) / 100;
-            double relleno = (anchoActual * 13) / 100;
+            double doce = (anchoActual * 12) / 100;
+            double relleno = (anchoActual * 16.33) / 100;
             EColumna_uno = nueve;
-            EColumna_dos = relleno;
+            EColumna_dos = doce;
             EColumna_tres = relleno;
             EColumna_cuatro = relleno;
             EColumna_cinco = relleno;
-            EColumna_seis = relleno;
-            EColumna_siete = relleno;
-            EColumna_ocho= relleno;
+            EColumna_seis = nueve;
+            EColumna_siete = nueve;
+            EColumna_ocho= doce;
             TColumna_uno = nueve;
-            TColumna_dos = relleno;
+            TColumna_dos = doce;
             TColumna_tres = relleno;
             TColumna_cuatro = relleno;
             TColumna_cinco = relleno;
-            TColumna_seis = relleno;
-            TColumna_siete = relleno;
-            TColumna_ocho = relleno;
+            TColumna_seis = nueve;
+            TColumna_siete = nueve;
+            TColumna_ocho = doce;
         }
         private async Task EjecutarObtenerCategoriasGenerales(object arg)
         {

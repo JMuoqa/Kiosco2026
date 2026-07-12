@@ -2,6 +2,7 @@
 using MySql.Data.MySqlClient;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
+using System.Globalization;
 using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Text.Json;
@@ -52,6 +53,7 @@ namespace Conexiones
         }
         private async Task<int> Con_ObtenerIDCategoria(MySqlConnection con, string nombreCategoria)
         {
+            Debug.WriteLine("Con_Productos - Con_ObtenerIDCategoria. nombreCategoria: " + nombreCategoria);
             string obtenerID = "SELECT ID FROM Categorias WHERE Nombre = @nombre";
             MySqlCommand cmd = new MySqlCommand(obtenerID, con);
             cmd.Parameters.AddWithValue("@nombre", nombreCategoria);
@@ -63,6 +65,7 @@ namespace Conexiones
                     n = Convert.ToInt32(datos["ID"]);
                 }
             }
+            Debug.WriteLine("Con_Productos - Con_ObtenerIDCategoria. n: " + n);
             return n;
             
         }
@@ -136,22 +139,26 @@ namespace Conexiones
             {
                 try
                 {
+                    con.Open();
                     int idCategoriaFinal = await Con_ObtenerIDCategoria(con, producto.Categoria);
                     string editarTodosLosLotes = "UPDATE Productos SET Nombre = @nombre, IDCategoria = @categoria WHERE Codigo = @codigo;";
                     MySqlCommand cmd = new MySqlCommand(editarTodosLosLotes, con);
                     cmd.Parameters.AddWithValue("@nombre", producto.Nombre);
-                    cmd.Parameters.AddWithValue("@categoria", producto.Categoria);
+                    cmd.Parameters.AddWithValue("@categoria", idCategoriaFinal);
                     cmd.Parameters.AddWithValue("@codigo", producto.Codigo);
                     string editarProducto = "UPDATE Productos SET Compra = @compra, Venta = @venta, Mostrar = @mostrar WHERE ID = @id;";
                     MySqlCommand cmd2 = new MySqlCommand(editarProducto, con);
-                    cmd2.Parameters.AddWithValue("@compra", producto.Compra);
-                    cmd2.Parameters.AddWithValue("@venta", producto.Venta);
+                    decimal precioCompra = decimal.Parse(producto.Compra, NumberStyles.Any, new CultureInfo("es-AR"));
+                    decimal precioVenta = decimal.Parse(producto.Venta, NumberStyles.Any, new CultureInfo("es-AR"));
+                    cmd2.Parameters.AddWithValue("@compra", precioCompra);
+                    cmd2.Parameters.AddWithValue("@venta", precioVenta);
                     cmd2.Parameters.AddWithValue("@mostrar", producto.Mostrar);
                     cmd2.Parameters.AddWithValue("@id", producto.ID);
-                    con.Open();
                     var resultado = cmd.ExecuteNonQuery();
                     var resultado2 = cmd2.ExecuteNonQuery();
-                    return (true, "Pruebas");
+                    if(resultado > 0 && resultado2 > 0)
+                        return (true, "Se edito correctamente el producto y los lotes");
+                    return (false, "No se pudo terminar la opreación");
                 }
                 catch (Exception ex)
                 {
@@ -424,7 +431,6 @@ namespace Conexiones
             {
                 try
                 {
-                    Debug.WriteLine("Con_Productos - Con_ObtenerUltLotePorNombre. nombre: " + nombre);
                     con.Open();
                     string obtenerUltLote = "SELECT ult.ID, ult.IDCategoria, ult.Nombre, ult.Codigo, ult.Compra, ult.Venta," +
                         " ult.Proveedor, ult.Mostrar, ult.Ingreso, ult.Vencimiento, tot.Cantidad" +
@@ -456,10 +462,6 @@ namespace Conexiones
                     }
                     var listaCate = await Con_ObtenerCategorias();
                     List<Categorias> listaCompleta = listaCate.lista;
-                    Debug.WriteLine("Con_Productos - Con_ObtenerUltLotePorNombre. productos: " + productos.Count);
-                    Debug.WriteLine("Con_Productos - Con_ObtenerUltLotePorNombre. productos[0].Categoria: " + productos.Count);
-                    Debug.WriteLine("Con_Productos - Con_ObtenerUltLotePorNombre. listaCompleta: " + listaCompleta.Count);
-                    Debug.WriteLine("Con_Productos - Con_ObtenerUltLotePorNombre. listaCompleta[0].Nombre: " + listaCompleta[0].Nombre);
                     for (int i = 0; i < productos.Count; i++)
                     {
                         for (int j = 0; j < listaCompleta.Count; j++)

@@ -245,7 +245,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 string total = PrecioTotal.Replace("$", "");
                 int cantidadTotal;
                 decimal precioTotal;
-                Debug.WriteLine(FormaDePago);
                 if (!int.TryParse(CantidadProductos, out cantidadTotal))
                     throw new Exception("Algo salio mal, informanos de este error");
                 if(!decimal.TryParse(total, out precioTotal))
@@ -258,7 +257,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     FormaDePago = this.FormaDePago,
                 };
                 var res = await _adminVenta.RegistrarVenta(ListaProductos.ToList(), venta);
-                Debug.WriteLine(res);
             }
             catch(Exception ex)
             {

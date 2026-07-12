@@ -53,9 +53,9 @@ namespace Dominio
             await ValidarDatosParaEdicionProducto(producto);
             double precioVenta;
             double precioCompra;
-            if (!double.TryParse(producto.Venta, NumberStyles.Any, CultureInfo.InvariantCulture, out precioVenta))
+            if (!double.TryParse(producto.Venta, NumberStyles.Any, new CultureInfo("es-AR"), out precioVenta))
                 throw new Exception("El campo de 'Precio de venta' no es numerico");
-            if (!double.TryParse(producto.Compra, NumberStyles.Any, CultureInfo.InvariantCulture, out precioCompra))
+            if (!double.TryParse(producto.Compra, NumberStyles.Any, new CultureInfo("es-AR"), out precioCompra))
                 throw new Exception("El campo de 'Costo de compra' no es numerico");
             if (precioCompra >= precioVenta)
                 throw new Exception("El campo de 'Venta' es menor al campo de 'Compra'");
