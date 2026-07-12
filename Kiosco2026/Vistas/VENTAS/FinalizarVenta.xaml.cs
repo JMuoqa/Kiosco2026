@@ -1,27 +1,23 @@
-﻿using System;
+﻿using Entidades;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Drawing.Printing;
+using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using Kiosco2026.ModeloDeLasVistas.Hijas;
 
 namespace Kiosco2026.Vistas.VENTAS
 {
-    /// <summary>
-    /// Lógica de interacción para FinalizarVenta.xaml
-    /// </summary>
     public partial class FinalizarVenta : Window
     {
-        public FinalizarVenta()
+        public FinalizarVenta(Ventas venta)
         {
             InitializeComponent();
+            this.DataContext = new ModeloFinalizarVenta(venta);
         }
+
     }
+
+    
 }

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Entidades;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -43,7 +45,9 @@ namespace Kiosco2026.Vistas.VENTAS
 
         private void RadioButton_Click(object sender, RoutedEventArgs e)
         {
-            FinalizarVenta window = new FinalizarVenta();
+            Ventas venta = (Ventas)listaProductos.Tag;
+            venta.Fecha = DateTime.Now;
+            FinalizarVenta window = new FinalizarVenta(venta);
             window.Owner = Application.Current.MainWindow;
             window.Show();
         }

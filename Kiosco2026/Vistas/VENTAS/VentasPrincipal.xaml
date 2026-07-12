@@ -172,6 +172,7 @@
                                    PreviewMouseDown="cmb_categorias_PreviewMouseDown"
                                    HorizontalAlignment="Left"
                                    Style="{StaticResource cmb_entrada_form}"
+                                   SelectedIndex="0"
                                    SelectedValue="{Binding FormaDePago}"
                                    SelectedValuePath="Content"
                                    Foreground="{Binding ColoresEntradas.Categoria}"
@@ -180,8 +181,8 @@
                             <ComboBoxItem Content="Transferencia" Foreground="#000000"/>
                             <ComboBoxItem Content="Debito" Foreground="#000000"/>
                         </ComboBox>
-                        <RadioButton Style="{StaticResource boton_confirmar}" Margin="0, 5"
-                                     Click="RadioButton_Click">
+                        <RadioButton x:Name="listaProductos" Style="{StaticResource boton_confirmar}" Margin="0, 5"
+                                     Click="RadioButton_Click" Tag="{Binding Venta}">
                             <TextBlock Style="{StaticResource texto_botones_uno}"> Vender </TextBlock>
                         </RadioButton>
                     </StackPanel>

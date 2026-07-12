@@ -8,9 +8,6 @@
         WindowStartupLocation="CenterOwner"
         mc:Ignorable="d"
         Title="FinalizarVenta" Height="160" Width="900">
-    <Window.DataContext>
-        <modelo:ModeloFinalizarVenta/>
-    </Window.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -20,14 +17,9 @@
             <TextBox Style="{StaticResource entrada_form}" Grid.Column="0"></TextBox>
         </StackPanel>
         <StackPanel Grid.Column="1">
-            <RadioButton Style="{StaticResource boton_buscar}">
-                <TextBlock Style="{StaticResource texto_botones_uno}" Foreground="#000000">
-                    Pago Total
-                </TextBlock>
-            </RadioButton>
-            <RadioButton Style="{StaticResource boton_confirmar}">
+            <RadioButton Style="{StaticResource boton_confirmar}" Command="{Binding ImprimirPagina}">
                 <TextBlock Style="{StaticResource texto_botones_uno}">
-                    Guardar
+                    Imprimir ticket
                 </TextBlock>
             </RadioButton>
         </StackPanel>

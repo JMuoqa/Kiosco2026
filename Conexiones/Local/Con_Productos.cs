@@ -20,7 +20,6 @@ namespace Conexiones
                     con.Open();
                     int idCategoriaExistente = await Con_ObtenerCategoriaProducto(con, producto.Codigo);
                     int idCategoriaFinal = await Con_ObtenerIDCategoria(con, producto.Categoria);
-                    Debug.WriteLine(idCategoriaExistente + "-" + idCategoriaFinal);
                     if (idCategoriaExistente > 0  && idCategoriaExistente != idCategoriaFinal)
                         return (estado: false, mensaje: "El producto ya está registrado y"+
                             " la categoría que intentas asignar no coincide con la categoría"+
@@ -39,10 +38,10 @@ namespace Conexiones
                     cmd.Parameters.AddWithValue("@proveedor", producto.Proveedor);
                     cmd.Parameters.AddWithValue("@ingreso", producto.Ingreso);
                     cmd.Parameters.AddWithValue("@vencimiento", producto.Vencimiento);
-                    var resultado = cmd.ExecuteNonQuery();
-                    Debug.WriteLine(resultado);
-                    return (true, "Pruebas");
-
+                    var resultado = await cmd.ExecuteNonQueryAsync();
+                    if(resultado>0)
+                        return (true, "Se cargo exitosamente");
+                    return (false, "No se pudo cargar el producto correctamente");
                 }
                 catch (Exception ex)
                 {
@@ -81,6 +80,12 @@ namespace Conexiones
                 }
             }
             return n;
+        }
+        #endregion
+        #region Con_RevisarExistenciaProducto
+        private async Task<bool> Con_RevisarExistenciaProducto(MySqlConnection con, string codigo)
+        {
+
         }
         #endregion
         #region Con_EditarProductoPorCodigo

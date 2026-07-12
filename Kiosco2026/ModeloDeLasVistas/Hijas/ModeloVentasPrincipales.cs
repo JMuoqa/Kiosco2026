@@ -36,6 +36,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             _adminVenta = new AdminVentas();
             _adminProductos = new AdminProductos();
             ColoresEntradas = new ColoresProductos();
+            _venta = new Ventas();
         }
         #region Columnas privadas
         private double _eColumna_uno;
@@ -125,13 +126,25 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private string _precioTotal;
         private string _cantidad;
         private string _codigo;
+        private string _descuento;
+        private string _subtotal;
         private string _cantidadProductos;
         private bool permitido = true;
+        private Ventas _venta;
         private AdminVentas _adminVenta;
         private AdminProductos _adminProductos;
         private Categorias _categoria;
         private ColoresProductos _coloresEntradas;
         private string _formaDePago;
+        public Ventas Venta
+        {
+            get => _venta;
+            set
+            {
+                _venta = value;
+                OnPropertyChanged(nameof(Venta));
+            }
+        }
         public string FormaDePago
         {
             get => _formaDePago;
@@ -203,8 +216,11 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 _listaProductos = value;
                 CantidadItems = _listaProductos.Count.ToString();
-                PrecioTotal = "$" + CalcularTotal().ToString();
-                CantidadProductos = CalcularCantidadProductos();
+                decimal calculoTotal = CalcularTotal();
+                int calculoCantidadProductos = CalcularCantidadProductos();
+                PrecioTotal = "$" + calculoTotal.ToString();
+                CantidadProductos = calculoCantidadProductos.ToString();
+                Venta = new Ventas(_listaProductos.ToList(), 0, calculoTotal, calculoTotal, _listaProductos.Count, calculoCantidadProductos, FormaDePago);
                 OnPropertyChanged(nameof(ListaProductos));
             }
         }
@@ -228,11 +244,11 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 DateTime hoy = DateTime.Now;
                 string total = PrecioTotal.Replace("$", "");
                 int cantidadTotal;
-                double precioTotal;
+                decimal precioTotal;
                 Debug.WriteLine(FormaDePago);
                 if (!int.TryParse(CantidadProductos, out cantidadTotal))
                     throw new Exception("Algo salio mal, informanos de este error");
-                if(!double.TryParse(total, out precioTotal))
+                if(!decimal.TryParse(total, out precioTotal))
                     throw new Exception("Algo salio mal, informanos de este error");
                 Ventas venta = new Ventas
                 {
@@ -282,26 +298,26 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 }
             }
         }
-        private string CalcularCantidadProductos()
+        private int CalcularCantidadProductos()
         {
             int c = 0;
             for (int i = 0; i < ListaProductos.Count; i++)
             {
                 c += ListaProductos[i].Cantidad;
             }
-            return c.ToString();
+            return c;
         }
-        private string CalcularTotal()
+        private decimal CalcularTotal()
         {
-            double total = 0;
+            decimal total = 0;
             for(int i = 0; i < ListaProductos.Count; i++)
             {
-                double n;
-                if (!double.TryParse(ListaProductos[i].Venta, NumberStyles.Any, CultureInfo.InvariantCulture, out n))
+                decimal n = 0;
+                if (!decimal.TryParse(ListaProductos[i].Venta, NumberStyles.Any, new CultureInfo("es-AR"), out n))
                     throw new Exception("Hubo un problema");
                 total += n * ListaProductos[i].Cantidad;    
             }
-            return total.ToString();
+            return total;
         }
         private async Task EjecutarKeyDownCargarItem(object arg)
         {
