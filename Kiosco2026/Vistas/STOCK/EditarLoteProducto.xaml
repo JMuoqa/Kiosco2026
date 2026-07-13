@@ -113,7 +113,7 @@
                                             </Border>
                                             <Border Width="{Binding DataContext.TColumna_tres, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
                                                 <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
-                                                           VerticalAlignment="Center"  Text="{Binding Nombre}"/>
+                                                           VerticalAlignment="Center"  Text="{Binding Nombre, Converter={StaticResource TextTrimmer}, ConverterParameter=15}"/>
                                             </Border>
                                             <Border Width="{Binding DataContext.TColumna_cuatro, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
                                                 <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"

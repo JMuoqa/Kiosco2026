@@ -175,20 +175,23 @@ namespace Conexiones
             {
                 try
                 {
-
+                    con.Open();
                     string editarLote = "UPDATE Productos SET Nombre = @nombre, Compra = @compra, Venta = @venta, Cantidad = @cantidad, Ingreso = @ingreso,"+
                         " Vencimiento = @vencimiento WHERE ID = @id;";
                     MySqlCommand cmd = new MySqlCommand(editarLote, con);
+                    decimal precioCompra = decimal.Parse(producto.Compra, NumberStyles.Any, new CultureInfo("es-AR"));
+                    decimal precioVenta = decimal.Parse(producto.Venta, NumberStyles.Any, new CultureInfo("es-AR"));
                     cmd.Parameters.AddWithValue("@nombre", producto.Nombre);
-                    cmd.Parameters.AddWithValue("@compra", producto.Compra);
-                    cmd.Parameters.AddWithValue("@venta", producto.Venta);
+                    cmd.Parameters.AddWithValue("@compra", precioCompra);
+                    cmd.Parameters.AddWithValue("@venta", precioVenta);
                     cmd.Parameters.AddWithValue("@cantidad", producto.Cantidad);
                     cmd.Parameters.AddWithValue("@ingreso", producto.Ingreso);
                     cmd.Parameters.AddWithValue("@vencimiento", producto.Vencimiento);
                     cmd.Parameters.AddWithValue("@id", producto.ID);
-                    con.Open();
                     var resultado = cmd.ExecuteNonQuery();
-                    return (true, "Pruebas");
+                    if(resultado > 0)
+                        return (true, "Se modifico el lote correctamente");
+                    return (true, "No se pudo modificar el lote");
                 }
                 catch (Exception ex)
                 {
@@ -392,8 +395,8 @@ namespace Conexiones
                                 ID = lector.GetInt32("ID"),
                                 Mostrar = lector.GetString("Mostrar"),
                                 Nombre = lector.GetString("Nombre"),
-                                Compra = lector.GetString("Compra"),
-                                Venta = lector.GetString("Venta"),
+                                Compra = lector.GetDecimal("Compra").ToString(),
+                                Venta = lector.GetDecimal("Venta").ToString(),
                                 Ingreso = lector.GetDateTime("Ingreso"),
                                 Vencimiento = lector.GetDateTime("Vencimiento"),
                                 Cantidad = lector.GetInt32("Cantidad"),
