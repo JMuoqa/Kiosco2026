@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Printing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -78,6 +79,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             pd.EndPrint += new PrintEventHandler(FinDeImpresion); 
             pd.Print();
         }
+        /*
+         * En esta funciona las variables float que se usan para sacar la pos 'x' de los textos, varian la asignacion de los nombres
+         * Quiero decir que xCantidad a veces es el ancho del texto cantidad y otras veces puede ser la posicion del texto cantidad
+        */
         private void ImpresionDePagina(object sender, PrintPageEventArgs e)
         {
             Font fuenteDeco = new Font("Roboto Flex", 10);
@@ -112,9 +117,11 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             SizeF anchoTituloSubTotal = e.Graphics.MeasureString(tituloSubTotal, fuenteInfoBold);
             SizeF anchoTituloDescuento = e.Graphics.MeasureString(tituloDescuento, fuenteInfoBold);
             SizeF anchoTituloPrecioTotal = e.Graphics.MeasureString(tituloPrecioTotal, fuenteInfoBold);
-            SizeF anchoSubTotal = e.Graphics.MeasureString(_subTotal.ToString(), fuenteInfoBold);
+            string _strSubTotal = "$" + _subTotal.ToString("N2", new CultureInfo("es-AR"));
+            SizeF anchoSubTotal = e.Graphics.MeasureString(_strSubTotal, fuenteInfoBold);
             SizeF anchoDescuento = e.Graphics.MeasureString(_descuento.ToString(), fuenteInfoBold);
-            SizeF anchoPrecioTotal = e.Graphics.MeasureString(_total.ToString(), fuenteInfoBold);
+            string _strTotal = "$" + _total.ToString("N2", new CultureInfo("es-AR"));
+            SizeF anchoPrecioTotal = e.Graphics.MeasureString(_strTotal, fuenteInfoBold);
             float xDetallesVenta = limiteDerecho - anchoTituloDescuento.Width - anchoSubTotal.Width;
             float xSubTotal = limiteDerecho - anchoSubTotal.Width;
             float xDescuento = limiteDerecho - anchoDescuento.Width;
@@ -131,18 +138,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             float xNombreCajero = limiteIzquierdo + anchoCajero.Width;
             float xCaja = limiteDerecho - anchoNombreCajero.Width - anchoNumeroCaja.Width;
             float xNumeroCaja = limiteDerecho - anchoNumeroCaja.Width;
-            ///
-            string tituloCantidad = "CANT.";
-            string tituloDescripcion = "DESCRIPCION";
-            string tituloUnit = "P.UNIT";
-            string tituloTotal = "TOTAL";
-            SizeF anchoCantidad = e.Graphics.MeasureString(tituloCantidad, fuenteInfoBold);
-            SizeF anchoTituloDesc = e.Graphics.MeasureString(tituloDescripcion, fuenteInfoBold);
-            SizeF anchoTituloUnit = e.Graphics.MeasureString(tituloUnit, fuenteInfoBold);
-            SizeF anchoTituloTotal= e.Graphics.MeasureString(tituloTotal, fuenteInfoBold);
-            float xColumna2 = anchoCantidad.Width + 2;
-            float xColumna3 = limiteDerecho - anchoTituloTotal.Width - anchoTituloUnit.Width - 10 - 15;
-            float xColumna4 = limiteDerecho - anchoTituloTotal.Width - 18;
             ///
             string tituloFecha = "Fecha: ";
             string titulohora = "Hora: ";
@@ -188,18 +183,22 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             y += 20;
             e.Graphics.DrawString(divisor, fuenteDeco, Brushes.Black, divisorCentrado, y);
             y += 20;
-            e.Graphics.DrawString(tituloCantidad, fuenteInfoBold, Brushes.Black, limiteIzquierdo, y);
-            e.Graphics.DrawString(tituloDescripcion, fuenteInfoBold, Brushes.Black, xColumna2, y);
-            e.Graphics.DrawString(tituloUnit, fuenteInfoBold, Brushes.Black, xColumna3, y);
-            e.Graphics.DrawString(tituloTotal, fuenteInfoBold, Brushes.Black, xColumna4, y);
-            y += 20;
             while (_indiceActual < _listaProductos.Count)
             {
-                e.Graphics.DrawString(_listaProductos[_indiceActual].Cantidad.ToString(), fuenteInfo, Brushes.Black, limiteIzquierdo, y);
-                e.Graphics.DrawString(_listaProductos[_indiceActual].Nombre, fuenteInfo, Brushes.Black, xColumna2, y);
-                e.Graphics.DrawString(_listaProductos[_indiceActual].Venta, fuenteInfo, Brushes.Black, xColumna3, y);
-                decimal precioTotal = decimal.Parse(_listaProductos[_indiceActual].Venta) * _listaProductos[_indiceActual].Cantidad;
-                e.Graphics.DrawString(precioTotal.ToString(), fuenteInfo, Brushes.Black, xColumna4, y);
+                string vCantidad = _listaProductos[_indiceActual].Cantidad.ToString() + "x";
+                string vPrecioVenta = "$" + decimal.Parse(_listaProductos[_indiceActual].Venta).ToString("N2", new CultureInfo("es-AR"));
+                string vNombre = _listaProductos[_indiceActual].Nombre.ToUpper();
+                decimal vPrecioTotal = decimal.Parse(_listaProductos[_indiceActual].Venta, NumberStyles.Any, new CultureInfo("es-AR")) * _listaProductos[_indiceActual].Cantidad;
+                string strVPrecioTotal = "$" + vPrecioTotal.ToString("N2", new CultureInfo("es-AR"));
+                SizeF anchoVCantidad = e.Graphics.MeasureString(vCantidad, fuenteInfo);
+                SizeF anchoVPrecioTotal = e.Graphics.MeasureString(strVPrecioTotal, fuenteInfo);
+                float posPrecioTotal = limiteDerecho - anchoVPrecioTotal.Width;
+                float xVCantidad = anchoVCantidad.Width + limiteIzquierdo;
+                e.Graphics.DrawString(vCantidad, fuenteInfo, Brushes.Black, limiteIzquierdo, y);
+                e.Graphics.DrawString(vPrecioVenta, fuenteInfo, Brushes.Black, xVCantidad, y);
+                y += 15;
+                e.Graphics.DrawString(vNombre, fuenteInfo, Brushes.Black, limiteIzquierdo, y);
+                e.Graphics.DrawString(strVPrecioTotal, fuenteInfo, Brushes.Black, posPrecioTotal, y);
                 y += 20;
                 _indiceActual++;
 
@@ -212,13 +211,13 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             e.Graphics.DrawString(divisor, fuenteDeco, Brushes.Black, divisorCentrado, y);
             y += 20;
             e.Graphics.DrawString(tituloSubTotal, fuenteInfoBold, Brushes.Black, xDetallesVenta, y);
-            e.Graphics.DrawString(_subTotal.ToString(), fuenteInfo, Brushes.Black, xSubTotal, y);
+            e.Graphics.DrawString(_strSubTotal, fuenteInfo, Brushes.Black, xSubTotal, y);
             y += 15;
             e.Graphics.DrawString(tituloDescuento, fuenteInfoBold, Brushes.Black, xDetallesVenta, y);
             e.Graphics.DrawString(_descuento.ToString(), fuenteInfo, Brushes.Black, xDescuento, y);
             y += 15;
             e.Graphics.DrawString(tituloPrecioTotal, fuenteInfoBold, Brushes.Black, xDetallesVenta, y);
-            e.Graphics.DrawString(_total.ToString(), fuenteInfo, Brushes.Black, xPrecioTotal, y);
+            e.Graphics.DrawString(_strTotal, fuenteInfo, Brushes.Black, xPrecioTotal, y);
             y += 20;
             e.Graphics.DrawString(divisor, fuenteDeco, Brushes.Black, divisorCentrado, y);
             y += 20;

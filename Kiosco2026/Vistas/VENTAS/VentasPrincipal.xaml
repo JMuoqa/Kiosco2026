@@ -44,6 +44,10 @@
                             <i:InvokeCommandAction Command="{Binding KeyDownCargarItem}" 
                                                    PassEventArgsToCommand="True"/>
                         </i:EventTrigger>
+                        <i:EventTrigger EventName="Loaded">
+                            <i:InvokeCommandAction Command="{Binding SelecionarTextBox}" 
+                                                   CommandParameter="{Binding ElementName=entrada_codigo}"/>
+                        </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </TextBox>
                 <RadioButton Style="{StaticResource boton_buscar}" Margin="0, 0, 15, 0"  Width="40"

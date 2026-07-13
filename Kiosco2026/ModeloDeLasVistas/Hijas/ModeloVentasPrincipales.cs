@@ -32,6 +32,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             EliminarItem = new ComandoModeloDeVista(EjecutarEliminarItem);
             RestablecerValores = new ComandoModeloDeVista(EjecutarRestablecerValores);
             RegistrarVenta = new ComandoModeloDeVista(EjecutarRegistrarVenta);
+            SelecionarTextBox = new ComandoModeloDeVista(EjecutarSelecionarTextBox);
             ListaProductos = new ObservableCollection<Productos>();
             _adminVenta = new AdminVentas();
             _adminProductos = new AdminProductos();
@@ -218,7 +219,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 CantidadItems = _listaProductos.Count.ToString();
                 decimal calculoTotal = CalcularTotal();
                 int calculoCantidadProductos = CalcularCantidadProductos();
-                PrecioTotal = "$" + calculoTotal.ToString();
+                PrecioTotal = "$" + calculoTotal.ToString("N2", new CultureInfo("es-AR"));
                 CantidadProductos = calculoCantidadProductos.ToString();
                 Venta = new Ventas(_listaProductos.ToList(), 0, calculoTotal, calculoTotal, _listaProductos.Count, calculoCantidadProductos, FormaDePago);
                 OnPropertyChanged(nameof(ListaProductos));
@@ -235,8 +236,14 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand CargarItem { get; }
         public ICommand EliminarItem { get; }
         public ICommand RegistrarVenta { get; }
+        public ICommand SelecionarTextBox { get; }
         #endregion
         #region Funciones
+        private async Task EjecutarSelecionarTextBox(object arg)
+        {
+            TextBox txt = (TextBox)arg;
+            txt.Focus();
+        }
         private async Task EjecutarRegistrarVenta(object arg)
         {
             try

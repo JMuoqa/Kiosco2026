@@ -49,7 +49,7 @@ namespace Kiosco2026.Vistas.VENTAS
             venta.Fecha = DateTime.Now;
             FinalizarVenta window = new FinalizarVenta(venta);
             window.Owner = Application.Current.MainWindow;
-            window.Show();
+            window.ShowDialog();
         }
     }
 }
