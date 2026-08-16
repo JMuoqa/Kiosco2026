@@ -14,11 +14,11 @@ namespace Dominio
             double precioVenta;
             double precioCompra;
             int cantidadProductos;
-            if (!double.TryParse(productoDto.Venta, out precioVenta))
+            if (!double.TryParse(productoDto.Venta, NumberStyles.Any, new CultureInfo("es-AR"), out precioVenta))
                 throw new Exception("El campo de 'Precio de venta' no es numerico");
-            if (!double.TryParse(productoDto.Compra,  out precioCompra))
+            if (!double.TryParse(productoDto.Compra, NumberStyles.Any, new CultureInfo("es-AR"), out precioCompra))
                 throw new Exception("El campo de 'Costo de compra' no es numerico");
-            if (!int.TryParse(productoDto.Cantidad, out cantidadProductos))
+            if (!int.TryParse(productoDto.Cantidad, NumberStyles.Any, new CultureInfo("es-AR"), out cantidadProductos))
                 throw new Exception("El campo de 'Cantidad' no es numerico");
             if (productoDto.Proveedor == "Proveedor")
                 productoDto.Proveedor = "";

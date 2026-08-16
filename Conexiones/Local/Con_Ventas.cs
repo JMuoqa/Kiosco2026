@@ -3,6 +3,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -19,7 +20,7 @@ namespace Conexiones
             {
                 try
                 {
-                    string registrarUsuario = "INSERT INTO ventas (fecha, items, cantidad_total_productos, forma_pago, total, id_usuario) VALUES( @fecha, @items, @cantidad_total, @forma_pago, @total); SELECT LAST_INSERT_ID();";
+                    string registrarUsuario = "INSERT INTO ventas (fecha, items, cantidad_total_productos, forma_pago, total, id_usuario) VALUES( @fecha, @items, @cantidad_total, @forma_pago, @total);";
                     MySqlCommand cmd = new MySqlCommand(registrarUsuario, conexion);
                     cmd.Parameters.AddWithValue("@fecha", venta.Fecha);
                     cmd.Parameters.AddWithValue("@items", pr.Count);
@@ -51,7 +52,7 @@ namespace Conexiones
             bool ciclo = true;
             while (ciclo)
             {
-                string productoARestar = "SELECT * FROM (SELECT p.*, ROW_NUMBER() OVER (ORDER BY Ingreso ASC) AS rn FROM Productos p WHERE Codigo = @codigo AND Cantidad > 0) t WHERE rn = 1; ";
+                string productoARestar = "SELECT * FROM (SELECT p.*, ROW_NUMBER() OVER (ORDER BY Ingreso ASC) AS rn FROM Productos p WHERE Codigo = @codigo AND Cantidad > 0) t WHERE rn = 1;";
                 MySqlCommand cmd = new MySqlCommand(productoARestar, con);
                 cmd.Parameters.AddWithValue("@codigo", pr.Codigo);
                 Productos primerProductoConStock = new Productos();
@@ -93,13 +94,25 @@ namespace Conexiones
                     cmdActualizarProducto.ExecuteNonQuery();
                     ciclo = false;
                 }
-                await CargarDetalleVenta(pr, cantidadARestar, con, ultimoIdVenta);
+                bool estadoDetalle = await CargarDetalleVenta(pr, primerProductoConStock, con, ultimoIdVenta);
+                if (!estadoDetalle)
+                    throw new Exception("Ocurrio un error al cargar el detalle de la venta");
             }
             return true;
         }
-        public async Task<bool> CargarDetalleVenta(Productos pr, int cantidadVendida, MySqlConnection con, long ultimoIdVenta)
+        public async Task<bool> CargarDetalleVenta(Productos pr, Productos primerProductoConStock, MySqlConnection con, long ultimoIdVenta)
         {
-
+            string cargarDetalleVentacar = "INSERT INTO detalle_ventas (id_venta, id_producto, codigo, cantidad, precio_unitario, subtotal) VALUES(@idventa, @idproducto, @codigo, @cantidad, @preciounitario, @subtotal);";
+            decimal subTotal = decimal.Parse(pr.Venta, NumberStyles.Any, new CultureInfo("es-AR")) * pr.Cantidad;
+            MySqlCommand cmd = new MySqlCommand(cargarDetalleVentacar, con);
+            cmd.Parameters.AddWithValue("@idventa", ultimoIdVenta);
+            cmd.Parameters.AddWithValue("@idproducto", primerProductoConStock.ID);
+            cmd.Parameters.AddWithValue("@codigo", pr.Codigo);
+            cmd.Parameters.AddWithValue("@cantidad", pr.Cantidad);
+            cmd.Parameters.AddWithValue("@preciounitario", pr.Venta);
+            cmd.Parameters.AddWithValue("@subtotal", subTotal);
+            cmd.ExecuteNonQuery();
+            return true;
         }
         #endregion
         public string ObtenerTokenJWT()
