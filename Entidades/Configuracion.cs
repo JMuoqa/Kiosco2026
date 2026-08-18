@@ -10,6 +10,11 @@ namespace Entidades
     public class Configuracion
     {
         public string CodigoSeguridad { get; set; }
+        public string NombreNegocio { get; set; }
+        public int NumeroDeCaja { get; set; }
+        public int NumeroDeSucursal { get; set; }
+        public string NombreDeCaja { get; set; }
+        public string DireccionDelLocal { get; set; }
     }
     public class ColoresTexto
     {

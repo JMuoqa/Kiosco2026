@@ -7,16 +7,93 @@
         xmlns:modelo="clr-namespace:Kiosco2026.ModeloDeLasVistas.Hijas"
         WindowStartupLocation="CenterOwner"
         mc:Ignorable="d"
-        Title="FinalizarVenta" Height="160" Width="900">
+        Title="FinalizarVenta" Height="700" Width="450
+        ">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0">
-            <TextBox Style="{StaticResource entrada_form}" Grid.Column="0"></TextBox>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="120"/>
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <TextBlock Text="{Binding NombreTienda}" Style="{StaticResource titulosTicket}" HorizontalAlignment="Center"/>
+            <TextBlock Text="{Binding DireccionTienda}" Style="{StaticResource textoInfoTicket}" HorizontalAlignment="Center"/>
+            <TextBlock Text="--------------------------------------------------------------------------" Style="{StaticResource textoInfoTicket}"/>
+            <TextBlock Text="{Binding TicketDeCompra}" Style="{StaticResource titulosTicket}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+            <TextBlock Text="--------------------------------------------------------------------------" Style="{StaticResource textoInfoTicket}"/>
+            <Grid Margin="14, 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Orientation="Horizontal">
+                    <TextBlock Text="Fecha: " Style="{StaticResource textoBoldInfoTicket}" />
+                    <TextBlock Text="Fecha" Style="{StaticResource textoInfoTicket}" />
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
+                    <TextBlock Text="Hora: " Style="{StaticResource textoBoldInfoTicket}" />
+                    <TextBlock Text="Hora" Style="{StaticResource textoInfoTicket}" />
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Orientation="Horizontal">
+                    <TextBlock Text="Cajero: " Style="{StaticResource textoBoldInfoTicket}" />
+                    <TextBlock Text="{Binding Cajero}" Style="{StaticResource textoInfoTicket}" />
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
+                    <TextBlock Text="Caja: " Style="{StaticResource textoBoldInfoTicket}" />
+                    <TextBlock Text="{Binding Caja}" Style="{StaticResource textoInfoTicket}" />
+                </StackPanel>
+            </Grid>
+            <TextBlock Text="--------------------------------------------------------------------------" Style="{StaticResource textoInfoTicket}"/>
+            <ScrollViewer Margin="14, 0" VerticalScrollBarVisibility="Auto" Height="100">
+                <ItemsControl ItemsSource="{Binding ListadoDeProductos}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Left">
+                                    <TextBlock Text="{Binding Cantidad}" Style="{StaticResource textoInfoTicket}" Margin="0" HorizontalAlignment="Left"/>
+                                    <TextBlock Text="x $" Style="{StaticResource textoInfoTicket}" Margin="0" HorizontalAlignment="Left"/>
+                                    <TextBlock Text="{Binding Venta}" Style="{StaticResource textoInfoTicket}" Margin="0" HorizontalAlignment="Left"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Left">
+                                    <TextBlock Text="{Binding Nombre}" Style="{StaticResource textoInfoTicket}" Margin="0" HorizontalAlignment="Left"/>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <TextBlock Text="--------------------------------------------------------------------------" Style="{StaticResource textoInfoTicket}"/>
+            <StackPanel Margin="14, 0" HorizontalAlignment="Right" Orientation="Horizontal">
+                <TextBlock Text="SUBTOTAL: " Style="{StaticResource textoBoldInfoTicket}" />
+                <TextBlock Text="$0,00" Style="{StaticResource textoInfoTicket}" />
+            </StackPanel>
+            <StackPanel Margin="14, 0" HorizontalAlignment="Right" Orientation="Horizontal">
+                <TextBlock Text="DESCUENTO: " Style="{StaticResource textoBoldInfoTicket}" />
+                <TextBlock Text="$0,00" Style="{StaticResource textoInfoTicket}" />
+            </StackPanel>
+            <StackPanel Margin="14, 0" HorizontalAlignment="Right" Orientation="Horizontal">
+                <TextBlock Text="TOTAL: " Style="{StaticResource textoBoldInfoTicket}" />
+                <TextBlock Text="$0,00" Style="{StaticResource textoInfoTicket}" />
+            </StackPanel>
+            <TextBlock Text="--------------------------------------------------------------------------" Style="{StaticResource textoInfoTicket}"/>
+            <StackPanel Margin="14, 0" HorizontalAlignment="Left" Orientation="Horizontal">
+                <TextBlock Text="FORMA DE PAGO: " Style="{StaticResource textoBoldInfoTicket}" />
+                <TextBlock Text="{Binding MetodoDePago}" Style="{StaticResource textoInfoTicket}" />
+            </StackPanel>
+            <StackPanel Margin="14, 0" HorizontalAlignment="Left" Orientation="Horizontal">
+                <TextBlock Text="Vuelto: " Style="{StaticResource textoBoldInfoTicket}" />
+                <TextBlock Text="$0,00" Style="{StaticResource textoInfoTicket}" />
+            </StackPanel>
         </StackPanel>
-        <StackPanel Grid.Column="1">
+        <StackPanel Grid.Row="1" VerticalAlignment="Bottom">
+            <TextBox Style="{StaticResource entrada_form}" Grid.Column="0"></TextBox>
             <RadioButton Style="{StaticResource boton_confirmar}" Command="{Binding ImprimirPagina}">
                 <TextBlock Style="{StaticResource texto_botones_uno}">
                     Imprimir ticket

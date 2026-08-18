@@ -14,13 +14,14 @@
         public int IDCategoria { get; set; }// esto es para convertir el json correctamente a este objeto
         public string Codigo { get; set; }
         private string _venta;
+
         public string Venta 
         {
             get => _venta;
             set 
             {
-                double numero;
-                if (!double.TryParse(value, out numero))
+                decimal numero;
+                if (!decimal.TryParse(value, out numero))
                     throw new Exception("No es un numero el valor que quieres cambiar");
                 if (numero <= 0)
                     throw new Exception("El campo 'Precio de venta' no puede ser negativo");
@@ -33,8 +34,8 @@
             get => _compra;
             set
             {
-                double numero;
-                if (!double.TryParse(value, out numero))
+                decimal numero;
+                if (!decimal.TryParse(value, out numero))
                     throw new Exception("No es un numero el valor que quieres cambiar");
                 if (numero <= 0)
                     throw new Exception("El campo 'Costo de compra' no puede ser negativo");
@@ -47,7 +48,7 @@
             get => _cantidad;
             set
             {
-                if (value <= 0)
+                if (value < 0)
                     throw new Exception("El campo 'Cantidad' no puede ser negativo");
                 _cantidad = value;
             }

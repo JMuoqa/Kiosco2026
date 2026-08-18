@@ -187,7 +187,7 @@
                         </ComboBox>
                         <RadioButton x:Name="listaProductos" Style="{StaticResource boton_confirmar}" Margin="0, 5"
                                      Click="RadioButton_Click" Tag="{Binding Venta}">
-                            <TextBlock Style="{StaticResource texto_botones_uno}"> Vender </TextBlock>
+                            <TextBlock Style="{StaticResource texto_botones_uno}">Guardar venta</TextBlock>
                         </RadioButton>
                     </StackPanel>
                 </StackPanel>

@@ -1,14 +1,18 @@
 ﻿using BarcodeStandard;
+using Dominio;
 using Entidades;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -19,6 +23,16 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
     {
         #region Propiedades
         private List<Productos> _listaProductos;
+        private ObservableCollection<Productos> _listadoDeProductos;
+        public ObservableCollection<Productos> ListadoDeProductos
+        {
+            get => _listadoDeProductos;
+            set
+            {
+                _listadoDeProductos = value;
+                OnPropertyChanged(nameof(Productos));
+            }
+        }
         private Ventas _venta;
         private string _metodoDePago;
         private DateTime _fechaRegistrada;
@@ -29,6 +43,57 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private string _vuelto;
         private string _montoPagado;
         private string _nombreTienda;
+        private string _caja;
+        private string _cajero;
+        private string _direccionTienda;
+        private Configuracion _configuracion;
+        private string _ticketDeCompra;
+        private AdminVentas _adminVentas;
+        public string TicketDeCompra
+        {
+            get => _ticketDeCompra;
+            set
+            {
+                _ticketDeCompra = value;
+                OnPropertyChanged(nameof(TicketDeCompra));
+            }
+        }
+        public string DireccionTienda
+        {
+            get => _direccionTienda;
+            set
+            {
+                _direccionTienda = value;
+                OnPropertyChanged(nameof(DireccionTienda));
+            }
+        }
+        public string Caja
+        {
+            get => _caja;
+            set
+            {
+                _caja = value;
+                OnPropertyChanged(nameof(Caja));
+            }
+        }
+        public string Cajero
+        {
+            get => _cajero;
+            set
+            {
+                _cajero = value;
+                OnPropertyChanged(nameof(Cajero));
+            }
+        }
+        public string MetodoDePago
+        {
+            get => _metodoDePago;
+            set
+            {
+                _metodoDePago = value;
+                OnPropertyChanged(nameof(MetodoDePago));
+            }
+        }
         public string MontoPagado
         {
             get => _montoPagado;
@@ -47,9 +112,21 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 OnPropertyChanged(nameof(Vuelto));
             }
         }
+        public string NombreTienda
+        {
+            get => _nombreTienda;
+            set
+            {
+                _nombreTienda = value;
+                OnPropertyChanged(nameof(NombreTienda));
+            }
+        }
         #endregion
         public ModeloFinalizarVenta(Ventas venta)
         {
+            string ruta = "config.json";
+            string jsonDeConfiguracion = File.ReadAllText(ruta);
+            _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             _venta = venta;
             _fechaRegistrada = venta.Fecha;
             _metodoDePago = venta.FormaDePago;
@@ -58,16 +135,27 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             _total = venta.Total;
             _metodoDePago = venta.FormaDePago;
             _listaProductos = venta.Productos;
+            ListadoDeProductos = new ObservableCollection<Productos>(_listaProductos);
             _indiceActual = 0;
             Vuelto = "0";
             MontoPagado = venta.Total.ToString();
-            _nombreTienda = "Negocio";
+            _nombreTienda = _configuracion.NombreNegocio;
+            Caja = _configuracion.NumeroDeCaja.ToString("D3");
+            Cajero = _configuracion.NombreDeCaja;
+            TicketDeCompra = $"TICKET DE COMPRA \nNº{_configuracion.NumeroDeSucursal.ToString("D4")}-{1.ToString("D8")}";
+            DireccionTienda = _configuracion.DireccionDelLocal;
             ImprimirPagina = new ComandoModeloDeVista(EjecutarImprimirPagina);
+            _adminVentas = new AdminVentas();
+            EjecutarRegistrarVenta(null);
         }
         #region Comandos
         public ICommand ImprimirPagina { get; }
         #endregion
         #region Funciones
+        private async Task EjecutarRegistrarVenta(object arg)
+        {
+            _adminVentas.RegistrarVenta(_venta);
+        }
         private async Task EjecutarImprimirPagina(object arg)
         {
             PrintDocument pd = new PrintDocument(); 
@@ -90,14 +178,14 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             Font fuenteInfoBold = new Font("Roboto Flex", 8, FontStyle.Bold);
             Font fuenteTitutlo = new Font("Roboto Flex", 18, FontStyle.Bold);
             Font fuenteIntermedia = new Font("Roboto Flex", 12, FontStyle.Bold);
-            int nLocal = 1;
+            int nLocal = _configuracion.NumeroDeSucursal;
             int idVenta = 1;
             float limiteIzquierdo = e.MarginBounds.Left;
             float limiteDerecho = e.MarginBounds.Right;
             string nombreNegocio = _nombreTienda.ToUpper(); ;
             string ticket = idVenta.ToString("D8");
             string direccionDelNegocio = "Gabriela Mistral 3591 - Cordoba Argentina";
-            string numeroTicket = $"TICKET DE COMPRA\nNº {nLocal.ToString("D4")}-{idVenta.ToString("D8")}";
+            string numeroTicket = TicketDeCompra;
             string divisor = "---------------------------------------------------------";
             SizeF anchoNombreTiendaUno = e.Graphics.MeasureString(_nombreTienda, fuenteInfo);
             ///
@@ -129,8 +217,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             ///
             string tituloCajero = "Cajero: ";
             string tituloCaja = "Caja: ";
-            string nombreCajero = "ADMIN";
-            string numeroCaja = 1.ToString("D3");
+            string nombreCajero = Cajero;
+            string numeroCaja = Caja;
             SizeF anchoCajero= e.Graphics.MeasureString(tituloCajero, fuenteInfoBold);
             SizeF anchoCaja= e.Graphics.MeasureString(tituloCaja, fuenteInfoBold);
             SizeF anchoNombreCajero = e.Graphics.MeasureString(nombreCajero, fuenteInfoBold);
@@ -222,13 +310,13 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             e.Graphics.DrawString(divisor, fuenteDeco, Brushes.Black, divisorCentrado, y);
             y += 20;
             e.Graphics.DrawString(tituloFormaDePago, fuenteInfoBold, Brushes.Black, limiteIzquierdo, y);
-            e.Graphics.DrawString(_metodoDePago, fuenteInfoBold, Brushes.Black, xFormaDePago, y);
+            e.Graphics.DrawString(_metodoDePago, fuenteInfo, Brushes.Black, xFormaDePago, y);
             y += 15;
             e.Graphics.DrawString(tituloMontoPagado, fuenteInfoBold, Brushes.Black, limiteIzquierdo, y);
-            e.Graphics.DrawString(MontoPagado, fuenteInfoBold, Brushes.Black, xMontoPagado, y);
+            e.Graphics.DrawString(MontoPagado, fuenteInfo, Brushes.Black, xMontoPagado, y);
             y += 15;
             e.Graphics.DrawString(tituloVuelto, fuenteInfoBold, Brushes.Black, limiteIzquierdo, y);
-            e.Graphics.DrawString(Vuelto, fuenteInfoBold, Brushes.Black, xVuelto, y);
+            e.Graphics.DrawString(Vuelto, fuenteInfo, Brushes.Black, xVuelto, y);
             y += 20;
             e.Graphics.DrawString(divisor, fuenteDeco, Brushes.Black, divisorCentrado, y);
             y += 20;

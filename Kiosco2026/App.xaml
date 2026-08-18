@@ -12,6 +12,7 @@
                 <ResourceDictionary Source="/Estilos/botones_nav.xaml"/>
                 <ResourceDictionary Source="/Estilos/entrada_form.xaml"/>
                 <ResourceDictionary Source="/Estilos/estilo_uno_botones.xaml"/>
+                <ResourceDictionary Source="/Estilos/texto_ticket.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <txtBlockCorto:OcultarTextoLargo x:Key="TextTrimmer"/>
         </ResourceDictionary>

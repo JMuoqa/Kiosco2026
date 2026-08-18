@@ -31,7 +31,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             CargarItem = new ComandoModeloDeVista(EjecutarCargarItem);
             EliminarItem = new ComandoModeloDeVista(EjecutarEliminarItem);
             RestablecerValores = new ComandoModeloDeVista(EjecutarRestablecerValores);
-            RegistrarVenta = new ComandoModeloDeVista(EjecutarRegistrarVenta);
             SelecionarTextBox = new ComandoModeloDeVista(EjecutarSelecionarTextBox);
             ListaProductos = new ObservableCollection<Productos>();
             _adminVenta = new AdminVentas();
@@ -152,6 +151,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             set
             {
                 _formaDePago = value;
+                Venta.FormaDePago = _formaDePago;
                 OnPropertyChanged(nameof(FormaDePago));
             }
         }
@@ -235,7 +235,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand KeyDownCargarItem { get; }
         public ICommand CargarItem { get; }
         public ICommand EliminarItem { get; }
-        public ICommand RegistrarVenta { get; }
         public ICommand SelecionarTextBox { get; }
         #endregion
         #region Funciones
@@ -243,32 +242,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             TextBox txt = (TextBox)arg;
             txt.Focus();
-        }
-        private async Task EjecutarRegistrarVenta(object arg)
-        {
-            try
-            {
-                DateTime hoy = DateTime.Now;
-                string total = PrecioTotal.Replace("$", "");
-                int cantidadTotal;
-                decimal precioTotal;
-                if (!int.TryParse(CantidadProductos, out cantidadTotal))
-                    throw new Exception("Algo salio mal, informanos de este error");
-                if(!decimal.TryParse(total, out precioTotal))
-                    throw new Exception("Algo salio mal, informanos de este error");
-                Ventas venta = new Ventas
-                {
-                    Fecha = hoy,
-                    CantidadProductos = cantidadTotal,
-                    Total = precioTotal,
-                    FormaDePago = this.FormaDePago,
-                };
-                var res = await _adminVenta.RegistrarVenta(ListaProductos.ToList(), venta);
-            }
-            catch(Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
         }
         private async Task EjecutarRestablecerValores(object arg)
         {

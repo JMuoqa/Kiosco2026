@@ -14,16 +14,16 @@ namespace Conexiones
     public class Con_Ventas : ConexionMySQL
     {
         #region Con_RegistrarVenta
-        public async Task<(bool estado, string mensaje)> Con_RegistrarVenta(List<Productos> pr, Ventas venta)
+        public async Task<(bool estado, string mensaje)> Con_RegistrarVenta(Ventas venta)
         {
             using (var conexion = new MySqlConnection(cadenaDeConexion))
             {
                 try
                 {
-                    string registrarUsuario = "INSERT INTO ventas (fecha, items, cantidad_total_productos, forma_pago, total, id_usuario) VALUES( @fecha, @items, @cantidad_total, @forma_pago, @total);";
+                    string registrarUsuario = "INSERT INTO ventas (fecha, items, cantidad_total_productos, forma_pago, total) VALUES( @fecha, @items, @cantidad_total, @forma_pago, @total);";
                     MySqlCommand cmd = new MySqlCommand(registrarUsuario, conexion);
                     cmd.Parameters.AddWithValue("@fecha", venta.Fecha);
-                    cmd.Parameters.AddWithValue("@items", pr.Count);
+                    cmd.Parameters.AddWithValue("@items", venta.Productos.Count);
                     cmd.Parameters.AddWithValue("@cantidad_total", venta.CantidadProductos);
                     cmd.Parameters.AddWithValue("@forma_pago", venta.FormaDePago);
                     cmd.Parameters.AddWithValue("@total", venta.Total);
@@ -32,9 +32,9 @@ namespace Conexiones
                     var ultimoIdVenta = cmd.LastInsertedId;
                     if(resultado>0)
                     {
-                        for (int i = 0; i < pr.Count; i++) 
+                        for (int i = 0; i < venta.Productos.Count; i++) 
                         {
-                            var resultadoDetalleVentas = await RestarProductoVendido(pr[i], conexion, ultimoIdVenta);
+                            var resultadoDetalleVentas = await RestarProductoVendido(venta.Productos[i], conexion, ultimoIdVenta);
                         }
                     }
                     return (true, "Pruebas");
@@ -58,6 +58,7 @@ namespace Conexiones
                 Productos primerProductoConStock = new Productos();
                 using (MySqlDataReader lector = cmd.ExecuteReader())
                 {
+                    bool objetoLlenado = false;
                     while (lector.Read())
                     {
                         primerProductoConStock = new Productos()
@@ -73,13 +74,18 @@ namespace Conexiones
                             Cantidad = lector.GetInt32("Cantidad"),
                             Codigo = lector.GetString("Codigo")
                         };
+                        objetoLlenado = true;
                     }
+                    if (!objetoLlenado)
+                        primerProductoConStock = pr;
                 }
+
                 int cantidadARestar = pr.Cantidad;
                 int cantidadDelPrimerProducto = primerProductoConStock.Cantidad;
                 int resultadoDeResta = cantidadDelPrimerProducto - cantidadARestar;
                 if (resultadoDeResta < 0)
                 {
+                    pr.Cantidad = resultadoDeResta * (-1);
                     string actualizarProducto = "UPDATE Productos SET Cantidad = 0 WHERE ID = @id;";
                     MySqlCommand cmdActualizarProducto = new MySqlCommand(actualizarProducto, con);
                     cmdActualizarProducto.Parameters.AddWithValue("@id", primerProductoConStock.ID);
@@ -104,12 +110,13 @@ namespace Conexiones
         {
             string cargarDetalleVentacar = "INSERT INTO detalle_ventas (id_venta, id_producto, codigo, cantidad, precio_unitario, subtotal) VALUES(@idventa, @idproducto, @codigo, @cantidad, @preciounitario, @subtotal);";
             decimal subTotal = decimal.Parse(pr.Venta, NumberStyles.Any, new CultureInfo("es-AR")) * pr.Cantidad;
+            decimal venta = decimal.Parse(pr.Venta, NumberStyles.Any, new CultureInfo("es-AR"));
             MySqlCommand cmd = new MySqlCommand(cargarDetalleVentacar, con);
             cmd.Parameters.AddWithValue("@idventa", ultimoIdVenta);
             cmd.Parameters.AddWithValue("@idproducto", primerProductoConStock.ID);
             cmd.Parameters.AddWithValue("@codigo", pr.Codigo);
             cmd.Parameters.AddWithValue("@cantidad", pr.Cantidad);
-            cmd.Parameters.AddWithValue("@preciounitario", pr.Venta);
+            cmd.Parameters.AddWithValue("@preciounitario", venta);
             cmd.Parameters.AddWithValue("@subtotal", subTotal);
             cmd.ExecuteNonQuery();
             return true;
