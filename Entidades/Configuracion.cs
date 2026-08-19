@@ -15,6 +15,9 @@ namespace Entidades
         public int NumeroDeSucursal { get; set; }
         public string NombreDeCaja { get; set; }
         public string DireccionDelLocal { get; set; }
+        public string BaseDeDatos { get; set; }
+        public string Usuario { get; set; }
+        public string Contrasena { get; set; }
     }
     public class ColoresTexto
     {
