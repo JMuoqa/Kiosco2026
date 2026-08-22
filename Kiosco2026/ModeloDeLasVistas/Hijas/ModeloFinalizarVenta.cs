@@ -45,6 +45,16 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private string _nombreTienda;
         private string _caja;
         private string _cajero;
+        private string _idVenta;
+        public string IdVenta
+        {
+            get => _idVenta;
+            set
+            {
+                _idVenta = value;
+                OnPropertyChanged(nameof(IdVenta));
+            }
+        }
         private string _direccionTienda;
         private Configuracion _configuracion;
         private string _ticketDeCompra;
@@ -142,11 +152,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             _nombreTienda = _configuracion.NombreNegocio;
             Caja = _configuracion.NumeroDeCaja.ToString("D3");
             Cajero = _configuracion.NombreDeCaja;
-            TicketDeCompra = $"TICKET DE COMPRA \nNº{_configuracion.NumeroDeSucursal.ToString("D4")}-{1.ToString("D8")}";
-            DireccionTienda = _configuracion.DireccionDelLocal;
-            ImprimirPagina = new ComandoModeloDeVista(EjecutarImprimirPagina);
             _adminVentas = new AdminVentas();
             EjecutarRegistrarVenta(null);
+            DireccionTienda = _configuracion.DireccionDelLocal;
+            ImprimirPagina = new ComandoModeloDeVista(EjecutarImprimirPagina);
         }
         #region Comandos
         public ICommand ImprimirPagina { get; }
@@ -154,7 +163,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         #region Funciones
         private async Task EjecutarRegistrarVenta(object arg)
         {
-            _adminVentas.RegistrarVenta(_venta);
+            var datos = await _adminVentas.RegistrarVenta(_venta);
+            IdVenta = datos.id.ToString("D8");
+            TicketDeCompra = $"TICKET DE COMPRA \nNº{_configuracion.NumeroDeSucursal.ToString("D4")}-{IdVenta}";
         }
         private async Task EjecutarImprimirPagina(object arg)
         {
@@ -179,11 +190,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             Font fuenteTitutlo = new Font("Roboto Flex", 18, FontStyle.Bold);
             Font fuenteIntermedia = new Font("Roboto Flex", 12, FontStyle.Bold);
             int nLocal = _configuracion.NumeroDeSucursal;
-            int idVenta = 1;
             float limiteIzquierdo = e.MarginBounds.Left;
             float limiteDerecho = e.MarginBounds.Right;
             string nombreNegocio = _nombreTienda.ToUpper(); ;
-            string ticket = idVenta.ToString("D8");
+            string ticket = IdVenta;
             string direccionDelNegocio = "Gabriela Mistral 3591 - Cordoba Argentina";
             string numeroTicket = TicketDeCompra;
             string divisor = "---------------------------------------------------------";
@@ -343,7 +353,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private void FinDeImpresion(object sender, PrintEventArgs e)
         {
             // Avanza unas líneas para que quede espacio debajo del ticket
-            byte[] feed = new byte[] { 0x1B, 0x64, 0x06 }; // 6? líneas CREO QUE EL 3 PARAMETRO SON LAS LINEAS
+            byte[] feed = new byte[] { 0x1B, 0x64, 0x06 }; // 6? líneas CREO QUE LA TERCER COLUMNA ES EL PARAMETRO DE LAS LINEAS
             ComportamientoImpresora.SendBytesToPrinter("FUKUNTickets", feed);
             byte[] cut = new byte[] { 0x1D, 0x56, 0x00 }; // ESC/POS corte total
             ComportamientoImpresora.SendBytesToPrinter("FUKUNTickets", cut);

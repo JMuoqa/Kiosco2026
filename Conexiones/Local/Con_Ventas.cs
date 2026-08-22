@@ -14,7 +14,7 @@ namespace Conexiones
     public class Con_Ventas : ConexionMySQL
     {
         #region Con_RegistrarVenta
-        public async Task<(bool estado, string mensaje)> Con_RegistrarVenta(Ventas venta)
+        public async Task<(bool estado, string mensaje, long idV)> Con_RegistrarVenta(Ventas venta)
         {
             using (var conexion = new MySqlConnection(cadenaDeConexion))
             {
@@ -37,13 +37,13 @@ namespace Conexiones
                             var resultadoDetalleVentas = await RestarProductoVendido(venta.Productos[i], conexion, ultimoIdVenta);
                         }
                     }
-                    return (true, "Pruebas");
+                    return (true, "Pruebas", ultimoIdVenta);
                 }
                 catch (Exception ex)
                 {
 
                     Debug.WriteLine(ex.Message);
-                    return (false, ex.Message);
+                    return (false, ex.Message, 0);
                 }
             }
         }

@@ -11,7 +11,7 @@ namespace Dominio
     public class AdminVentas
     {
         private Con_Ventas _ventas = new Con_Ventas();
-        public async Task<(bool estado, string menasje)> RegistrarVenta(Ventas venta)
+        public async Task<(bool estado, string menasje, long id)> RegistrarVenta(Ventas venta)
         {
             return await _ventas.Con_RegistrarVenta(venta);
         }

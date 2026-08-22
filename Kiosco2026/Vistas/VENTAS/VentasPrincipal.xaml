@@ -51,7 +51,7 @@
                     </i:Interaction.Triggers>
                 </TextBox>
                 <RadioButton Style="{StaticResource boton_buscar}" Margin="0, 0, 15, 0"  Width="40"
-                             Command="{Binding CargarItem}">
+                             Command="{Binding CargarItem}" Focusable="False">
                     <fa:IconImage Icon="Add" Width="20"/>
                 </RadioButton>
                 <TextBox x:Name="entrada_cantidad" Style="{StaticResource entrada_form}" Width="100" PreviewTextInput="entradas_PreviewTextInput"
@@ -64,6 +64,10 @@
                         <i:EventTrigger EventName="LostFocus">
                             <i:InvokeCommandAction Command="{Binding LostFocus}" 
                            CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="KeyDown">
+                            <i:InvokeCommandAction Command="{Binding FocusACodigos}" 
+                                                   PassEventArgsToCommand="True"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </TextBox>
@@ -180,7 +184,8 @@
                                    SelectedValue="{Binding FormaDePago}"
                                    SelectedValuePath="Content"
                                    Foreground="{Binding ColoresEntradas.Categoria}"
-                                   Cursor="Hand">
+                                   Cursor="Hand"
+                                   Focusable="False">
                             <ComboBoxItem Content="Efectivo" Foreground="#000000"/>
                             <ComboBoxItem Content="Transferencia" Foreground="#000000"/>
                             <ComboBoxItem Content="Debito" Foreground="#000000"/>
