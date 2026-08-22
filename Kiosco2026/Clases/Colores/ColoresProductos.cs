@@ -28,6 +28,17 @@ namespace Kiosco2026.Clases.Colores
         private Brush _busuqedaUno;
         private Brush _descuento;
         private Brush _montoPagado;
+        private Brush _unidadMedida;
+        public Brush UnidadMedida
+        {
+            get => _unidadMedida;
+            set
+            {
+                _unidadMedida = value;
+                OnPropertyChanged(nameof(UnidadMedida));
+            }
+        }
+
         public Brush MontoPagado
         {
             get => _montoPagado;

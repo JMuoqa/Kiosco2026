@@ -13,8 +13,8 @@
         public string Categoria { get; set; }
         public int IDCategoria { get; set; }// esto es para convertir el json correctamente a este objeto
         public string Codigo { get; set; }
+        public string UnidadMedida { get; set; }
         private string _venta;
-
         public string Venta 
         {
             get => _venta;
@@ -83,6 +83,7 @@
     public class ProductosDto
     {
         public string ID { get; set; }
+        public string UnidadMedida { get; set; }
         public string Nombre { get; set; }
         public string Categoria { get; set; }
         public string Codigo { get; set; }

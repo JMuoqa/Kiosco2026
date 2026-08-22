@@ -119,19 +119,42 @@
                 </TextBlock>
             </StackPanel>
             <StackPanel Grid.Column="1">
-                <TextBox x:Name="entrada_cantidad" Style="{StaticResource entrada_form}" Text="{Binding Cantidad}" 
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="entrada_cantidad" Style="{StaticResource entrada_form}" Text="{Binding Cantidad}" 
                          PreviewTextInput="entradas_PreviewTextInput" Foreground="{Binding ColoresEntradas.Cantidad}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="GotFocus">
-                            <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="GotFocus">
+                                <i:InvokeCommandAction Command="{Binding GotFocus}" 
                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
-                        </i:EventTrigger>
-                        <i:EventTrigger EventName="LostFocus">
-                            <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="LostFocus">
+                                <i:InvokeCommandAction Command="{Binding LostFocus}" 
                                CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </TextBox>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </TextBox>
+                    <ComboBox x:Name="cmb_unidad" Grid.Column="1" PreviewMouseDown="cmb_categorias_PreviewMouseDown"
+                        Style="{StaticResource cmb_entrada_form}" SelectedIndex="0" Foreground="{Binding ColoresEntradas.UnidadMedida}"
+                        Cursor="Hand" SelectedItem="{Binding ComboBoxItem}">
+                        <ComboBoxItem Foreground="#000000">Unidad de medida*</ComboBoxItem>
+                        <ComboBoxItem Foreground="#000000">Un</ComboBoxItem>
+                        <ComboBoxItem Foreground="#000000">g</ComboBoxItem>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding SelectionChangedUnidadMedida}"
+                                                   CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ComboBox}}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="Loaded">
+                                <i:InvokeCommandAction Command="{Binding GuardarCmbUni}" 
+                                                           CommandParameter="{Binding ElementName=cmb_unidad}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                </Grid>
                 <TextBox x:Name="entrada_proveedor" Style="{StaticResource entrada_form}" Text="{Binding Proveedor}" 
                          Foreground="{Binding ColoresEntradas.Proveedor}">
                     <i:Interaction.Triggers>

@@ -35,7 +35,9 @@ namespace Dominio
                 Cantidad = cantidadProductos,
                 Proveedor = productoDto.Proveedor,
                 Ingreso = productoDto.Ingreso,
-                Vencimiento = productoDto.Vencimiento
+                Vencimiento = productoDto.Vencimiento,
+                UnidadMedida = productoDto.UnidadMedida,
+                
             };
             return await _productos.Con_CargarProducto(producto);
         }
@@ -139,6 +141,8 @@ namespace Dominio
         {
             if (prod == null)
                 throw new Exception ("No hay datos del producto");
+            if(string.IsNullOrWhiteSpace(prod.UnidadMedida) || prod.UnidadMedida == "Unidad de medida*")
+                throw new Exception("El campo 'Unidad de medida' esta vacio");
             if (string.IsNullOrWhiteSpace(prod.Nombre) || prod.Nombre == "Nombre*")
                 throw new Exception("El campo 'Nombre' esta vacio");
             if (string.IsNullOrWhiteSpace(prod.Categoria) || prod.Categoria == "Categoria*")

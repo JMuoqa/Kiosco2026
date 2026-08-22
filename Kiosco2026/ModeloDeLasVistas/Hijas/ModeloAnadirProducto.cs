@@ -20,12 +20,35 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
     public class ModeloAnadirProducto : ModeloDeVistaBase
     {
         #region Propiedades
+        private ComboBoxItem _comboBoxItem;
+        public ComboBoxItem ComboBoxItem
+        {
+            get => _comboBoxItem;
+            set
+            {
+                _comboBoxItem = value;
+                string texto = _comboBoxItem.Content.ToString();
+                UnidadMedida = texto;
+                OnPropertyChanged(nameof(ComboBoxItem));
+            }
+        }
+        private string _unidadMedida;
+        public string UnidadMedida
+        {
+            get => _unidadMedida;
+            set
+            {
+                _unidadMedida = value;
+                OnPropertyChanged(nameof(UnidadMedida));
+            }
+        }
         private System.Timers.Timer tiempo;
         private string _nombre;
         private string _codigo;
         private Categorias _categoria;
         private ColoresTexto _colores;
         private ComboBox _cmbCat;
+        private ComboBox _cmbUni;
         private string _colorMensaje;
         private string _venta;
         private string _compra;
@@ -174,8 +197,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
             LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
             SelectionChanged = new ComandoModeloDeVista(EjecutarSelected);
+            SelectionChangedUnidadMedida = new ComandoModeloDeVista(EjecutarSelectedUnidadMedida);
             ComprobarExistencia = new ComandoModeloDeVista(EjecutarComprobarExistencia);
-            GuardarCmb = new ComandoModeloDeVista(EjecutarGuardarCmb);
+            GuardarCmb = new ComandoModeloDeVista(EjecutarGuardarCmbCat);
+            GuardarCmbUni= new ComandoModeloDeVista(EjecutarGuardarCmbUni);
             _colores = new ColoresTexto();
             _adminProductos = new AdminProductos();
             _cmbCat = new ComboBox();
@@ -194,13 +219,20 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand GotFocus { get; }
         public ICommand LostFocus { get; }
         public ICommand SelectionChanged { get; }
+        public ICommand SelectionChangedUnidadMedida { get; }
         public ICommand GuardarCmb { get; }
+        public ICommand GuardarCmbUni { get; }
         #endregion
         #region Funciones
-        private async Task EjecutarGuardarCmb(object arg)
+        private async Task EjecutarGuardarCmbCat(object arg)
         {
             ComboBox cmb = (ComboBox)arg;
             _cmbCat = cmb;
+        }
+        private async Task EjecutarGuardarCmbUni(object arg)
+        {
+            ComboBox cmb = (ComboBox)arg;
+            _cmbUni = cmb;
         }
         private async Task EjecutarComprobarExistencia(object arg)
         {
@@ -220,12 +252,20 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                         Proveedor = res.producto.Proveedor;
                         ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
                         ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+                        ColoresEntradas.UnidadMedida = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
                         ColoresEntradas.Proveedor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
                         for (int i = 0; i < _cmbCat.Items.Count; i++)
                         {
                             Categorias cate = (Categorias)_cmbCat.Items[i];
                             if (cate.ID == res.producto.IDCategoria)
                                 _cmbCat.SelectedIndex = i;
+                        }
+                        for (int i = 0; i < _cmbUni.Items.Count; i++)
+                        {
+                            ComboBoxItem cmbItem = (ComboBoxItem)_cmbUni.Items[i];
+                            string texto = cmbItem.Content.ToString();
+                            if (texto == res.producto.UnidadMedida)
+                                _cmbUni.SelectedIndex = i;
                         }
                     }
                     else
@@ -241,7 +281,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             }
             finally
             {
-                tiempo.Interval = 10000;
+                tiempo.Interval = 15000;
                 tiempo.Enabled = true;
             }
         }
@@ -277,7 +317,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     Cantidad = this.Cantidad,
                     Proveedor = this.Proveedor,
                     Ingreso = fechaSeleccionadaHoraActual,
-                    Vencimiento = this.Vencimiento
+                    Vencimiento = this.Vencimiento,
+                    UnidadMedida = this.UnidadMedida
                 };
                 var respuesta = await _adminProductos.CargarProducto(producto);
                 if (respuesta.estado){
@@ -297,7 +338,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             finally
             {
                 ProductoNuevo = "";
-                tiempo.Interval = 10000;
+                tiempo.Interval = 15000;
                 tiempo.Enabled = true;
             }
         }
@@ -324,6 +365,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
             ColoresEntradas.Proveedor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
             ColoresEntradas.Categoria = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.UnidadMedida = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
             DateTime hoy = DateTime.Today;
             DateTime AnoDespues = hoy.AddYears(1);
             Ingreso = hoy;
@@ -339,6 +381,15 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 ColoresEntradas.Categoria = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
             else
                 ColoresEntradas.Categoria= new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+        }
+        private async Task EjecutarSelectedUnidadMedida (object arg)
+        {
+            ComboBoxItem item = (ComboBoxItem)arg;
+            string texto = (string)item.Content;
+            if(texto != "Unidad de medida*")
+                ColoresEntradas.UnidadMedida = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+            else
+                ColoresEntradas.UnidadMedida = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
         }
         private async Task EjecutarGotFocus(object arg)
         {

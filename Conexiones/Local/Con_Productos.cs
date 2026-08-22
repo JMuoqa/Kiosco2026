@@ -21,14 +21,20 @@ namespace Conexiones
                     con.Open();
                     int idCategoriaExistente = await Con_ObtenerCategoriaProducto(con, producto.Codigo);
                     int idCategoriaFinal = await Con_ObtenerIDCategoria(con, producto.Categoria);
+                    string t = await Con_ObtenerUnidadMedidaPorCodigo(con, producto.Codigo);
+                    if(t != producto.UnidadMedida)
+                        return (estado: false, mensaje: "El producto ya está registrado y" +
+                            " la 'unidad de medida' que intentas asignar no coincide con la 'unidad de medida'" +
+                            " existente. Para continuar, puedes cambiar la 'unidad de medida' del" +
+                            " producto que estás intentando cargar o actualizar la del producto ya registrado.");
                     if (idCategoriaExistente > 0  && idCategoriaExistente != idCategoriaFinal)
                         return (estado: false, mensaje: "El producto ya está registrado y"+
-                            " la categoría que intentas asignar no coincide con la categoría"+
-                            " existente. Para continuar, puedes cambiar la categoría del"+
-                            " producto que estás intentando cargar o actualizar la categoría del producto ya registrado.");
+                            " la 'categoría' que intentas asignar no coincide con la 'categoría'" +
+                            " existente. Para continuar, puedes cambiar la 'categoría' del" +
+                            " producto que estás intentando cargar o actualizar la del producto ya registrado.");
                     int IDCategoria = idCategoriaFinal;
-                    string insertarProductos = "INSERT INTO Productos (Nombre, IDCategoria, Codigo, Venta, Compra, Cantidad, Proveedor, Mostrar, Ingreso, Vencimiento)"+
-                        " VALUES(@nombre, @categoria, @codigo, @venta, @compra, @cantidad, @proveedor, \"SI\", @ingreso, @vencimiento);";
+                    string insertarProductos = "INSERT INTO Productos (Nombre, IDCategoria, Codigo, Venta, Compra, Cantidad, Proveedor, Mostrar, Ingreso, Vencimiento, UnidadMedida)"+
+                        " VALUES(@nombre, @categoria, @codigo, @venta, @compra, @cantidad, @proveedor, \"SI\", @ingreso, @vencimiento, @unidad);";
                     MySqlCommand cmd = new MySqlCommand(insertarProductos, con);
                     cmd.Parameters.AddWithValue("@nombre", producto.Nombre);
                     cmd.Parameters.AddWithValue("@categoria", IDCategoria);
@@ -39,6 +45,7 @@ namespace Conexiones
                     cmd.Parameters.AddWithValue("@proveedor", producto.Proveedor);
                     cmd.Parameters.AddWithValue("@ingreso", producto.Ingreso);
                     cmd.Parameters.AddWithValue("@vencimiento", producto.Vencimiento);
+                    cmd.Parameters.AddWithValue("@@unidad", producto.UnidadMedida);
                     var resultado = await cmd.ExecuteNonQueryAsync();
                     if(resultado>0)
                         return (true, "Se cargo exitosamente");
@@ -51,9 +58,23 @@ namespace Conexiones
                 }
             }
         }
+        private async Task<string> Con_ObtenerUnidadMedidaPorCodigo(MySqlConnection con, string codigo)
+        {
+            string obtenerUnidadMedida = "SELECT UnidadMedida FROM Productos WHERE Codigo = @codigo";
+            MySqlCommand cmd = new MySqlCommand(obtenerUnidadMedida, con);
+            cmd.Parameters.AddWithValue("@codigo", codigo);
+            string t = "";
+            using (MySqlDataReader datos = cmd.ExecuteReader())
+            {
+                if (datos.Read())
+                {
+                    t = Convert.ToString(datos["UnidadMedida"]);
+                }
+            }
+            return t;
+        }
         private async Task<int> Con_ObtenerIDCategoria(MySqlConnection con, string nombreCategoria)
         {
-            Debug.WriteLine("Con_Productos - Con_ObtenerIDCategoria. nombreCategoria: " + nombreCategoria);
             string obtenerID = "SELECT ID FROM Categorias WHERE Nombre = @nombre";
             MySqlCommand cmd = new MySqlCommand(obtenerID, con);
             cmd.Parameters.AddWithValue("@nombre", nombreCategoria);
@@ -108,6 +129,7 @@ namespace Conexiones
                                 Nombre = lector.GetString("Nombre"),
                                 Proveedor = lector.GetString("Proveedor"),
                                 IDCategoria = lector.GetInt32("IDCategoria"),
+                                UnidadMedida = lector.GetString("UnidadMedida")
                             };
                             var listaCate = await Con_ObtenerCategorias();
                             List<Categorias> listaCompleta = listaCate.lista;
