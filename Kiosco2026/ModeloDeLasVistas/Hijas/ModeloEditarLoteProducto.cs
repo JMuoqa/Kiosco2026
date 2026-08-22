@@ -388,7 +388,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     throw new Exception("El campo 'cantidad' no es un numero");
                 Productos nuevoProducto = new Productos
                 {
-                    Nombre = this.Nombre,
+                    Nombre = this.Nombre.ToUpper(),
                     Cantidad = cantidad,
                     Compra = this.Compra,
                     Venta = this.Venta,

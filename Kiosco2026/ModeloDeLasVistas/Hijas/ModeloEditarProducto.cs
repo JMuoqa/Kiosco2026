@@ -383,7 +383,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     mostrar = "NO";
                 Productos producto = new Productos
                 {
-                    Nombre = this.Nombre,
+                    Nombre = this.Nombre.ToUpper(),
                     Categoria = this.Categoria.Nombre,
                     Venta = this.Venta,
                     Compra = this.Compra,

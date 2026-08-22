@@ -309,13 +309,13 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 );
                 ProductosDto producto = new ProductosDto
                 {
-                    Nombre = this.Nombre,
+                    Nombre = this.Nombre.ToUpper(),
                     Categoria = this.Categoria.Nombre, //Categoria deberia ser un numero
                     Codigo = this.Codigo,
                     Margen = this.Margen,
                     Compra = this.Compra,
                     Cantidad = this.Cantidad,
-                    Proveedor = this.Proveedor,
+                    Proveedor = this.Proveedor.ToUpper(),
                     Ingreso = fechaSeleccionadaHoraActual,
                     Vencimiento = this.Vencimiento,
                     UnidadMedida = this.UnidadMedida
