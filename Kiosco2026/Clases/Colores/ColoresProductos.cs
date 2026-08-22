@@ -27,6 +27,16 @@ namespace Kiosco2026.Clases.Colores
         private Brush _busuqeda;
         private Brush _busuqedaUno;
         private Brush _descuento;
+        private Brush _montoPagado;
+        public Brush MontoPagado
+        {
+            get => _montoPagado;
+            set
+            {
+                _montoPagado = value;
+                OnPropertyChanged(nameof(MontoPagado));
+            }
+        }
         public Brush Descuento
         {
             get => _descuento;

@@ -1,6 +1,7 @@
 ﻿using BarcodeStandard;
 using Dominio;
 using Entidades;
+using Kiosco2026.Clases.Colores;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -37,20 +38,67 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private string _metodoDePago;
         private DateTime _fechaRegistrada;
         private decimal _subTotal;
-        private decimal _descuento;
-        public string Descuneto
+        public string SubTotal
         {
-            get => _descuento.ToString();
+            get => "$"+_subTotal.ToString("N2", new CultureInfo("es-AR"));
+            set
+            {
+                _subTotal = decimal.Parse(value.ToString(), NumberStyles.Any, new CultureInfo("es-AR"));
+                OnPropertyChanged(nameof(SubTotal));
+            }
+        }
+        private decimal _descuento;
+        public string Descuento
+        {
+            get => "$"+_descuento.ToString("N2", new CultureInfo("es-AR"));
             set
             {
                 _descuento = decimal.Parse(value.ToString(), NumberStyles.Any, new CultureInfo("es-AR"));
-                OnPropertyChanged(nameof(Descuneto));
+                OnPropertyChanged(nameof(Descuento));
             }
         }
         private decimal _total;
+        public string Total
+        {
+            get => "$" + _total.ToString("N2", new CultureInfo("es-AR"));
+            set
+            {
+                _total = decimal.Parse(value.ToString(), NumberStyles.Any, new CultureInfo("es-AR"));
+                OnPropertyChanged(nameof(Total));
+            }
+        }
         private int _indiceActual;
-        private string _vuelto;
-        private string _montoPagado;
+        private decimal _vuelto;
+        public string Vuelto
+        {
+            get => "$" + _vuelto.ToString("N2", new CultureInfo("es-AR"));
+            set
+            {
+
+                _vuelto = decimal.Parse(value.ToString(), NumberStyles.Any, new CultureInfo("es-AR"));
+                OnPropertyChanged(nameof(Vuelto));
+            }
+        }
+        private decimal _montoPagado;
+        public string MontoPagado
+        {
+            get
+            {
+                if (_montoPagado != 0)
+                    return _montoPagado.ToString("N2", new CultureInfo("es-AR"));
+                else
+                    return "";
+            }
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                    _montoPagado = decimal.Parse(value.ToString(), NumberStyles.Any, new CultureInfo("es-AR"));
+                else
+                    _montoPagado = 0;
+                ActualizarVuelto();
+                OnPropertyChanged(nameof(MontoPagado));
+            }
+        }
         private string _nombreTienda;
         private string _caja;
         private string _cajero;
@@ -113,24 +161,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 OnPropertyChanged(nameof(MetodoDePago));
             }
         }
-        public string MontoPagado
-        {
-            get => _montoPagado;
-            set
-            {
-                _montoPagado = value;
-                OnPropertyChanged(nameof(MontoPagado));
-            }
-        }
-        public string Vuelto
-        {
-            get => _vuelto;
-            set
-            {
-                _vuelto = value;
-                OnPropertyChanged(nameof(Vuelto));
-            }
-        }
         public string NombreTienda
         {
             get => _nombreTienda;
@@ -140,19 +170,33 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 OnPropertyChanged(nameof(NombreTienda));
             }
         }
+
+        private ColoresProductos _coloresEntradas;
+        public ColoresProductos ColoresEntradas
+        {
+            get => _coloresEntradas;
+            set
+            {
+                _coloresEntradas = value;
+                OnPropertyChanged(nameof(_coloresEntradas));
+            }
+        }
         #endregion
         public ModeloFinalizarVenta(Ventas venta)
         {
+            _coloresEntradas = new ColoresProductos();
+            ColoresEntradas.MontoPagado = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#FFFFFF"));
+            GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
+            LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
             string ruta = "config.json";
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             _venta = venta;
             _fechaRegistrada = venta.Fecha;
             _metodoDePago = venta.FormaDePago;
-            Descuneto = venta.Descuento.ToString();
-            _subTotal = venta.SubTotal;
+            Descuento = venta.Descuento.ToString();
+            SubTotal = venta.SubTotal.ToString();
             _total = venta.Total;
-            _metodoDePago = venta.FormaDePago;
             _listaProductos = venta.Productos;
             ListadoDeProductos = new ObservableCollection<Productos>(_listaProductos);
             _indiceActual = 0;
@@ -168,8 +212,15 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         #region Comandos
         public ICommand ImprimirPagina { get; }
+        public ICommand GotFocus { get; }
+        public ICommand LostFocus { get; }
         #endregion
         #region Funciones
+        private void ActualizarVuelto()
+        {
+            decimal resultado = _montoPagado - _total;
+            Vuelto = resultado.ToString();
+        }
         private async Task EjecutarRegistrarVenta(object arg)
         {
             var datos = await _adminVentas.RegistrarVenta(_venta);
@@ -224,8 +275,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             SizeF anchoTituloSubTotal = e.Graphics.MeasureString(tituloSubTotal, fuenteInfoBold);
             SizeF anchoTituloDescuento = e.Graphics.MeasureString(tituloDescuento, fuenteInfoBold);
             SizeF anchoTituloPrecioTotal = e.Graphics.MeasureString(tituloPrecioTotal, fuenteInfoBold);
+            // "N2" ESPECIFICA QUE TENDRA 2 0 DECIMALES
             string _strSubTotal = "$" + _subTotal.ToString("N2", new CultureInfo("es-AR"));
-            string descuento = "$" + _descuento.ToString();
+            string descuento = "$" + _descuento.ToString("N2", new CultureInfo("es-AR"));
             SizeF anchoSubTotal = e.Graphics.MeasureString(_strSubTotal, fuenteInfoBold);
             SizeF anchoDescuento = e.Graphics.MeasureString(descuento, fuenteInfoBold);
             string _strTotal = "$" + _total.ToString("N2", new CultureInfo("es-AR"));
@@ -367,6 +419,15 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             ComportamientoImpresora.SendBytesToPrinter("FUKUNTickets", feed);
             byte[] cut = new byte[] { 0x1D, 0x56, 0x00 }; // ESC/POS corte total
             ComportamientoImpresora.SendBytesToPrinter("FUKUNTickets", cut);
+        }
+        private async Task EjecutarGotFocus(object arg)
+        {
+            MontoPagado = "";
+        }
+        private async Task EjecutarLostFocus(object arg)
+        {
+            if (string.IsNullOrWhiteSpace(MontoPagado))
+                MontoPagado = "0";
         }
         #endregion
     }

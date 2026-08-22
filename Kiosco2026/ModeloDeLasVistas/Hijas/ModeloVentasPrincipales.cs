@@ -125,6 +125,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             }
         }
         #endregion
+        #region Propiedades
         private string _cantidadItems;
         private string _precioTotal;
         private string _cantidad;
@@ -238,6 +239,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 OnPropertyChanged(nameof(ListaProductos));
             }
         }
+        #endregion
         #region Comandos
         public ICommand ActualizarAnchoActual { get; }
         public ICommand SelectionChanged { get; }

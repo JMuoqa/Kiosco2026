@@ -5,15 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kiosco2026.Vistas.VENTAS"
         xmlns:modelo="clr-namespace:Kiosco2026.ModeloDeLasVistas.Hijas"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         WindowStartupLocation="CenterOwner"
         mc:Ignorable="d"
-        Title="FinalizarVenta" Height="700" Width="450
-        ">
+        Title="FinalizarVenta" 
+        Height="750" Width="450">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="120"/>
-        </Grid.RowDefinitions>
         <StackPanel>
             <TextBlock Text="{Binding NombreTienda}" Style="{StaticResource titulosTicket}" HorizontalAlignment="Center"/>
             <TextBlock Text="{Binding DireccionTienda}" Style="{StaticResource textoInfoTicket}" HorizontalAlignment="Center"/>
@@ -72,15 +69,15 @@
             <TextBlock Text="--------------------------------------------------------------------------" Style="{StaticResource textoInfoTicket}"/>
             <StackPanel Margin="14, 0" HorizontalAlignment="Right" Orientation="Horizontal">
                 <TextBlock Text="SUBTOTAL: " Style="{StaticResource textoBoldInfoTicket}" />
-                <TextBlock Text="$0,00" Style="{StaticResource textoInfoTicket}" />
+                <TextBlock Text="{Binding SubTotal}" Style="{StaticResource textoInfoTicket}" />
             </StackPanel>
             <StackPanel Margin="14, 0" HorizontalAlignment="Right" Orientation="Horizontal">
                 <TextBlock Text="DESCUENTO: " Style="{StaticResource textoBoldInfoTicket}" />
-                <TextBlock Text="" Style="{StaticResource textoInfoTicket}" />
+                <TextBlock Text="{Binding Descuento}" Style="{StaticResource textoInfoTicket}" />
             </StackPanel>
             <StackPanel Margin="14, 0" HorizontalAlignment="Right" Orientation="Horizontal">
                 <TextBlock Text="TOTAL: " Style="{StaticResource textoBoldInfoTicket}" />
-                <TextBlock Text="$0,00" Style="{StaticResource textoInfoTicket}" />
+                <TextBlock Text="{Binding Total}" Style="{StaticResource textoInfoTicket}" />
             </StackPanel>
             <TextBlock Text="--------------------------------------------------------------------------" Style="{StaticResource textoInfoTicket}"/>
             <StackPanel Margin="14, 0" HorizontalAlignment="Left" Orientation="Horizontal">
@@ -88,13 +85,22 @@
                 <TextBlock Text="{Binding MetodoDePago}" Style="{StaticResource textoInfoTicket}" />
             </StackPanel>
             <StackPanel Margin="14, 0" HorizontalAlignment="Left" Orientation="Horizontal">
-                <TextBlock Text="Vuelto: " Style="{StaticResource textoBoldInfoTicket}" />
-                <TextBlock Text="$0,00" Style="{StaticResource textoInfoTicket}" />
+                <TextBlock Text="VUELTO: " Style="{StaticResource textoBoldInfoTicket}" />
+                <TextBlock Text="{Binding Vuelto}" Style="{StaticResource textoInfoTicket}" />
             </StackPanel>
-        </StackPanel>
-        <StackPanel Grid.Row="1" VerticalAlignment="Bottom">
-            <TextBox Style="{StaticResource entrada_form}" Grid.Column="0"></TextBox>
-            <RadioButton Style="{StaticResource boton_confirmar}" Command="{Binding ImprimirPagina}">
+            <TextBlock Margin="14, 0, 14, 10" Text="MONTO PAGADO: " HorizontalAlignment="Left" Style="{StaticResource textoBoldInfoTicket}" />
+            <TextBox Margin="14, 0, 14, 10" Style="{StaticResource entrada_form}" Foreground="{Binding ColoresEntradas.MontoPagado}" 
+                     Text="{Binding MontoPagado, UpdateSourceTrigger=PropertyChanged}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="GotFocus">
+                        <i:InvokeCommandAction Command="{Binding GotFocus}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="LostFocus">
+                        <i:InvokeCommandAction Command="{Binding LostFocus}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </TextBox>
+            <RadioButton Margin="14, 0" Style="{StaticResource boton_confirmar}" Command="{Binding ImprimirPagina}">
                 <TextBlock Style="{StaticResource texto_botones_uno}">
                     Imprimir ticket
                 </TextBlock>
