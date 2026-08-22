@@ -16,6 +16,9 @@
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding ValoresPredeterminados}"/>
         </i:EventTrigger>
+        <i:EventTrigger EventName="Click">
+            <i:InvokeCommandAction Command="{Binding RestablecerValoresConfirmado}"/>
+        </i:EventTrigger>
     </i:Interaction.Triggers>
     <Border CornerRadius="10" Margin="30" Background="#FFFFFF">
         <Grid Margin="15">
@@ -73,8 +76,13 @@
                 </TextBox>
             </StackPanel>
             <Border Grid.Column="1" Width="200" HorizontalAlignment="Right">
-                <RadioButton Style="{StaticResource boton_cancelar}"  Margin="25, 0, 15, 0" Command="{Binding RestablecerValores}">
+                <RadioButton x:Name="botonRestablecer" Style="{StaticResource boton_cancelar}"  Margin="25, 0, 15, 0" Command="{Binding RestablecerValores}">
                     <TextBlock Style="{StaticResource texto_botones_uno}" Text="Restablecer" Margin="15, 0" />
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <i:InvokeCommandAction Command="{Binding RestablecerValoresConfirmado}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                 </RadioButton>
             </Border>
             <Grid Grid.Row="1"  >
@@ -190,8 +198,8 @@
                             <ComboBoxItem Content="Transferencia" Foreground="#000000"/>
                             <ComboBoxItem Content="Debito" Foreground="#000000"/>
                         </ComboBox>
-                        <RadioButton x:Name="listaProductos" Style="{StaticResource boton_confirmar}" Margin="0, 5"
-                                     Click="RadioButton_Click" Tag="{Binding Venta}">
+                        <RadioButton Style="{StaticResource boton_confirmar}" Margin="0, 5"
+                                     Command="{Binding AbrirFinalizarVenta}">
                             <TextBlock Style="{StaticResource texto_botones_uno}">Guardar venta</TextBlock>
                         </RadioButton>
                     </StackPanel>

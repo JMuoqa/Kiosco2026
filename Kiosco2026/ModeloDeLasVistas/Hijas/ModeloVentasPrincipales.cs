@@ -1,6 +1,7 @@
 ﻿using Dominio;
 using Entidades;
 using Kiosco2026.Clases.Colores;
+using Kiosco2026.Vistas.VENTAS;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -33,6 +34,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             RestablecerValores = new ComandoModeloDeVista(EjecutarRestablecerValores);
             SelecionarTextBox = new ComandoModeloDeVista(EjecutarSelecionarTextBox);
             FocusACodigos = new ComandoModeloDeVista(EjecutarFocusACodigos);
+            AbrirFinalizarVenta = new ComandoModeloDeVista(EjecutarAbrirFinalizarVenta);
             ListaProductos = new ObservableCollection<Productos>();
             _adminVenta = new AdminVentas();
             _adminProductos = new AdminProductos();
@@ -232,6 +234,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand SelectionChanged { get; }
         public ICommand RestablecerValores { get; }
         public ICommand ValoresPredeterminados { get; }
+        public ICommand AbrirFinalizarVenta { get; }
         public ICommand GotFocus { get; }
         public ICommand LostFocus { get; }
         public ICommand KeyDownCargarItem { get; }
@@ -241,6 +244,17 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand FocusACodigos { get; }
         #endregion
         #region Funciones
+        private async Task EjecutarAbrirFinalizarVenta(object arg)
+        {
+            Venta.Fecha = DateTime.Now;
+            FinalizarVenta window = new FinalizarVenta(Venta);
+            window.Owner = Application.Current.MainWindow;
+            window.Closed += (sender, e) =>
+            {
+                EjecutarRestablecerValoresConfirmado();
+            };
+            window.ShowDialog();
+        }
         private async Task EjecutarFocusACodigos(object arg)
         {
             if (arg is KeyEventArgs e)
@@ -268,6 +282,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             );
             if(confirmacion == MessageBoxResult.Yes)
                 ListaProductos = new ObservableCollection<Productos>(new List<Productos>());
+        }
+        private void EjecutarRestablecerValoresConfirmado()
+        {
+            ListaProductos = new ObservableCollection<Productos>(new List<Productos>());
         }
         private async Task EjecutarEliminarItem(object arg)
         {

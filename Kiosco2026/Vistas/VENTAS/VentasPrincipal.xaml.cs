@@ -42,14 +42,5 @@ namespace Kiosco2026.Vistas.VENTAS
             if (!char.IsNumber(e.Text[0]))
                 e.Handled = true;
         }
-
-        private void RadioButton_Click(object sender, RoutedEventArgs e)
-        {
-            Ventas venta = (Ventas)listaProductos.Tag;
-            venta.Fecha = DateTime.Now;
-            FinalizarVenta window = new FinalizarVenta(venta);
-            window.Owner = Application.Current.MainWindow;
-            window.ShowDialog();
-        }
     }
 }
