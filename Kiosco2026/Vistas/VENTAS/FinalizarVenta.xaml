@@ -76,7 +76,7 @@
             </StackPanel>
             <StackPanel Margin="14, 0" HorizontalAlignment="Right" Orientation="Horizontal">
                 <TextBlock Text="DESCUENTO: " Style="{StaticResource textoBoldInfoTicket}" />
-                <TextBlock Text="$0,00" Style="{StaticResource textoInfoTicket}" />
+                <TextBlock Text="" Style="{StaticResource textoInfoTicket}" />
             </StackPanel>
             <StackPanel Margin="14, 0" HorizontalAlignment="Right" Orientation="Horizontal">
                 <TextBlock Text="TOTAL: " Style="{StaticResource textoBoldInfoTicket}" />

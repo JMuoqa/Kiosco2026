@@ -198,6 +198,21 @@
                             <ComboBoxItem Content="Transferencia" Foreground="#000000"/>
                             <ComboBoxItem Content="Debito" Foreground="#000000"/>
                         </ComboBox>
+                        <TextBox Style="{StaticResource entrada_form}" Width="300" Margin="0, 10, 0, 10"
+                                 Text="{Binding Descuento, UpdateSourceTrigger=PropertyChanged}" 
+                                 Foreground="{Binding ColoresEntradas.Descuento}" PreviewTextInput="entradas_PreviewTextInput"
+                                 HorizontalAlignment="Left" x:Name="entrada_descuento">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                                   CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="LostFocus">
+                                    <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                                   CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
                         <RadioButton Style="{StaticResource boton_confirmar}" Margin="0, 5"
                                      Command="{Binding AbrirFinalizarVenta}">
                             <TextBlock Style="{StaticResource texto_botones_uno}">Guardar venta</TextBlock>

@@ -38,6 +38,15 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private DateTime _fechaRegistrada;
         private decimal _subTotal;
         private decimal _descuento;
+        public string Descuneto
+        {
+            get => _descuento.ToString();
+            set
+            {
+                _descuento = decimal.Parse(value.ToString(), NumberStyles.Any, new CultureInfo("es-AR"));
+                OnPropertyChanged(nameof(Descuneto));
+            }
+        }
         private decimal _total;
         private int _indiceActual;
         private string _vuelto;
@@ -140,7 +149,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             _venta = venta;
             _fechaRegistrada = venta.Fecha;
             _metodoDePago = venta.FormaDePago;
-            _descuento = venta.Descuento;
+            Descuneto = venta.Descuento.ToString();
             _subTotal = venta.SubTotal;
             _total = venta.Total;
             _metodoDePago = venta.FormaDePago;
@@ -216,8 +225,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             SizeF anchoTituloDescuento = e.Graphics.MeasureString(tituloDescuento, fuenteInfoBold);
             SizeF anchoTituloPrecioTotal = e.Graphics.MeasureString(tituloPrecioTotal, fuenteInfoBold);
             string _strSubTotal = "$" + _subTotal.ToString("N2", new CultureInfo("es-AR"));
+            string descuento = "$" + _descuento.ToString();
             SizeF anchoSubTotal = e.Graphics.MeasureString(_strSubTotal, fuenteInfoBold);
-            SizeF anchoDescuento = e.Graphics.MeasureString(_descuento.ToString(), fuenteInfoBold);
+            SizeF anchoDescuento = e.Graphics.MeasureString(descuento, fuenteInfoBold);
             string _strTotal = "$" + _total.ToString("N2", new CultureInfo("es-AR"));
             SizeF anchoPrecioTotal = e.Graphics.MeasureString(_strTotal, fuenteInfoBold);
             float xDetallesVenta = limiteDerecho - anchoTituloDescuento.Width - anchoSubTotal.Width;
@@ -312,7 +322,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             e.Graphics.DrawString(_strSubTotal, fuenteInfo, Brushes.Black, xSubTotal, y);
             y += 15;
             e.Graphics.DrawString(tituloDescuento, fuenteInfoBold, Brushes.Black, xDetallesVenta, y);
-            e.Graphics.DrawString(_descuento.ToString(), fuenteInfo, Brushes.Black, xDescuento, y);
+            e.Graphics.DrawString(descuento, fuenteInfo, Brushes.Black, xDescuento, y);
             y += 15;
             e.Graphics.DrawString(tituloPrecioTotal, fuenteInfoBold, Brushes.Black, xDetallesVenta, y);
             e.Graphics.DrawString(_strTotal, fuenteInfo, Brushes.Black, xPrecioTotal, y);
