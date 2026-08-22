@@ -32,6 +32,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             EliminarItem = new ComandoModeloDeVista(EjecutarEliminarItem);
             RestablecerValores = new ComandoModeloDeVista(EjecutarRestablecerValores);
             SelecionarTextBox = new ComandoModeloDeVista(EjecutarSelecionarTextBox);
+            FocusACodigos = new ComandoModeloDeVista(EjecutarFocusACodigos);
             ListaProductos = new ObservableCollection<Productos>();
             _adminVenta = new AdminVentas();
             _adminProductos = new AdminProductos();
@@ -128,6 +129,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private string _codigo;
         private string _descuento;
         private string _subtotal;
+        private TextBox txtBox;
         private string _cantidadProductos;
         private bool permitido = true;
         private Ventas _venta;
@@ -236,12 +238,25 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand CargarItem { get; }
         public ICommand EliminarItem { get; }
         public ICommand SelecionarTextBox { get; }
+        public ICommand FocusACodigos { get; }
         #endregion
         #region Funciones
+        private async Task EjecutarFocusACodigos(object arg)
+        {
+            if (arg is KeyEventArgs e)
+            {
+                if (e.Key == Key.Enter)
+                {
+                    txtBox.Focus();
+                }
+            }
+        }
         private async Task EjecutarSelecionarTextBox(object arg)
         {
             TextBox txt = (TextBox)arg;
+            txtBox = txt;
             txt.Focus();
+            
         }
         private async Task EjecutarRestablecerValores(object arg)
         {
