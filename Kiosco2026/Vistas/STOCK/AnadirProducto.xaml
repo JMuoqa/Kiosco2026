@@ -89,7 +89,7 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </TextBox>
-                <TextBox x:Name="entrada_venta" Style="{StaticResource entrada_form}" Text="{Binding Venta}" 
+                <TextBox x:Name="entrada_venta" Style="{StaticResource entrada_form}" Text="{Binding Margen}" 
                          PreviewTextInput="entradas_PreviewTextInput" Foreground="{Binding ColoresEntradas.Venta}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="GotFocus">
@@ -141,7 +141,7 @@
                         Style="{StaticResource cmb_entrada_form}" SelectedIndex="0" Foreground="{Binding ColoresEntradas.UnidadMedida}"
                         Cursor="Hand" SelectedItem="{Binding ComboBoxItem}">
                         <ComboBoxItem Foreground="#000000">Unidad de medida*</ComboBoxItem>
-                        <ComboBoxItem Foreground="#000000">Un</ComboBoxItem>
+                        <ComboBoxItem Foreground="#000000">Uni</ComboBoxItem>
                         <ComboBoxItem Foreground="#000000">g</ComboBoxItem>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">

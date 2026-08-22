@@ -50,7 +50,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private ComboBox _cmbCat;
         private ComboBox _cmbUni;
         private string _colorMensaje;
-        private string _venta;
+        private string _margen;
         private string _compra;
         private string _cantidad;
         private string _mensaje;
@@ -124,13 +124,13 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 OnPropertyChanged(nameof(Categoria));
             }
         }
-        public string Venta
+        public string Margen
         {
-            get => _venta;
+            get => _margen;
             set
             {
-                _venta = value;
-                OnPropertyChanged(nameof(Venta));
+                _margen = value;
+                OnPropertyChanged(nameof(Margen));
             }
         }
         public string Compra
@@ -312,7 +312,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     Nombre = this.Nombre,
                     Categoria = this.Categoria.Nombre, //Categoria deberia ser un numero
                     Codigo = this.Codigo,
-                    Venta = this.Venta,
+                    Margen = this.Margen,
                     Compra = this.Compra,
                     Cantidad = this.Cantidad,
                     Proveedor = this.Proveedor,
@@ -354,7 +354,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             Nombre = "Nombre*";
             Codigo = "Código*";
-            Venta = "Precio de venta*";
+            Margen = "Margen de ganancia en %*";
             Compra = "Costo de compra*";
             Cantidad = "Cantidad*";
             Proveedor = "Proveedor";
@@ -400,7 +400,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 {
                     case "entrada_nombre": Nombre = string.Empty; ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
                     case "entrada_codigo": Codigo = string.Empty; ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
-                    case "entrada_venta": Venta = string.Empty; ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                    case "entrada_venta": Margen = string.Empty; ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
                     case "entrada_compra": Compra = string.Empty; ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
                     case "entrada_cantidad": Cantidad = string.Empty; ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
                     case "entrada_proveedor": Proveedor = string.Empty; ColoresEntradas.Proveedor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
@@ -414,7 +414,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 case "entrada_nombre": if (string.IsNullOrWhiteSpace(Nombre) || Nombre.Trim() == "Nombre*") { Nombre = "Nombre*"; ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
                 case "entrada_codigo": if (string.IsNullOrWhiteSpace(Codigo) || Codigo.Trim() == "Código*") { Codigo = "Código*"; ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
-                case "entrada_venta": if (string.IsNullOrWhiteSpace(Venta) || Venta.Trim() == "Precio de venta*") { Venta= "Precio de venta*"; ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+                case "entrada_venta": if (string.IsNullOrWhiteSpace(Margen) || Margen.Trim() == "Margen de ganancia en %*") { Margen = "Margen de ganancia en %*"; ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
                 case "entrada_compra": if (string.IsNullOrWhiteSpace(Compra) || Compra.Trim() == "Costo de compra*") { Compra = "Costo de compra*"; ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
                 case "entrada_cantidad": if (string.IsNullOrWhiteSpace(Cantidad) || Cantidad.Trim() == "Cantidad*") { Cantidad = "Cantidad*"; ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
                 case "entrada_proveedor": if (string.IsNullOrWhiteSpace(Proveedor) || Proveedor.Trim() == "Proveedor") { Proveedor = "Proveedor"; ColoresEntradas.Proveedor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
@@ -422,7 +422,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private bool RevisarEntradas(TextBox entrada)
         {
-            string[] valores = ["Nombre*", "Código*", "Precio de venta*", "Costo de compra*", "Cantidad*", "Proveedor"];
+            string[] valores = ["Nombre*", "Código*", "Margen de ganancia en %*", "Costo de compra*", "Cantidad*", "Proveedor"];
             foreach (string valor in valores)
             {
                 if (valor == entrada.Text)
@@ -435,7 +435,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             Nombre = "Nombre*";
             Codigo = "Código*";
-            Venta = "Precio de venta*";
+            Margen = "Margen de ganancia en %*";
             Compra = "Costo de compra*";
             Cantidad = "Cantidad*";
             Proveedor = "Proveedor";

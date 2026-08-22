@@ -88,6 +88,7 @@
         public string Categoria { get; set; }
         public string Codigo { get; set; }
         public string Venta { get; set; }
+        public string Margen { get; set; }
         public string Compra { get; set; }
         public string Cantidad { get; set; }
         public string Proveedor { get; set; }

@@ -22,7 +22,7 @@ namespace Conexiones
                     int idCategoriaExistente = await Con_ObtenerCategoriaProducto(con, producto.Codigo);
                     int idCategoriaFinal = await Con_ObtenerIDCategoria(con, producto.Categoria);
                     string t = await Con_ObtenerUnidadMedidaPorCodigo(con, producto.Codigo);
-                    if(t != producto.UnidadMedida)
+                    if(!string.IsNullOrWhiteSpace(t) && t != producto.UnidadMedida)
                         return (estado: false, mensaje: "El producto ya está registrado y" +
                             " la 'unidad de medida' que intentas asignar no coincide con la 'unidad de medida'" +
                             " existente. Para continuar, puedes cambiar la 'unidad de medida' del" +
@@ -368,6 +368,7 @@ namespace Conexiones
                                 Compra = lector.GetDecimal("Compra").ToString(),
                                 Venta = lector.GetDecimal("Venta").ToString(),
                                 Cantidad = lector.GetInt32("Cantidad"),
+                                UnidadMedida = lector.GetString("UnidadMedida")
                             });
                         }
                     }

@@ -345,7 +345,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             y += 20;
             while (_indiceActual < _listaProductos.Count)
             {
-                string vCantidad = _listaProductos[_indiceActual].Cantidad.ToString() + "x";
+                string vCantidad = _listaProductos[_indiceActual].Cantidad.ToString() + $" {_listadoDeProductos[_indiceActual].UnidadMedida} " + "x";
                 string vPrecioVenta = "$" + decimal.Parse(_listaProductos[_indiceActual].Venta).ToString("N2", new CultureInfo("es-AR"));
                 string vNombre = _listaProductos[_indiceActual].Nombre.ToUpper();
                 decimal vPrecioTotal = decimal.Parse(_listaProductos[_indiceActual].Venta, NumberStyles.Any, new CultureInfo("es-AR")) * _listaProductos[_indiceActual].Cantidad;

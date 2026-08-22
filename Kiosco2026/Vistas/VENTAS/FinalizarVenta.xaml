@@ -55,7 +55,8 @@
                                 </Grid.RowDefinitions>
                                 <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Left">
                                     <TextBlock Text="{Binding Cantidad}" Style="{StaticResource textoInfoTicket}" Margin="0" HorizontalAlignment="Left"/>
-                                    <TextBlock Text="x $" Style="{StaticResource textoInfoTicket}" Margin="0" HorizontalAlignment="Left"/>
+                                    <TextBlock Text="{Binding UnidadMedida}" Style="{StaticResource textoInfoTicket}" Margin="0" HorizontalAlignment="Left"/>
+                                    <TextBlock Text=" x $" Style="{StaticResource textoInfoTicket}" Margin="0" HorizontalAlignment="Left"/>
                                     <TextBlock Text="{Binding Venta}" Style="{StaticResource textoInfoTicket}" Margin="0" HorizontalAlignment="Left"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Left">

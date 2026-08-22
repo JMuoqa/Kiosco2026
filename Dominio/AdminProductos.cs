@@ -11,27 +11,30 @@ namespace Dominio
         private Con_Productos _productos = new Con_Productos();
         public async Task<(bool estado, string mensaje)> CargarProducto(ProductosDto productoDto)
         {
-            double precioVenta;
-            double precioCompra;
+            int margenGanancia;
+            decimal precioCompra;
             int cantidadProductos;
-            if (!double.TryParse(productoDto.Venta, NumberStyles.Any, new CultureInfo("es-AR"), out precioVenta))
-                throw new Exception("El campo de 'Precio de venta' no es numerico");
-            if (!double.TryParse(productoDto.Compra, NumberStyles.Any, new CultureInfo("es-AR"), out precioCompra))
+            if (!int.TryParse(productoDto.Margen, out margenGanancia))
+                throw new Exception("El campo de 'Margen de ganancia' no es numerico");
+            if (!decimal.TryParse(productoDto.Compra, NumberStyles.Any, new CultureInfo("es-AR"), out precioCompra))
                 throw new Exception("El campo de 'Costo de compra' no es numerico");
             if (!int.TryParse(productoDto.Cantidad, NumberStyles.Any, new CultureInfo("es-AR"), out cantidadProductos))
                 throw new Exception("El campo de 'Cantidad' no es numerico");
             if (productoDto.Proveedor == "Proveedor")
                 productoDto.Proveedor = "";
             await ValidarDatosProducto(productoDto);
+            decimal precioVenta = precioCompra + (precioCompra * margenGanancia / 100);
             if (precioCompra >= precioVenta)
-                throw new Exception("El campo de 'Venta' es menor al campo de 'Compra'");
+                throw new Exception("El campo de 'Venta' es menor o igual al campo de 'Costo de compra'");
+            decimal precioVentaUnitario = precioVenta / cantidadProductos;
+            decimal precioCompraUnitario = precioCompra / cantidadProductos;
             Productos producto = new Productos
             {
                 Nombre = productoDto.Nombre,
-                Categoria = productoDto.Categoria, //Es texto pero en el backend de la web conseguimos el id
+                Categoria = productoDto.Categoria, //Es texto 
                 Codigo = productoDto.Codigo,
-                Venta = precioVenta.ToString(), // esto tengo que corregirlo por que me parece que es rendundante 3/2/2026
-                Compra = precioCompra.ToString(),
+                Venta = precioVentaUnitario.ToString(CultureInfo.InvariantCulture), 
+                Compra = precioCompraUnitario.ToString(CultureInfo.InvariantCulture),
                 Cantidad = cantidadProductos,
                 Proveedor = productoDto.Proveedor,
                 Ingreso = productoDto.Ingreso,
@@ -141,7 +144,9 @@ namespace Dominio
         {
             if (prod == null)
                 throw new Exception ("No hay datos del producto");
-            if(string.IsNullOrWhiteSpace(prod.UnidadMedida) || prod.UnidadMedida == "Unidad de medida*")
+            if (string.IsNullOrWhiteSpace(prod.Margen) || prod.Margen == "Margen de ganancia en %*")
+                throw new Exception("El campo 'Margen' esta vacio");
+            if (string.IsNullOrWhiteSpace(prod.UnidadMedida) || prod.UnidadMedida == "Unidad de medida*")
                 throw new Exception("El campo 'Unidad de medida' esta vacio");
             if (string.IsNullOrWhiteSpace(prod.Nombre) || prod.Nombre == "Nombre*")
                 throw new Exception("El campo 'Nombre' esta vacio");
@@ -149,8 +154,6 @@ namespace Dominio
                 throw new Exception("El campo 'Categoria' esta vacio");
             if (string.IsNullOrWhiteSpace(prod.Codigo) || prod.Codigo == "Código*")
                 throw new Exception("El campo 'Codigo' esta vacio");
-            if (string.IsNullOrWhiteSpace(prod.Venta.ToString()))
-                throw new Exception("El campo 'Venta' esta vacio");
             if (string.IsNullOrWhiteSpace(prod.Compra.ToString()))
                 throw new Exception("El campo 'Compra' esta vacio");
             if (string.IsNullOrWhiteSpace(prod.Cantidad.ToString()))
