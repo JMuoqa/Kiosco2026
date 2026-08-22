@@ -372,6 +372,8 @@ namespace Conexiones
                             });
                         }
                     }
+                    if (productos.Count < 1)
+                        throw new Exception("No hay un producto cargado con ese codigo de barras");
                     var listaCate = await Con_ObtenerCategorias();
                     List<Categorias> listaCompleta = listaCate.lista;
                     for (int i = 0; i < productos.Count; i++)

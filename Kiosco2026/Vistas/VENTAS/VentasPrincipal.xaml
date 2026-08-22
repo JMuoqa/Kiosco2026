@@ -221,6 +221,8 @@
                                      Command="{Binding AbrirFinalizarVenta}">
                             <TextBlock Style="{StaticResource texto_botones_uno}">Guardar venta</TextBlock>
                         </RadioButton>
+                        <TextBlock Margin="10" FontFamily="Roboto Flex" 
+                           FontSize="16" Text="{Binding Mensaje}" Foreground="{Binding ColorMensaje}" TextWrapping="Wrap" ></TextBlock>
                     </StackPanel>
                 </StackPanel>
             </Grid>

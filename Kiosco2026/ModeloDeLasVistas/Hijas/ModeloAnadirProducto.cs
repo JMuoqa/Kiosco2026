@@ -202,10 +202,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             GuardarCmb = new ComandoModeloDeVista(EjecutarGuardarCmbCat);
             GuardarCmbUni= new ComandoModeloDeVista(EjecutarGuardarCmbUni);
             _colores = new ColoresTexto();
+            ColorMensaje = _colores.Normal;
             _adminProductos = new AdminProductos();
             _cmbCat = new ComboBox();
-            ColorMensaje = _colores.Normal;
-            tiempo = new System.Timers.Timer();
+            tiempo = new System.Timers.Timer(); 
             tiempo.Elapsed += ResetearMensaje;
             tiempo.Enabled = false;
             tiempo.AutoReset = true;

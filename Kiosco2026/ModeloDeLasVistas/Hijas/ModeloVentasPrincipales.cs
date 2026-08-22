@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -39,7 +40,13 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             _adminVenta = new AdminVentas();
             _adminProductos = new AdminProductos();
             ColoresEntradas = new ColoresProductos();
+            _colores = new ColoresTexto();
+            ColorMensaje = _colores.Normal;
             _venta = new Ventas();
+            tiempo = new System.Timers.Timer();
+            tiempo.Elapsed += ResetearMensaje;
+            tiempo.Enabled = false;
+            tiempo.AutoReset = true;
         }
         #region Columnas privadas
         private double _eColumna_uno;
@@ -126,6 +133,17 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         #endregion
         #region Propiedades
+        private System.Timers.Timer tiempo;
+        private string _mensaje;
+        public string Mensaje
+        {
+            get => _mensaje;
+            set
+            {
+                _mensaje = value;
+                OnPropertyChanged(nameof(Mensaje));
+            }
+        }
         private string _cantidadItems;
         private string _precioTotal;
         private string _cantidad;
@@ -140,7 +158,18 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private AdminProductos _adminProductos;
         private Categorias _categoria;
         private ColoresProductos _coloresEntradas;
+        private ColoresTexto _colores;
         private string _formaDePago;
+        private string _colorMensaje;
+        public string ColorMensaje
+        {
+            get => _colorMensaje;
+            set
+            {
+                _colorMensaje = value;
+                OnPropertyChanged(nameof(ColorMensaje));
+            }
+        }
         public string Descuento
         {
             get => _descuento;
@@ -259,6 +288,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             try
             {
+                if (ListaProductos.Count < 1)
+                    throw new Exception("No hay productos cargados en la lista para vender");
                 Venta.Fecha = DateTime.Now;
                 decimal descuento;
                 if (!decimal.TryParse(Descuento, NumberStyles.Any, new CultureInfo("es-AR"), out descuento))
@@ -273,9 +304,15 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 };
                 window.ShowDialog();
             }
-            catch(Exception e)
+            catch (Exception ex)
             {
-                Debug.WriteLine(e.ToString());
+                ColorMensaje = _colores.ColorError;
+                Mensaje = ex.Message;
+            }
+            finally
+            {
+                tiempo.Interval = 15000;
+                tiempo.Enabled = true;
             }
         }
         private async Task EjecutarFocusACodigos(object arg)
@@ -402,10 +439,13 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             catch(Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                MessageBox.Show(ex.Message);
+                ColorMensaje = _colores.ColorError;
+                Mensaje = ex.Message;
             }
             finally
             {
+                tiempo.Interval = 15000;
+                tiempo.Enabled = true;
                 permitido = true;
             }
         }
@@ -483,6 +523,12 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             }
             return false;
 
+        }
+
+        private void ResetearMensaje(object source, ElapsedEventArgs e)
+        {
+            tiempo.Enabled = false;
+            Mensaje = "";
         }
         #endregion
     }
