@@ -387,7 +387,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             int c = 0;
             for (int i = 0; i < ListaProductos.Count; i++)
             {
-                c += ListaProductos[i].Cantidad;
+                if (ListaProductos[i].UnidadMedida.ToUpper() == "UNI")
+                    c += ListaProductos[i].Cantidad;
+                else
+                    c += 1;
             }
             return c;
         }
