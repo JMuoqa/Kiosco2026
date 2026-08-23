@@ -76,6 +76,8 @@ namespace Dominio
                 throw new Exception("El campo 'Compra' esta vacio");
             if (string.IsNullOrWhiteSpace(producto.Venta) || producto.Venta == "Precio de venta*")
                 throw new Exception("El campo 'Venta' esta vacio");
+            if (producto.Nombre.Length > 100)
+                throw new Exception("El nombre del producto no puede superar los 100 caracteres.");
         }
         public async Task<(bool estado, string mensaje, List<Productos> lista)> BusquedaProductoPorCodigoUltLote(string codigo)
         {
@@ -118,6 +120,8 @@ namespace Dominio
                 throw new Exception("El campo 'Compra' esta vacio");
             if (string.IsNullOrWhiteSpace(prod.Cantidad.ToString()))
                 throw new Exception("El campo 'Cantidad' esta vacio");
+            if (prod.Nombre.Length > 100)
+                throw new Exception("El nombre del producto no puede superar los 100 caracteres.");
             return;
         }
         private async Task ValidarDatosDeEditarCategoria(Categorias categoria)
@@ -130,6 +134,8 @@ namespace Dominio
                 throw new Exception("El campo 'Mostrar' no esta definido.");
             if (categoria.ID <= 0)
                 throw new Exception("No hay ninguna categoria seleccionada");
+            if (categoria.Nombre.Length > 80)
+                throw new Exception("El nombre de la categoria no puede superar los 80 caracteres");
             return;
         }
         private async Task ValidarDatosCategoria(Categorias categoria)
@@ -138,6 +144,8 @@ namespace Dominio
                 throw new Exception("No hay datos del producto");
             if(string.IsNullOrWhiteSpace(categoria.Nombre) ||categoria.Nombre == "Nombre de la categoria")
                 throw new Exception("El campo 'Nombre', del formulario de carga, esta vacio");
+            if(categoria.Nombre.Length > 80)
+                throw new Exception("El nombre de la categoria no puede superar los 80 caracteres");
             return;
         }
         private async Task ValidarDatosProducto(ProductosDto prod)
