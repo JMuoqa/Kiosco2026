@@ -5,9 +5,12 @@ using Kiosco2026.Vistas;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,8 +22,12 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
 {
     public class ModeloEditarProducto : ModeloDeVistaBase
     {
-        public ModeloEditarProducto() 
+        private Configuracion _configuracion { get; }
+        public ModeloEditarProducto()
         {
+            string ruta = "config.json";
+            string jsonDeConfiguracion = File.ReadAllText(ruta);
+            _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             ActualizarAnchoActual = new ComandoModeloDeVista(EjecutarActualizarAnchoActual);
             ObtenerProductos = new ComandoModeloDeVista(EjecutarObtenerProductos);
             CargarDatos = new ComandoModeloDeVista(EjecutarCargarDatos);
@@ -535,6 +542,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 ColorMensaje = _colores.ColorError;
                 Mensaje = ex.Message;
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloEditarProducto", "EjecutarObtenerProductos", _configuracion.NombreDeCaja);
+                EscribirEnTXTError(error);
             }
             finally
             {
@@ -587,11 +596,19 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private async Task EjecutarObtenerCategoriasGenerales(object arg)
         {
-            var respuesta = await _adminProductos.ObtenerCategoriasCliente();
-            List<Categorias> lista = respuesta.lista;
-            lista.Insert(0, new Categorias { Nombre = "Categoria*" });
-            ListaCategoriasParaBusquedas = new ObservableCollection<Categorias>(lista);
-            ListaCategorias = new ObservableCollection<Categorias>(lista);
+            try
+            {
+                var respuesta = await _adminProductos.ObtenerCategoriasCliente();
+                List<Categorias> lista = respuesta.lista;
+                lista.Insert(0, new Categorias { Nombre = "Categoria*" });
+                ListaCategoriasParaBusquedas = new ObservableCollection<Categorias>(lista);
+                ListaCategorias = new ObservableCollection<Categorias>(lista);
+            }
+            catch (Exception ex) 
+            {
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloEditarProducto", "EjecutarObtenerCategoriasGenerales", _configuracion.NombreDeCaja);
+                EscribirEnTXTError(error);
+            }
         }
         private async Task EjecutarValoresPredeterminados(object arg)
         {

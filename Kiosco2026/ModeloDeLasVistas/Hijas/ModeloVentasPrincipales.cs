@@ -5,10 +5,13 @@ using Kiosco2026.Vistas.VENTAS;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -22,8 +25,12 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
 {
     public class ModeloVentasPrincipales : ModeloDeVistaBase
     {
+        private Configuracion _configuracion { get; }
         public ModeloVentasPrincipales()
         {
+            string ruta = "config.json";
+            string jsonDeConfiguracion = File.ReadAllText(ruta);
+            _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             ActualizarAnchoActual = new ComandoModeloDeVista(EjecutarActualizarAnchoActual);
             SelectionChanged = new ComandoModeloDeVista(EjecutarSelected);
             ValoresPredeterminados = new ComandoModeloDeVista(EjecutarValoresPredeterminados);
@@ -308,6 +315,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 ColorMensaje = _colores.ColorError;
                 Mensaje = ex.Message;
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloVentasPrincipales", "EjecutarAbrirFinalizarVenta", _configuracion.NombreDeCaja);
+                EscribirEnTXTError(error);
             }
             finally
             {
@@ -411,6 +420,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             catch (Exception ex) 
             {
                 Debug.WriteLine(ex.Message);
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloVentasPrincipales", "EjecutarKeyDownCargarItem", _configuracion.NombreDeCaja);
+                EscribirEnTXTError(error);
             }
         }
         private async Task EjecutarCargarItem(object arg)
@@ -444,6 +455,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 Debug.WriteLine(ex.Message);
                 ColorMensaje = _colores.ColorError;
                 Mensaje = ex.Message;
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloVentasPrincipales", "EjecutarCargarItem", _configuracion.NombreDeCaja);
+                EscribirEnTXTError(error);
             }
             finally
             {

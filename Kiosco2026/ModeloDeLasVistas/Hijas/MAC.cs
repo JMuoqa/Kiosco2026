@@ -4,9 +4,12 @@ using Kiosco2026.Clases.Colores;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Input;
@@ -18,9 +21,13 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
 {
     public class MAC : ModeloDeVistaBase
     {
+        private Configuracion _configuracion { get; }
 
         public MAC()
         {
+            string ruta = "config.json";
+            string jsonDeConfiguracion = File.ReadAllText(ruta);
+            _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             CargarCategoria = new ComandoModeloDeVista(EjecutarCargarCategoria);
             GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
             LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
@@ -119,6 +126,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 ColorMensaje = _colores.ColorError;
                 Mensaje = ex.Message;
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "MAC", "EjecutarCargarCategoria", _configuracion.NombreDeCaja);
+                EscribirEnTXTError(error);
             }
             finally
             {

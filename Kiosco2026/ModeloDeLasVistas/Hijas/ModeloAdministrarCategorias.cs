@@ -5,9 +5,12 @@ using Kiosco2026.Vistas;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -21,8 +24,12 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
 {
     public class ModeloAdministrarCategorias : ModeloDeVistaBase
     {
-        public ModeloAdministrarCategorias() 
+        private Configuracion _configuracion { get; }
+        public ModeloAdministrarCategorias()
         {
+            string ruta = "config.json";
+            string jsonDeConfiguracion = File.ReadAllText(ruta);
+            _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             ActualizarAnchoActual = new ComandoModeloDeVista(EjecutarActualizarAnchoActual);
             LlenarDatos = new ComandoModeloDeVista(EjecutarLlenarDatos);
             BuscarCategorias = new ComandoModeloDeVista(EjecutarBuscarCategorias);
@@ -316,6 +323,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 ColorMensajeEdicion = _colores.ColorError;
                 MensajeEdicion = ex.Message;
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloAdministrarCategorias", "EjecutarEditarCategoria", _configuracion.NombreDeCaja);
+                EscribirEnTXTError(error);
             }
             finally
             {

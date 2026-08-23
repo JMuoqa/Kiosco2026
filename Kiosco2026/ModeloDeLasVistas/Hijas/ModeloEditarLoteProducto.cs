@@ -4,9 +4,12 @@ using Kiosco2026.Clases.Colores;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -18,8 +21,12 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
 {
     public class ModeloEditarLoteProducto : ModeloDeVistaBase
     {
+        private Configuracion _configuracion { get; }
         public ModeloEditarLoteProducto(Productos pr)
         {
+            string ruta = "config.json";
+            string jsonDeConfiguracion = File.ReadAllText(ruta);
+            _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             ActualizarAnchoActual = new ComandoModeloDeVista(EjecutarActualizarAnchoActual);
             ObtenerProductos = new ComandoModeloDeVista(EjecutarObtenerProductos);
             GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
@@ -363,6 +370,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloEditarLoteProducto", "EjecutarObtenerProductos", _configuracion.NombreDeCaja);
+                EscribirEnTXTError(error);
             }
         }
         private async Task EjecutarBusquedaLotes(object obj)
@@ -375,6 +384,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             catch (Exception ex) 
             {
                 Debug.WriteLine(ex.Message);
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloEditarLoteProducto", "EjecutarBusquedaLotes", _configuracion.NombreDeCaja);
+                EscribirEnTXTError(error);
             }
         }
         private async Task EjecutarEditarLote(object obj)
@@ -407,6 +418,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 ColorMensaje = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#990000"));
                 Mensaje = ex.Message;
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloEditarLoteProducto", "EjecutarEditarLote", _configuracion.NombreDeCaja);
+                EscribirEnTXTError(error);
             }
             finally
             {

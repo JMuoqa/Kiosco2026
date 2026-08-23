@@ -244,172 +244,181 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         */
         private void ImpresionDePagina(object sender, PrintPageEventArgs e)
         {
-            Font fuenteDeco = new Font("Roboto Flex", 10);
-            Font fuenteInfo = new Font("Roboto Flex", 8);
-            Font fuenteInfoBold = new Font("Roboto Flex", 8, FontStyle.Bold);
-            Font fuenteTitutlo = new Font("Roboto Flex", 18, FontStyle.Bold);
-            Font fuenteIntermedia = new Font("Roboto Flex", 12, FontStyle.Bold);
-            int nLocal = _configuracion.NumeroDeSucursal;
-            float limiteIzquierdo = e.MarginBounds.Left;
-            float limiteDerecho = e.MarginBounds.Right;
-            string nombreNegocio = _nombreTienda.ToUpper(); ;
-            string ticket = IdVenta;
-            string direccionDelNegocio = "Gabriela Mistral 3591 - Cordoba Argentina";
-            string numeroTicket = TicketDeCompra;
-            string divisor = "---------------------------------------------------------";
-            SizeF anchoNombreTiendaUno = e.Graphics.MeasureString(_nombreTienda, fuenteInfo);
-            ///
-            string tituloFormaDePago = "Forma de pago: ";
-            string tituloMontoPagado = "Monto pagado: ";
-            string tituloVuelto = "Vuelto: ";
-            SizeF anchoTituloFormaDePago = e.Graphics.MeasureString(tituloFormaDePago, fuenteInfoBold);
-            SizeF anchoTituloMontoPagado = e.Graphics.MeasureString(tituloMontoPagado, fuenteInfoBold);
-            SizeF anchoTituloVuelto = e.Graphics.MeasureString(tituloVuelto, fuenteInfoBold);
-            float xFormaDePago = limiteIzquierdo + anchoTituloFormaDePago.Width;
-            float xMontoPagado = limiteIzquierdo + anchoTituloMontoPagado.Width;
-            float xVuelto = limiteIzquierdo + anchoTituloVuelto.Width;
-            ///
-            string tituloSubTotal = "SUBTOTAL: ";
-            string tituloDescuento = "DESCUENTO: ";
-            string tituloPrecioTotal= "TOTAL: ";
-            SizeF anchoTituloSubTotal = e.Graphics.MeasureString(tituloSubTotal, fuenteInfoBold);
-            SizeF anchoTituloDescuento = e.Graphics.MeasureString(tituloDescuento, fuenteInfoBold);
-            SizeF anchoTituloPrecioTotal = e.Graphics.MeasureString(tituloPrecioTotal, fuenteInfoBold);
-            // "N2" ESPECIFICA QUE TENDRA 2 0 DECIMALES
-            string _strSubTotal = "$" + _subTotal.ToString("N2", new CultureInfo("es-AR"));
-            string descuento = "$" + _descuento.ToString("N2", new CultureInfo("es-AR"));
-            SizeF anchoSubTotal = e.Graphics.MeasureString(_strSubTotal, fuenteInfoBold);
-            SizeF anchoDescuento = e.Graphics.MeasureString(descuento, fuenteInfoBold);
-            string _strTotal = "$" + _total.ToString("N2", new CultureInfo("es-AR"));
-            SizeF anchoPrecioTotal = e.Graphics.MeasureString(_strTotal, fuenteInfoBold);
-            float xDetallesVenta = limiteDerecho - anchoTituloDescuento.Width - anchoSubTotal.Width;
-            float xSubTotal = limiteDerecho - anchoSubTotal.Width;
-            float xDescuento = limiteDerecho - anchoDescuento.Width;
-            float xPrecioTotal = limiteDerecho - anchoPrecioTotal.Width;
-            ///
-            string tituloCajero = "Cajero: ";
-            string tituloCaja = "Caja: ";
-            string nombreCajero = Cajero;
-            string numeroCaja = Caja;
-            SizeF anchoCajero= e.Graphics.MeasureString(tituloCajero, fuenteInfoBold);
-            SizeF anchoCaja= e.Graphics.MeasureString(tituloCaja, fuenteInfoBold);
-            SizeF anchoNombreCajero = e.Graphics.MeasureString(nombreCajero, fuenteInfoBold);
-            SizeF anchoNumeroCaja = e.Graphics.MeasureString(numeroCaja, fuenteInfoBold);
-            float xNombreCajero = limiteIzquierdo + anchoCajero.Width;
-            float xCaja = limiteDerecho - anchoNombreCajero.Width - anchoNumeroCaja.Width;
-            float xNumeroCaja = limiteDerecho - anchoNumeroCaja.Width;
-            ///
-            string tituloFecha = "Fecha: ";
-            string titulohora = "Hora: ";
-            string fechaActual = _fechaRegistrada.ToString("dd/MM/yyyy");
-            SizeF anchoTituloFecha = e.Graphics.MeasureString(tituloFecha, fuenteInfo);
-            SizeF anchoTituloHora = e.Graphics.MeasureString(titulohora, fuenteInfo);
-            string horaActual = _fechaRegistrada.ToString("HH:mm:ss");
-            SizeF anchoHoraActual = e.Graphics.MeasureString(horaActual, fuenteInfo);
-            float xFechaActual = e.MarginBounds.Left + anchoTituloFecha.Width;
-            float xHoraActual = limiteDerecho - anchoHoraActual.Width;
-            float xTituloHora = limiteDerecho - anchoHoraActual.Width - anchoTituloHora.Width;
-            ///Esto es para medir el ancho del texto, lo usaremos para centrarlo 
-            SizeF achoNombreNegocio = e.Graphics.MeasureString(nombreNegocio, fuenteTitutlo);
-            SizeF achoNumeroTicket = e.Graphics.MeasureString(numeroTicket, fuenteIntermedia);
-            SizeF achoDireccionDelNegocio = e.Graphics.MeasureString(direccionDelNegocio, fuenteInfo);
-            SizeF anchoDeco = e.Graphics.MeasureString(divisor, fuenteDeco);
-            /// Calcullamos su posicion centrada
-            float nombreNegocioCentrado = limiteIzquierdo + (e.MarginBounds.Width - achoNombreNegocio.Width) / 2;
-            float direccionDelNegocioCentrado = limiteIzquierdo + (e.MarginBounds.Width - achoDireccionDelNegocio.Width) / 2;
-            float numeroTicketCentrado = limiteIzquierdo + (e.MarginBounds.Width - achoNumeroTicket.Width) / 2;
-            float divisorCentrado = limiteIzquierdo + (e.MarginBounds.Width - anchoDeco.Width) / 2;
-            float xNombreTiendaUnoCentrado = limiteIzquierdo + (e.MarginBounds.Width - anchoNombreTiendaUno.Width) / 2;
-            float y = 10;
-            e.Graphics.DrawString(nombreNegocio, fuenteTitutlo, Brushes.Black, nombreNegocioCentrado, y);
-            y += 40;
-            e.Graphics.DrawString(direccionDelNegocio, fuenteInfo, Brushes.Black, direccionDelNegocioCentrado, y);
-            y += 20;
-            e.Graphics.DrawString(divisor, fuenteDeco, Brushes.Black, divisorCentrado, y);
-            y += 20;
-            e.Graphics.DrawString(numeroTicket, fuenteIntermedia, Brushes.Black, numeroTicketCentrado, y);
-            y += 40;
-            e.Graphics.DrawString(divisor, fuenteDeco, Brushes.Black, divisorCentrado, y);
-            y += 20;
-            e.Graphics.DrawString(fechaActual, fuenteInfo, Brushes.Black, xFechaActual, y);
-            e.Graphics.DrawString(horaActual, fuenteInfo, Brushes.Black, xHoraActual, y);
-            e.Graphics.DrawString(tituloFecha, fuenteInfoBold, Brushes.Black, limiteIzquierdo, y);
-            e.Graphics.DrawString(titulohora, fuenteInfoBold, Brushes.Black, xTituloHora, y);
-            y += 15;
-            e.Graphics.DrawString(tituloCajero, fuenteInfoBold, Brushes.Black, limiteIzquierdo, y);
-            e.Graphics.DrawString(nombreCajero, fuenteInfo, Brushes.Black, xNombreCajero, y);
-            e.Graphics.DrawString(tituloCaja, fuenteInfoBold, Brushes.Black, xTituloHora, y);
-            e.Graphics.DrawString(numeroCaja, fuenteInfo, Brushes.Black, xHoraActual, y);
-            y += 20;
-            e.Graphics.DrawString(divisor, fuenteDeco, Brushes.Black, divisorCentrado, y);
-            y += 20;
-            while (_indiceActual < _listaProductos.Count)
+            try
             {
-                string vCantidad = _listaProductos[_indiceActual].Cantidad.ToString() + $" {_listadoDeProductos[_indiceActual].UnidadMedida} " + "x";
-                string vPrecioVenta = "$" + decimal.Parse(_listaProductos[_indiceActual].Venta).ToString("N2", new CultureInfo("es-AR"));
-                string vNombre = _listaProductos[_indiceActual].Nombre.ToUpper();
-                decimal vPrecioTotal = decimal.Parse(_listaProductos[_indiceActual].Venta, NumberStyles.Any, new CultureInfo("es-AR")) * _listaProductos[_indiceActual].Cantidad;
-                string strVPrecioTotal = "$" + vPrecioTotal.ToString("N2", new CultureInfo("es-AR"));
-                SizeF anchoVCantidad = e.Graphics.MeasureString(vCantidad, fuenteInfo);
-                SizeF anchoVPrecioTotal = e.Graphics.MeasureString(strVPrecioTotal, fuenteInfo);
-                float posPrecioTotal = limiteDerecho - anchoVPrecioTotal.Width;
-                float xVCantidad = anchoVCantidad.Width + limiteIzquierdo;
-                e.Graphics.DrawString(vCantidad, fuenteInfo, Brushes.Black, limiteIzquierdo, y);
-                e.Graphics.DrawString(vPrecioVenta, fuenteInfo, Brushes.Black, xVCantidad, y);
-                y += 15;
-                e.Graphics.DrawString(vNombre, fuenteInfo, Brushes.Black, limiteIzquierdo, y);
-                e.Graphics.DrawString(strVPrecioTotal, fuenteInfo, Brushes.Black, posPrecioTotal, y);
-                y += 20;
-                _indiceActual++;
 
-                if (y > e.MarginBounds.Bottom)
+                Font fuenteDeco = new Font("Roboto Flex", 10);
+                Font fuenteInfo = new Font("Roboto Flex", 8);
+                Font fuenteInfoBold = new Font("Roboto Flex", 8, FontStyle.Bold);
+                Font fuenteTitutlo = new Font("Roboto Flex", 18, FontStyle.Bold);
+                Font fuenteIntermedia = new Font("Roboto Flex", 12, FontStyle.Bold);
+                int nLocal = _configuracion.NumeroDeSucursal;
+                float limiteIzquierdo = e.MarginBounds.Left;
+                float limiteDerecho = e.MarginBounds.Right;
+                string nombreNegocio = _nombreTienda.ToUpper(); ;
+                string ticket = IdVenta;
+                string direccionDelNegocio = "Gabriela Mistral 3591 - Cordoba Argentina";
+                string numeroTicket = TicketDeCompra;
+                string divisor = "---------------------------------------------------------";
+                SizeF anchoNombreTiendaUno = e.Graphics.MeasureString(_nombreTienda, fuenteInfo);
+                ///
+                string tituloFormaDePago = "Forma de pago: ";
+                string tituloMontoPagado = "Monto pagado: ";
+                string tituloVuelto = "Vuelto: ";
+                SizeF anchoTituloFormaDePago = e.Graphics.MeasureString(tituloFormaDePago, fuenteInfoBold);
+                SizeF anchoTituloMontoPagado = e.Graphics.MeasureString(tituloMontoPagado, fuenteInfoBold);
+                SizeF anchoTituloVuelto = e.Graphics.MeasureString(tituloVuelto, fuenteInfoBold);
+                float xFormaDePago = limiteIzquierdo + anchoTituloFormaDePago.Width;
+                float xMontoPagado = limiteIzquierdo + anchoTituloMontoPagado.Width;
+                float xVuelto = limiteIzquierdo + anchoTituloVuelto.Width;
+                ///
+                string tituloSubTotal = "SUBTOTAL: ";
+                string tituloDescuento = "DESCUENTO: ";
+                string tituloPrecioTotal = "TOTAL: ";
+                SizeF anchoTituloSubTotal = e.Graphics.MeasureString(tituloSubTotal, fuenteInfoBold);
+                SizeF anchoTituloDescuento = e.Graphics.MeasureString(tituloDescuento, fuenteInfoBold);
+                SizeF anchoTituloPrecioTotal = e.Graphics.MeasureString(tituloPrecioTotal, fuenteInfoBold);
+                // "N2" ESPECIFICA QUE TENDRA 2 0 DECIMALES
+                string _strSubTotal = "$" + _subTotal.ToString("N2", new CultureInfo("es-AR"));
+                string descuento = "$" + _descuento.ToString("N2", new CultureInfo("es-AR"));
+                SizeF anchoSubTotal = e.Graphics.MeasureString(_strSubTotal, fuenteInfoBold);
+                SizeF anchoDescuento = e.Graphics.MeasureString(descuento, fuenteInfoBold);
+                string _strTotal = "$" + _total.ToString("N2", new CultureInfo("es-AR"));
+                SizeF anchoPrecioTotal = e.Graphics.MeasureString(_strTotal, fuenteInfoBold);
+                float xDetallesVenta = limiteDerecho - anchoTituloDescuento.Width - anchoSubTotal.Width;
+                float xSubTotal = limiteDerecho - anchoSubTotal.Width;
+                float xDescuento = limiteDerecho - anchoDescuento.Width;
+                float xPrecioTotal = limiteDerecho - anchoPrecioTotal.Width;
+                ///
+                string tituloCajero = "Cajero: ";
+                string tituloCaja = "Caja: ";
+                string nombreCajero = Cajero;
+                string numeroCaja = Caja;
+                SizeF anchoCajero = e.Graphics.MeasureString(tituloCajero, fuenteInfoBold);
+                SizeF anchoCaja = e.Graphics.MeasureString(tituloCaja, fuenteInfoBold);
+                SizeF anchoNombreCajero = e.Graphics.MeasureString(nombreCajero, fuenteInfoBold);
+                SizeF anchoNumeroCaja = e.Graphics.MeasureString(numeroCaja, fuenteInfoBold);
+                float xNombreCajero = limiteIzquierdo + anchoCajero.Width;
+                float xCaja = limiteDerecho - anchoNombreCajero.Width - anchoNumeroCaja.Width;
+                float xNumeroCaja = limiteDerecho - anchoNumeroCaja.Width;
+                ///
+                string tituloFecha = "Fecha: ";
+                string titulohora = "Hora: ";
+                string fechaActual = _fechaRegistrada.ToString("dd/MM/yyyy");
+                SizeF anchoTituloFecha = e.Graphics.MeasureString(tituloFecha, fuenteInfo);
+                SizeF anchoTituloHora = e.Graphics.MeasureString(titulohora, fuenteInfo);
+                string horaActual = _fechaRegistrada.ToString("HH:mm:ss");
+                SizeF anchoHoraActual = e.Graphics.MeasureString(horaActual, fuenteInfo);
+                float xFechaActual = e.MarginBounds.Left + anchoTituloFecha.Width;
+                float xHoraActual = limiteDerecho - anchoHoraActual.Width;
+                float xTituloHora = limiteDerecho - anchoHoraActual.Width - anchoTituloHora.Width;
+                ///Esto es para medir el ancho del texto, lo usaremos para centrarlo 
+                SizeF achoNombreNegocio = e.Graphics.MeasureString(nombreNegocio, fuenteTitutlo);
+                SizeF achoNumeroTicket = e.Graphics.MeasureString(numeroTicket, fuenteIntermedia);
+                SizeF achoDireccionDelNegocio = e.Graphics.MeasureString(direccionDelNegocio, fuenteInfo);
+                SizeF anchoDeco = e.Graphics.MeasureString(divisor, fuenteDeco);
+                /// Calcullamos su posicion centrada
+                float nombreNegocioCentrado = limiteIzquierdo + (e.MarginBounds.Width - achoNombreNegocio.Width) / 2;
+                float direccionDelNegocioCentrado = limiteIzquierdo + (e.MarginBounds.Width - achoDireccionDelNegocio.Width) / 2;
+                float numeroTicketCentrado = limiteIzquierdo + (e.MarginBounds.Width - achoNumeroTicket.Width) / 2;
+                float divisorCentrado = limiteIzquierdo + (e.MarginBounds.Width - anchoDeco.Width) / 2;
+                float xNombreTiendaUnoCentrado = limiteIzquierdo + (e.MarginBounds.Width - anchoNombreTiendaUno.Width) / 2;
+                float y = 10;
+                e.Graphics.DrawString(nombreNegocio, fuenteTitutlo, Brushes.Black, nombreNegocioCentrado, y);
+                y += 40;
+                e.Graphics.DrawString(direccionDelNegocio, fuenteInfo, Brushes.Black, direccionDelNegocioCentrado, y);
+                y += 20;
+                e.Graphics.DrawString(divisor, fuenteDeco, Brushes.Black, divisorCentrado, y);
+                y += 20;
+                e.Graphics.DrawString(numeroTicket, fuenteIntermedia, Brushes.Black, numeroTicketCentrado, y);
+                y += 40;
+                e.Graphics.DrawString(divisor, fuenteDeco, Brushes.Black, divisorCentrado, y);
+                y += 20;
+                e.Graphics.DrawString(fechaActual, fuenteInfo, Brushes.Black, xFechaActual, y);
+                e.Graphics.DrawString(horaActual, fuenteInfo, Brushes.Black, xHoraActual, y);
+                e.Graphics.DrawString(tituloFecha, fuenteInfoBold, Brushes.Black, limiteIzquierdo, y);
+                e.Graphics.DrawString(titulohora, fuenteInfoBold, Brushes.Black, xTituloHora, y);
+                y += 15;
+                e.Graphics.DrawString(tituloCajero, fuenteInfoBold, Brushes.Black, limiteIzquierdo, y);
+                e.Graphics.DrawString(nombreCajero, fuenteInfo, Brushes.Black, xNombreCajero, y);
+                e.Graphics.DrawString(tituloCaja, fuenteInfoBold, Brushes.Black, xTituloHora, y);
+                e.Graphics.DrawString(numeroCaja, fuenteInfo, Brushes.Black, xHoraActual, y);
+                y += 20;
+                e.Graphics.DrawString(divisor, fuenteDeco, Brushes.Black, divisorCentrado, y);
+                y += 20;
+                while (_indiceActual < _listaProductos.Count)
                 {
-                    e.HasMorePages = true;
-                    return;
+                    string vCantidad = _listaProductos[_indiceActual].Cantidad.ToString() + $" {_listadoDeProductos[_indiceActual].UnidadMedida} " + "x";
+                    string vPrecioVenta = "$" + decimal.Parse(_listaProductos[_indiceActual].Venta).ToString("N2", new CultureInfo("es-AR"));
+                    string vNombre = _listaProductos[_indiceActual].Nombre.ToUpper();
+                    decimal vPrecioTotal = decimal.Parse(_listaProductos[_indiceActual].Venta, NumberStyles.Any, new CultureInfo("es-AR")) * _listaProductos[_indiceActual].Cantidad;
+                    string strVPrecioTotal = "$" + vPrecioTotal.ToString("N2", new CultureInfo("es-AR"));
+                    SizeF anchoVCantidad = e.Graphics.MeasureString(vCantidad, fuenteInfo);
+                    SizeF anchoVPrecioTotal = e.Graphics.MeasureString(strVPrecioTotal, fuenteInfo);
+                    float posPrecioTotal = limiteDerecho - anchoVPrecioTotal.Width;
+                    float xVCantidad = anchoVCantidad.Width + limiteIzquierdo;
+                    e.Graphics.DrawString(vCantidad, fuenteInfo, Brushes.Black, limiteIzquierdo, y);
+                    e.Graphics.DrawString(vPrecioVenta, fuenteInfo, Brushes.Black, xVCantidad, y);
+                    y += 15;
+                    e.Graphics.DrawString(vNombre, fuenteInfo, Brushes.Black, limiteIzquierdo, y);
+                    e.Graphics.DrawString(strVPrecioTotal, fuenteInfo, Brushes.Black, posPrecioTotal, y);
+                    y += 20;
+                    _indiceActual++;
+
+                    if (y > e.MarginBounds.Bottom)
+                    {
+                        e.HasMorePages = true;
+                        return;
+                    }
                 }
+                e.Graphics.DrawString(divisor, fuenteDeco, Brushes.Black, divisorCentrado, y);
+                y += 20;
+                e.Graphics.DrawString(tituloSubTotal, fuenteInfoBold, Brushes.Black, xDetallesVenta, y);
+                e.Graphics.DrawString(_strSubTotal, fuenteInfo, Brushes.Black, xSubTotal, y);
+                y += 15;
+                e.Graphics.DrawString(tituloDescuento, fuenteInfoBold, Brushes.Black, xDetallesVenta, y);
+                e.Graphics.DrawString(descuento, fuenteInfo, Brushes.Black, xDescuento, y);
+                y += 15;
+                e.Graphics.DrawString(tituloPrecioTotal, fuenteInfoBold, Brushes.Black, xDetallesVenta, y);
+                e.Graphics.DrawString(_strTotal, fuenteInfo, Brushes.Black, xPrecioTotal, y);
+                y += 20;
+                e.Graphics.DrawString(divisor, fuenteDeco, Brushes.Black, divisorCentrado, y);
+                y += 20;
+                e.Graphics.DrawString(tituloFormaDePago, fuenteInfoBold, Brushes.Black, limiteIzquierdo, y);
+                e.Graphics.DrawString(_metodoDePago, fuenteInfo, Brushes.Black, xFormaDePago, y);
+                y += 15;
+                e.Graphics.DrawString(tituloMontoPagado, fuenteInfoBold, Brushes.Black, limiteIzquierdo, y);
+                e.Graphics.DrawString(MontoPagado, fuenteInfo, Brushes.Black, xMontoPagado, y);
+                y += 15;
+                e.Graphics.DrawString(tituloVuelto, fuenteInfoBold, Brushes.Black, limiteIzquierdo, y);
+                e.Graphics.DrawString(Vuelto, fuenteInfo, Brushes.Black, xVuelto, y);
+                y += 20;
+                e.Graphics.DrawString(divisor, fuenteDeco, Brushes.Black, divisorCentrado, y);
+                y += 20;
+                e.Graphics.DrawString(_nombreTienda, fuenteInfo, Brushes.Black, xNombreTiendaUnoCentrado, y);
+                y += 20;
+                Barcode barcode = new Barcode();
+                var img = barcode.Encode(BarcodeStandard.Type.Code128, ticket, new SKColor(0, 0, 0), new SKColor(255, 255, 255), 200, 30);
+                float xCodigobarras = limiteIzquierdo + (e.MarginBounds.Width - img.Width) / 2;
+                //Esto se usa por que e.Graphics.DrawImage espera un objeto de tipo Image
+                using (SKData data = img.Encode(SKEncodedImageFormat.Png, 100))
+                using (var stream = new System.IO.MemoryStream(data.ToArray()))
+                {
+                    Image imagen = Image.FromStream(stream);
+                    e.Graphics.DrawImage(imagen, xCodigobarras, y);
+                }
+                y += 35;
+                SizeF anchoTicket = e.Graphics.MeasureString(ticket, fuenteInfo);
+                float xTicket = limiteIzquierdo + (e.MarginBounds.Width - anchoTicket.Width) / 2;
+                e.Graphics.DrawString(ticket, fuenteInfo, Brushes.Black, xTicket, y);
+                e.HasMorePages = false;
+                _indiceActual = 0;
             }
-            e.Graphics.DrawString(divisor, fuenteDeco, Brushes.Black, divisorCentrado, y);
-            y += 20;
-            e.Graphics.DrawString(tituloSubTotal, fuenteInfoBold, Brushes.Black, xDetallesVenta, y);
-            e.Graphics.DrawString(_strSubTotal, fuenteInfo, Brushes.Black, xSubTotal, y);
-            y += 15;
-            e.Graphics.DrawString(tituloDescuento, fuenteInfoBold, Brushes.Black, xDetallesVenta, y);
-            e.Graphics.DrawString(descuento, fuenteInfo, Brushes.Black, xDescuento, y);
-            y += 15;
-            e.Graphics.DrawString(tituloPrecioTotal, fuenteInfoBold, Brushes.Black, xDetallesVenta, y);
-            e.Graphics.DrawString(_strTotal, fuenteInfo, Brushes.Black, xPrecioTotal, y);
-            y += 20;
-            e.Graphics.DrawString(divisor, fuenteDeco, Brushes.Black, divisorCentrado, y);
-            y += 20;
-            e.Graphics.DrawString(tituloFormaDePago, fuenteInfoBold, Brushes.Black, limiteIzquierdo, y);
-            e.Graphics.DrawString(_metodoDePago, fuenteInfo, Brushes.Black, xFormaDePago, y);
-            y += 15;
-            e.Graphics.DrawString(tituloMontoPagado, fuenteInfoBold, Brushes.Black, limiteIzquierdo, y);
-            e.Graphics.DrawString(MontoPagado, fuenteInfo, Brushes.Black, xMontoPagado, y);
-            y += 15;
-            e.Graphics.DrawString(tituloVuelto, fuenteInfoBold, Brushes.Black, limiteIzquierdo, y);
-            e.Graphics.DrawString(Vuelto, fuenteInfo, Brushes.Black, xVuelto, y);
-            y += 20;
-            e.Graphics.DrawString(divisor, fuenteDeco, Brushes.Black, divisorCentrado, y);
-            y += 20;
-            e.Graphics.DrawString(_nombreTienda, fuenteInfo, Brushes.Black, xNombreTiendaUnoCentrado, y);
-            y += 20;
-            Barcode barcode = new Barcode(); 
-            var img = barcode.Encode(BarcodeStandard.Type.Code128, ticket, new SKColor(0, 0, 0), new SKColor(255, 255, 255), 200, 30);
-            float xCodigobarras = limiteIzquierdo + (e.MarginBounds.Width - img.Width) / 2;
-            //Esto se usa por que e.Graphics.DrawImage espera un objeto de tipo Image
-            using (SKData data = img.Encode(SKEncodedImageFormat.Png, 100))
-            using (var stream = new System.IO.MemoryStream(data.ToArray()))
+            catch (Exception ex) 
             {
-                Image imagen = Image.FromStream(stream);
-                e.Graphics.DrawImage(imagen, xCodigobarras, y);
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloFinalizarVenta", "ImpresionDePagina", _configuracion.NombreDeCaja);
+                EscribirEnTXTError(error);
             }
-            y += 35;
-            SizeF anchoTicket = e.Graphics.MeasureString(ticket, fuenteInfo);
-            float xTicket = limiteIzquierdo + (e.MarginBounds.Width - anchoTicket.Width) / 2;
-            e.Graphics.DrawString(ticket, fuenteInfo, Brushes.Black, xTicket, y);
-            e.HasMorePages = false;
-            _indiceActual = 0;
         }
         // Cuando termina la impresión, mando el comando de corte
         private void FinDeImpresion(object sender, PrintEventArgs e)

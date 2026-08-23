@@ -4,10 +4,13 @@ using Kiosco2026.Clases.Colores;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Controls;
@@ -19,6 +22,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
 {
     public class ModeloAnadirProducto : ModeloDeVistaBase
     {
+        private Configuracion _configuracion { get; }
         #region Propiedades
         private ComboBoxItem _comboBoxItem;
         public ComboBoxItem ComboBoxItem
@@ -191,6 +195,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         #endregion
         public ModeloAnadirProducto()
         {
+            string ruta = "config.json";
+            string jsonDeConfiguracion = File.ReadAllText(ruta);
+            _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             ColoresEntradas = new ColoresProductos();
             ObtenerCategoriasGenerales = new ComandoModeloDeVista(EjecutarObtenerCategoriasGenerales);
             CargarProducto = new ComandoModeloDeVista(EjecutarCargarProducto);
@@ -281,6 +288,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 ColorMensaje = _colores.ColorError;
                 Mensaje = ex.Message;
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloAnadirProducto", "EjecutarComprobarExistencia", _configuracion.NombreDeCaja);
+                EscribirEnTXTError(error);
             }
             finally
             {
@@ -336,6 +345,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 ColorMensaje = _colores.ColorError;
                 Mensaje = ex.Message;
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloAnadirProducto", "EjecutarCargarProducto", _configuracion.NombreDeCaja);
+                EscribirEnTXTError(error);
             }
             finally
             {

@@ -11,6 +11,14 @@ namespace Conexiones
 {
     public class Con_Productos : ConexionMySQL
     {
+        private Configuracion _configuracion { get; }
+        public Con_Productos()
+        {
+
+            string ruta = "config.json";
+            string jsonDeConfiguracion = File.ReadAllText(ruta);
+            _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
+        }
         #region Con_CargarProducto
         public async Task<(bool estado, string mensaje)> Con_CargarProducto(Productos producto)
         {
@@ -54,6 +62,8 @@ namespace Conexiones
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
+                    HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Productos", "Con_CargarProducto", _configuracion.NombreDeCaja);
+                    RegistrarErrorBDLocal(error);
                     return (false, ex.Message);
                 }
             }
@@ -149,6 +159,8 @@ namespace Conexiones
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
+                    HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Productos", "Con_RevisarExistenciaProducto", _configuracion.NombreDeCaja);
+                    RegistrarErrorBDLocal(error);
                     return (false, false, ex.Message,new Productos());
                 }
             }
@@ -185,6 +197,8 @@ namespace Conexiones
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
+                    HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Productos", "Con_EditarProductoPorCodigo", _configuracion.NombreDeCaja);
+                    RegistrarErrorBDLocal(error);
                     return (false, ex.Message);
                 }
             }
@@ -218,6 +232,8 @@ namespace Conexiones
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
+                    HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Productos", "Con_EditarLote", _configuracion.NombreDeCaja);
+                    RegistrarErrorBDLocal(error);
                     return (false, ex.Message);
                 }
             }
@@ -242,6 +258,8 @@ namespace Conexiones
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
+                    HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Productos", "Con_CargarCategoria", _configuracion.NombreDeCaja);
+                    RegistrarErrorBDLocal(error);
                     return (false, ex.Message);
                 }
             }
@@ -268,6 +286,8 @@ namespace Conexiones
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
+                    HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Productos", "Con_EditarCategoria", _configuracion.NombreDeCaja);
+                    RegistrarErrorBDLocal(error);
                     return (false, ex.Message);
                 }
             }
@@ -300,6 +320,8 @@ namespace Conexiones
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
+                    HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Productos", "Con_ObtenerCategorias", _configuracion.NombreDeCaja);
+                    RegistrarErrorBDLocal(error);
                     return (false, ex.Message, new List<Categorias>());
                 }
             }
@@ -336,6 +358,8 @@ namespace Conexiones
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
+                    HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Productos", "Con_BusquedaCategorias", _configuracion.NombreDeCaja);
+                    RegistrarErrorBDLocal(error);
                     return (false, ex.Message, new List<Categorias>());
                 }
             }
@@ -394,6 +418,8 @@ namespace Conexiones
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
+                    HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Productos", "Con_BusquedaPorCodigoUltLote", _configuracion.NombreDeCaja);
+                    RegistrarErrorBDLocal(error);
                     return (false, ex.Message, new List<Productos>());
                 }
             }
@@ -449,6 +475,8 @@ namespace Conexiones
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
+                    HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Productos", "Con_LotesPorIngreso", _configuracion.NombreDeCaja);
+                    RegistrarErrorBDLocal(error);
                     return (false, ex.Message, new List<Productos>());
                 }
             }
@@ -515,17 +543,12 @@ namespace Conexiones
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
+                    HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Productos", "Con_ObtenerUltLotePorNombre", _configuracion.NombreDeCaja);
+                    RegistrarErrorBDLocal(error);
                     return (false, ex.Message, new List<Productos>());
                 }
             }
         }
         #endregion
-        public string ObtenerTokenJWT()
-        {
-            string ruta = "config.json";
-            string jsonDeConfiguracion = File.ReadAllText(ruta);
-            Configuracion configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
-            return configuracion.CodigoSeguridad;
-        }
     }
 }

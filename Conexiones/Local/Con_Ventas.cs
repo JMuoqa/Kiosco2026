@@ -2,6 +2,7 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -13,6 +14,14 @@ namespace Conexiones
 {
     public class Con_Ventas : ConexionMySQL
     {
+        private Configuracion _configuracion { get; }
+        public Con_Ventas()
+        {
+
+            string ruta = "config.json";
+            string jsonDeConfiguracion = File.ReadAllText(ruta);
+            _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
+        }
         #region Con_RegistrarVenta
         public async Task<(bool estado, string mensaje, long idV)> Con_RegistrarVenta(Ventas venta)
         {
@@ -43,6 +52,8 @@ namespace Conexiones
                 {
 
                     Debug.WriteLine(ex.Message);
+                    HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Ventas", "Con_RegistrarVenta", _configuracion.NombreDeCaja);
+                    RegistrarErrorBDLocal(error);
                     return (false, ex.Message, 0);
                 }
             }
