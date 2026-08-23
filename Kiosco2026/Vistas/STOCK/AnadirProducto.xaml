@@ -38,6 +38,10 @@
                             <i:InvokeCommandAction Command="{Binding ComprobarExistencia}"
                                                    PassEventArgsToCommand="True"/>
                         </i:EventTrigger>
+                        <i:EventTrigger EventName="Loaded">
+                            <i:InvokeCommandAction Command="{Binding SelecionarTextBox}" 
+                                                   CommandParameter="{Binding ElementName=entrada_codigo}"/>
+                        </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </TextBox>
                 <TextBox x:Name="entrada_nombre" Style="{StaticResource entrada_form}"

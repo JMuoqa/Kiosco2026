@@ -163,8 +163,12 @@
                                                                    VerticalAlignment="Center"  Text="{Binding Venta}"/>
                                                 </Border>
                                                 <Border Width="{Binding DataContext.TColumna_ocho, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
-                                                    <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
                                                                    VerticalAlignment="Center"  Text="{Binding Cantidad}"/>
+                                                        <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18" Margin="0"
+                                                                   VerticalAlignment="Center"  Text="{Binding UnidadMedida}"/>
+                                                    </StackPanel>
                                                 </Border>
                                             </StackPanel>
                                         </Button>

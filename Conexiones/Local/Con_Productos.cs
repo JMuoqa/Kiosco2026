@@ -425,6 +425,7 @@ namespace Conexiones
                                 Ingreso = lector.GetDateTime("Ingreso"),
                                 Vencimiento = lector.GetDateTime("Vencimiento"),
                                 Cantidad = lector.GetInt32("Cantidad"),
+                                UnidadMedida = lector.GetString("UnidadMedida")
                             });
                         }
                     }
@@ -461,8 +462,8 @@ namespace Conexiones
                 {
                     con.Open();
                     string obtenerUltLote = "SELECT ult.ID, ult.IDCategoria, ult.Nombre, ult.Codigo, ult.Compra, ult.Venta," +
-                        " ult.Proveedor, ult.Mostrar, ult.Ingreso, ult.Vencimiento, tot.Cantidad" +
-                        " FROM ( SELECT ID, IDCategoria, Nombre, Codigo, Compra, Venta, Proveedor, Mostrar, Ingreso, Vencimiento" +
+                        " ult.Proveedor, ult.Mostrar, ult.Ingreso, ult.Vencimiento, ult.UnidadMedida, tot.Cantidad " +
+                        " FROM ( SELECT ID, IDCategoria, Nombre, Codigo, Compra, Venta, Proveedor, Mostrar, Ingreso, Vencimiento, UnidadMedida" +
                         " FROM ( SELECT p.*, ROW_NUMBER() OVER (PARTITION BY Codigo ORDER BY Ingreso DESC) AS rn FROM Productos p ) t" +
                         " WHERE rn = 1 AND (Nombre LIKE @nombre OR @nombre = \"\") )ult JOIN( SELECT Codigo, CAST(SUM(Cantidad) AS SIGNED) AS Cantidad" +
                         " FROM Productos GROUP BY Codigo ) tot ON ult.Codigo = tot.Codigo;";
@@ -484,10 +485,13 @@ namespace Conexiones
                                 Ingreso = lector.GetDateTime("Ingreso"),
                                 Vencimiento = lector.GetDateTime("Vencimiento"),
                                 Cantidad = lector.GetInt32("Cantidad"),
-                                Codigo = lector.GetString("Codigo")
+                                Codigo = lector.GetString("Codigo"),
+                                UnidadMedida = lector.GetString("UnidadMedida")
                             });
                         }
                     }
+                    if (productos.Count < 1)
+                        return (false, "No hay productos cargados", new List<Productos>());
                     var listaCate = await Con_ObtenerCategorias();
                     List<Categorias> listaCompleta = listaCate.lista;
                     for (int i = 0; i < productos.Count; i++)

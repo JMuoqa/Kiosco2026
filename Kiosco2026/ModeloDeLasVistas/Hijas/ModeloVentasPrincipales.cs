@@ -33,10 +33,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             CargarItem = new ComandoModeloDeVista(EjecutarCargarItem);
             EliminarItem = new ComandoModeloDeVista(EjecutarEliminarItem);
             RestablecerValores = new ComandoModeloDeVista(EjecutarRestablecerValores);
-            SelecionarTextBox = new ComandoModeloDeVista(EjecutarSelecionarTextBox);
             FocusACodigos = new ComandoModeloDeVista(EjecutarFocusACodigos);
             AbrirFinalizarVenta = new ComandoModeloDeVista(EjecutarAbrirFinalizarVenta);
             ListaProductos = new ObservableCollection<Productos>();
+            SelecionarTextBox = new ComandoModeloDeVista(EjecutarSelecionarTextBox);
             _adminVenta = new AdminVentas();
             _adminProductos = new AdminProductos();
             ColoresEntradas = new ColoresProductos();
@@ -327,10 +327,13 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private async Task EjecutarSelecionarTextBox(object arg)
         {
-            TextBox txt = (TextBox)arg;
-            txtBox = txt;
-            txt.Focus();
-            
+            if (arg is TextBox txt)
+            {
+                await Task.Delay(100);
+                txtBox = (TextBox)txt;
+                txt.Focus();
+                Keyboard.Focus(txt);
+            }
         }
         private async Task EjecutarRestablecerValores(object arg)
         {

@@ -187,6 +187,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 OnPropertyChanged(nameof(ListaCategorias));
             }
         }
+        private TextBox txtBox;
         #endregion
         public ModeloAnadirProducto()
         {
@@ -201,6 +202,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             ComprobarExistencia = new ComandoModeloDeVista(EjecutarComprobarExistencia);
             GuardarCmb = new ComandoModeloDeVista(EjecutarGuardarCmbCat);
             GuardarCmbUni= new ComandoModeloDeVista(EjecutarGuardarCmbUni);
+            SelecionarTextBox = new ComandoModeloDeVista(EjecutarSelecionarTextBox);
             _colores = new ColoresTexto();
             ColorMensaje = _colores.Normal;
             _adminProductos = new AdminProductos();
@@ -222,6 +224,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand SelectionChangedUnidadMedida { get; }
         public ICommand GuardarCmb { get; }
         public ICommand GuardarCmbUni { get; }
+        public ICommand SelecionarTextBox { get; }
         #endregion
         #region Funciones
         private async Task EjecutarGuardarCmbCat(object arg)
@@ -344,6 +347,17 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         #endregion
         #region Grafica
+        private async Task EjecutarSelecionarTextBox(object arg)
+        {
+            if (arg is TextBox txt)
+            {
+                await Task.Delay(100);
+                txtBox = (TextBox)txt;
+                txt.Focus();
+                Keyboard.Focus(txt);
+            }
+
+        }
 
         private void ResetearMensaje(object source, ElapsedEventArgs e)
         {
