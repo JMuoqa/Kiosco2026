@@ -324,7 +324,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     Categoria = this.Categoria.Nombre, //Categoria deberia ser un numero
                     Codigo = this.Codigo,
                     Margen = this.Margen,
-                    Compra = this.Compra,
+                    Compra = this.Compra.Replace(".", ""),
                     Cantidad = this.Cantidad,
                     Proveedor = this.Proveedor.ToUpper(),
                     Ingreso = fechaSeleccionadaHoraActual,

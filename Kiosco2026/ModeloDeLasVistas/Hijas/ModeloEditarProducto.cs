@@ -429,8 +429,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 {
                     Nombre = this.Nombre.ToUpper(),
                     Categoria = this.Categoria.Nombre,
-                    Venta = this.Venta,
-                    Compra = this.Compra,
+                    Venta = this.Venta.Replace(".", ""),
+                    Compra = this.Compra.Replace(".", ""),
                     Codigo = this.Producto.Codigo,
                     ID = this._idProducto,
                     Mostrar = mostrar

@@ -60,7 +60,7 @@
                                     <TextBlock Text="{Binding Venta}" Style="{StaticResource textoInfoTicket}" Margin="0" HorizontalAlignment="Left"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Left">
-                                    <TextBlock Text="{Binding Nombre}" Style="{StaticResource textoInfoTicket}" Margin="0" HorizontalAlignment="Left"/>
+                                    <TextBlock Text="{Binding Nombre, Converter={StaticResource TextTrimmer}, ConverterParameter=25}" Style="{StaticResource textoInfoTicket}" Margin="0" HorizontalAlignment="Left"/>
                                 </StackPanel>
                             </Grid>
                         </DataTemplate>

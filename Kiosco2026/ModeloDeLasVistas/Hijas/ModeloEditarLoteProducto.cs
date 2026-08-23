@@ -401,8 +401,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 {
                     Nombre = this.Nombre.ToUpper(),
                     Cantidad = cantidad,
-                    Compra = this.Compra,
-                    Venta = this.Venta,
+                    Compra = this.Compra.Replace(".", ""),
+                    Venta = this.Venta.Replace(".", ""),
                     Vencimiento = this.Vencimiento ?? new DateTime(),
                     Ingreso = this.Ingreso ?? new DateTime(),
                     ID = this.Producto.ID,
