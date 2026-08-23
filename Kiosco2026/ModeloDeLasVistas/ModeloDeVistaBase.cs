@@ -21,13 +21,14 @@ namespace Kiosco2026.ModeloDeLasVistas
             string ruta = "log_error.txt";
             DateTime hoy = DateTime.Now;
             string logError = File.ReadAllText(ruta);
-            logError += "\n{" + $"fecha:{hoy.ToString("dd-MM-yyyy HH:mm:ss")}, " +
+            logError += "{" + $"fecha:{hoy.ToString("dd-MM-yyyy HH:mm:ss")}," +
+                $"mensaje: {ERROR.Mensaje}," +
                 $"tipo_error: {ERROR.TipoError}," +
                 $"stack_trace: {ERROR.StackTrace}," +
                 $"namespace: {ERROR.NameSpace}," +
                 $"clase: {ERROR.Clase}," +
                 $"metodo: {ERROR.Metodo}," +
-                $"usuario: {ERROR.Cajero}" + "}" + "\n";
+                $"usuario: {ERROR.Cajero}" + "}" + "\n\n";
             File.WriteAllText(ruta, logError);
         }
     }

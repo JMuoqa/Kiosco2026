@@ -30,13 +30,14 @@ namespace Conexiones
             string ruta = "log_error.txt";
             DateTime hoy = DateTime.Now;
             string logError = File.ReadAllText(ruta);
-            logError += "\n{" + $"fecha:{hoy.ToString("dd-MM-yyyy HH:mm:ss")}, " +
+            logError += "{" + $"fecha:{hoy.ToString("dd-MM-yyyy HH:mm:ss")}, " +
+                $"mensaje: {ERROR.Mensaje}," +
                 $"tipo_error: {ERROR.TipoError}," +
                 $"stack_trace: {ERROR.StackTrace}," +
                 $"namespace: {ERROR.NameSpace}," +
                 $"clase: {ERROR.Clase}," +
                 $"metodo: {ERROR.Metodo}," +
-                $"usuario: {ERROR.Cajero}" + "}" + "\n";
+                $"usuario: {ERROR.Cajero}" + "}" + "\n\n";
             File.WriteAllText(ruta, logError);
         }
         protected async Task RegistrarErrorBDLocal(HistorialErrores ERROR)
@@ -45,7 +46,7 @@ namespace Conexiones
             {
                 using (var con = new MySqlConnection(cadenaDeConexion))
                 {
-
+                    con.Open();
                     string registrarError = "INSERT INTO historial_errores (mensaje, tipo_error, stack_trace, namespace, clase, metodo, usuario) VALUES(@mensaje, @tipo_error, @stack_trace, @namespace, @clase, @metodo, @usuario);";
                     MySqlCommand cmd = new MySqlCommand(registrarError, con);
                     cmd.Parameters.AddWithValue("@mensaje", ERROR.Mensaje);

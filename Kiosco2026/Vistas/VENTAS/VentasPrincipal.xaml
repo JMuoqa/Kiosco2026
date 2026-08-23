@@ -16,9 +16,6 @@
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding ValoresPredeterminados}"/>
         </i:EventTrigger>
-        <i:EventTrigger EventName="Click">
-            <i:InvokeCommandAction Command="{Binding RestablecerValoresConfirmado}"/>
-        </i:EventTrigger>
     </i:Interaction.Triggers>
     <Border CornerRadius="10" Margin="30" Background="#FFFFFF">
         <Grid Margin="15">
