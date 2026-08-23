@@ -261,8 +261,9 @@ namespace Conexiones
                     cmd.Parameters.AddWithValue("@mostrar", categoria.Mostrar);
                     cmd.Parameters.AddWithValue("@id", categoria.ID);
                     var resultado = cmd.ExecuteNonQuery();
-                    Debug.WriteLine(resultado);
-                    return (true, "Pruebas");
+                    if (resultado > 0)
+                        return (true, "La categoria se edito correctamente");
+                    return (false, "No se pudo editar la categoria");
                 }
                 catch (Exception ex)
                 {

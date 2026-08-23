@@ -239,15 +239,15 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     throw new Exception("No hay ninguna categoria seleccionada");
                 string visualizacion;
                 if (Visualizacion)
-                    visualizacion = "si";
+                    visualizacion = "SI";
                 else
-                    visualizacion = "no";
+                    visualizacion = "NO";
                 int idCategoria;
                 if (!int.TryParse(CategoriaSeleccionada, out idCategoria))
                     throw new Exception("Algo salio mal, contactanos");
                 Categorias cate = new Categorias
                 {
-                    Nombre = Edicion,
+                    Nombre = Edicion.ToUpper(),
                     ID = idCategoria,
                     Mostrar = visualizacion
                 };

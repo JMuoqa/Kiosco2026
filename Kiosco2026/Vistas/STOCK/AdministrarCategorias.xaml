@@ -124,7 +124,7 @@
             <StackPanel Grid.Row="2"  Orientation="Vertical">
                 <StackPanel Margin="0, 20, 0, 10" Orientation="Horizontal">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock  FontSize="20" FontWeight="SemiBold" FontFamily="Roboto Flex">Editar categoria Nº:</TextBlock>
+                        <TextBlock Margin="3,0" FontSize="20" FontWeight="SemiBold" FontFamily="Roboto Flex">Editar categoria Nº:</TextBlock>
                         <TextBox Background="Transparent" Foreground="#000000"
                                  FontSize="18" FontWeight="Medium" FontFamily="Roboto Flex"
                                  Margin="10, 0, 0, 0" Text="{Binding CategoriaSeleccionada}" 
@@ -137,7 +137,7 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <TextBox Grid.Column="0" IsReadOnly="{Binding SoloLectura}" x:Name="entrada_edicion" 
-                             Style="{StaticResource entrada_form}" Margin="0" Text="{Binding Edicion}" 
+                             Style="{StaticResource entrada_form}" Margin="3,0" Text="{Binding Edicion}" 
                              Foreground="{Binding ColoresProductos.BusuqedaUno}" Height="40">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="GotFocus">
@@ -156,13 +156,19 @@
                         <CheckBox VerticalAlignment="Center"  Margin="10, 0, 0, 0" IsChecked="{Binding Visualizacion}"></CheckBox>
                     </StackPanel>
                 </Grid>
-                <RadioButton Grid.Column="1"  Style="{StaticResource boton_confirmar}" Margin="0, 10" Command="{Binding EditarCategoria}">
-                    <TextBlock Style="{StaticResource texto_botones_uno}" Text="Realizar cambios" />
-                </RadioButton>
-                <RadioButton Grid.Column="1"  Style="{StaticResource boton_cancelar}" Margin="0, 10" 
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <RadioButton Grid.Column="0"  Style="{StaticResource boton_confirmar}" Margin="3, 10" Command="{Binding EditarCategoria}">
+                        <TextBlock Style="{StaticResource texto_botones_uno}" Text="Realizar cambios" />
+                    </RadioButton>
+                    <RadioButton Grid.Column="1" Style="{StaticResource boton_cancelar}" Margin="3, 10" 
                              Command="{Binding Cancelar}">
-                    <TextBlock Style="{StaticResource texto_botones_uno}" Text="Cancelar" />
-                </RadioButton>
+                        <TextBlock Style="{StaticResource texto_botones_uno}" Text="Cancelar" />
+                    </RadioButton>
+                </Grid>
                 <TextBlock FontFamily="Roboto Flex" FontSize="16" 
                            Text="{Binding MensajeEdicion}" Foreground="{Binding ColorMensajeEdicion}"></TextBlock>
             </StackPanel>
