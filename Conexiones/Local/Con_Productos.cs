@@ -231,12 +231,13 @@ namespace Conexiones
                 try
                 {
                     con.Open();    
-                    string cargarCategoria = "INSERT INTO Categorias (Nombre, Mostrar) VALUES(@nombre, \"si\");";
+                    string cargarCategoria = "INSERT INTO Categorias (Nombre, Mostrar) VALUES(@nombre, \"SI\");";
                     MySqlCommand cmd = new MySqlCommand(cargarCategoria, con);
                     cmd.Parameters.AddWithValue("@nombre", categoria.Nombre);
-                    var resultado = cmd.ExecuteNonQuery();
-                    Debug.WriteLine(resultado);
-                    return (true, "Pruebas");
+                    int resultado = cmd.ExecuteNonQuery();
+                    if(resultado > 0)
+                        return (true, "La categoria se cargo correctamente");
+                    return (false, "No se pudo cargar la categoria");
                 }
                 catch (Exception ex)
                 {

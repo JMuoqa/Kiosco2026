@@ -91,10 +91,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 Categorias cate = new Categorias
                 {
-                    Nombre = NombreCargar
+                    Nombre = NombreCargar.ToUpper()
                 };
                 var respuesta = await _adminProductos.CargarCategoria(cate);
-                Debug.WriteLine(respuesta);
                 if (respuesta.estado){
                     ColorMensaje = _colores.ColorExito;
                     EjecutarPostCarga();
