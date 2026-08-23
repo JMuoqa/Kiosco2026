@@ -33,6 +33,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             EditarProducto = new ComandoModeloDeVista(EjecutarEditarProducto);
             BusquedaPorCodigo = new ComandoModeloDeVista(EjecutarBusquedaPorCodigoUltLote);
             ResetearBusqueda = new ComandoModeloDeVista(ResetearTabla);
+            KeyDownObtenerProductos = new ComandoModeloDeVista(EjecutarKeyDownObtenerProductos);
             _adminProductos = new AdminProductos();
             ColoresEntradas = new ColoresProductos();
             Producto = new Productos("-");
@@ -362,8 +363,19 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand GuardarCmb { get; }
         public ICommand SelectionChanged { get; }
         public ICommand EditarProducto { get; }
+        public ICommand KeyDownObtenerProductos { get; }
         #endregion
         #region Eventos
+        public async Task EjecutarKeyDownObtenerProductos(object arg)
+        {
+            if(arg is KeyEventArgs e)
+            {
+                if(e.Key == Key.Enter)
+                {
+                    EjecutarObtenerProductos(null);
+                }
+            }
+        }
         public async Task EjecutarEditarProducto(object arg)
         {
             try
@@ -466,23 +478,43 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private async Task EjecutarObtenerProductos(object obj)
         {
-            string valor = "";
-            BusquedaCodigo = "Buscar por codigo"; 
+
+            try
+            {
+                string valor;
+                if (BusquedaCodigo == "Buscar por codigo" || string.IsNullOrWhiteSpace(BusquedaCodigo))
+                {
+                    valor = Busqueda != "Buscar por nombre" ? Busqueda : "";
+                    ObtenerProductosPorNombreYCategoria(valor);
+                }
+                else
+                {
+                    EjecutarBusquedaPorCodigoUltLote(null);
+                }
+            }
+            catch (Exception ex)
+            {
+                ColorMensaje = _colores.ColorError;
+                Mensaje = ex.Message;
+            }
+            finally
+            {
+                tiempo.Interval = 10000;
+                tiempo.Enabled = true;
+            }
+        }
+        private async Task ObtenerProductosPorNombreYCategoria(string valor)
+        {
+            BusquedaCodigo = "Buscar por codigo";
             ColoresEntradas.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
-            if (Busqueda != "Buscar por nombre")
-                valor = Busqueda;
             var res = await _adminProductos.Con_ObtenerUltLotePorNombre(valor);
-            Debug.WriteLine("ModeloEditar Producto - EjecutarObtenerProductos: " + res.lista[0].Categoria);
             ListaProductos = new ObservableCollection<Productos>(res.lista);
         }
         private async Task EjecutarBusquedaPorCodigoUltLote(object obj)
         {
             Busqueda = "Buscar por nombre";
             ColoresEntradas.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
-            string valor = "";
-            if(BusquedaCodigo != "Buscar por codigo")
-                valor = BusquedaCodigo;
-            var res = await _adminProductos.BusquedaProductoPorCodigoUltLote(valor);
+            var res = await _adminProductos.BusquedaProductoPorCodigoUltLote(BusquedaCodigo);
             ListaProductos = new ObservableCollection<Productos>(res.lista);
         }
         private async Task EjecutarActualizarAnchoActual(object arg)

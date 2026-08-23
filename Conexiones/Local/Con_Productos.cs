@@ -295,7 +295,7 @@ namespace Conexiones
                             });
                         }
                     }
-                    return (true, "Pruebas", categoriasObtenidas);
+                    return (true, "Se encontraron categorias", categoriasObtenidas);
                 }
                 catch (Exception ex)
                 {
@@ -389,7 +389,7 @@ namespace Conexiones
                             }
                         }
                     }
-                    return (true, "Pruebas", productos);
+                    return (true, "Se encontraron productos", productos);
                 }
                 catch (Exception ex)
                 {
@@ -444,7 +444,7 @@ namespace Conexiones
                             }
                         }
                     }
-                    return (true, "Pruebas", productos);
+                    return (true, "Se encontraron productos", productos);
                 }
                 catch (Exception ex)
                 {
@@ -463,6 +463,7 @@ namespace Conexiones
                 try
                 {
                     con.Open();
+                    nombre = "%" + nombre + "%";
                     string obtenerUltLote = "SELECT ult.ID, ult.IDCategoria, ult.Nombre, ult.Codigo, ult.Compra, ult.Venta," +
                         " ult.Proveedor, ult.Mostrar, ult.Ingreso, ult.Vencimiento, ult.UnidadMedida, tot.Cantidad " +
                         " FROM ( SELECT ID, IDCategoria, Nombre, Codigo, Compra, Venta, Proveedor, Mostrar, Ingreso, Vencimiento, UnidadMedida" +
@@ -507,7 +508,7 @@ namespace Conexiones
                             }
                         }
                     }
-                    return (true, "Pruebas", productos);
+                    return (true, "Se encontraron productos", productos);
                 }
                 catch (Exception ex)
                 {

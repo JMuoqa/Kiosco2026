@@ -35,7 +35,7 @@
                            VerticalAlignment="Center" Text="Productos">
                     </TextBlock>
                     <TextBox x:Name="entrada_busqueda" Style="{StaticResource entrada_form}" Margin="10, 0, 10, 0" 
-                             Text="{Binding Busqueda}" Height="40" Width="250" Foreground="{Binding ColoresEntradas.Busuqeda}">
+                             Text="{Binding Busqueda, UpdateSourceTrigger=PropertyChanged}" Height="40" Width="250" Foreground="{Binding ColoresEntradas.Busuqeda}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="GotFocus">
                                 <i:InvokeCommandAction Command="{Binding GotFocus}" 
@@ -44,28 +44,32 @@
                             <i:EventTrigger EventName="LostFocus">
                                 <i:InvokeCommandAction Command="{Binding LostFocus}" 
                                  CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="KeyDown">
+                                <i:InvokeCommandAction Command="{Binding KeyDownObtenerProductos}" 
+                                 PassEventArgsToCommand="True"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </TextBox>
+                    <TextBox x:Name="entrada_codigo" Style="{StaticResource entrada_form}" Margin="10, 0, 10, 0" 
+                             Text="{Binding BusquedaCodigo, UpdateSourceTrigger=PropertyChanged }" Height="40" Width="250" Foreground="{Binding ColoresEntradas.BusuqedaUno}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="GotFocus">
+                                <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="LostFocus">
+                                <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                                 CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="KeyDown">
+                                <i:InvokeCommandAction Command="{Binding KeyDownObtenerProductos}" 
+                                 PassEventArgsToCommand="True"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </TextBox>
                     <RadioButton Grid.Column="1"  Style="{StaticResource boton_buscar}" Height="40" 
                                 VerticalAlignment="Center" Margin="0" Width="60" Command="{Binding ObtenerProductos}">
-                        <fa:IconImage Icon="Search" Margin="0" Style="{StaticResource iconos_menu}"/>
-                    </RadioButton>
-                    <TextBox x:Name="entrada_codigo" Style="{StaticResource entrada_form}" Margin="10, 0, 10, 0" 
-                             Text="{Binding BusquedaCodigo}" Height="40" Width="250" Foreground="{Binding ColoresEntradas.BusuqedaUno}">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="GotFocus">
-                                <i:InvokeCommandAction Command="{Binding GotFocus}" 
-                                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
-                            </i:EventTrigger>
-                            <i:EventTrigger EventName="LostFocus">
-                                <i:InvokeCommandAction Command="{Binding LostFocus}" 
-                                 CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </TextBox>
-                    <RadioButton Grid.Column="1"  Style="{StaticResource boton_buscar}" Height="40" 
-                                VerticalAlignment="Center" Margin="0" Width="60" Command="{Binding BusquedaPorCodigo}">
                         <fa:IconImage Icon="Search" Margin="0" Style="{StaticResource iconos_menu}"/>
                     </RadioButton>
                     <RadioButton Grid.Column="1"  Style="{StaticResource boton_buscar}" Height="40" 
