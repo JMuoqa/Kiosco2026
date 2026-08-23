@@ -231,8 +231,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             PrintDocument pd = new PrintDocument(); 
             pd.PrinterSettings.PrinterName = "FUKUNTickets"; 
-            pd.DefaultPageSettings.Margins = new Margins(0, 0, 0, 0); 
-            pd.DefaultPageSettings.PaperSize = new PaperSize("Ticket", 280, 600);
+            pd.DefaultPageSettings.Margins = new Margins(0, 0, 0, 0);
+            Font fuenteInfo = new Font("Roboto Flex", 8);
+            pd.DefaultPageSettings.PaperSize = new PaperSize("Ticket", 280, 10000);
             //Sucribimos lso eventos para cuando empiece y termine una impresion 
             pd.PrintPage += new PrintPageEventHandler(ImpresionDePagina);
             pd.EndPrint += new PrintEventHandler(FinDeImpresion); 
@@ -360,16 +361,22 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     e.Graphics.DrawString(vCantidad, fuenteInfo, Brushes.Black, limiteIzquierdo, y);
                     e.Graphics.DrawString(vPrecioVenta, fuenteInfo, Brushes.Black, xVCantidad, y);
                     y += 15;
-                    e.Graphics.DrawString(vNombre, fuenteInfo, Brushes.Black, limiteIzquierdo, y);
+                    RectangleF rectNombre = new RectangleF(limiteIzquierdo, y, 220, 100);
+                    //Aca uso la sobre carag que usa un RectangleF para que si el nombre es muy largo haga "wrap"
+                    e.Graphics.DrawString(vNombre, fuenteInfo, Brushes.Black, rectNombre);
+                    //Aca se calcula tamaño de el string, y despues accedemos a el alto real que tiene
+                    SizeF anchoNombreProducto = e.Graphics.MeasureString(vNombre, fuenteInfo, 220);
+                    //Se le resta 15 para alinearlo
+                    y += anchoNombreProducto.Height - 12;
                     e.Graphics.DrawString(strVPrecioTotal, fuenteInfo, Brushes.Black, posPrecioTotal, y);
                     y += 20;
                     _indiceActual++;
-
+                    /*Esto lo que hace es copiar de vuelta la pagina ena vez pase el limite, no es necesario ya que el ticket es dinamico
                     if (y > e.MarginBounds.Bottom)
                     {
                         e.HasMorePages = true;
                         return;
-                    }
+                    }*/
                 }
                 e.Graphics.DrawString(divisor, fuenteDeco, Brushes.Black, divisorCentrado, y);
                 y += 20;

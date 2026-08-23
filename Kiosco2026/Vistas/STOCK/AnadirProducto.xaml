@@ -93,36 +93,6 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </TextBox>
-                <TextBox x:Name="entrada_venta" Style="{StaticResource entrada_form}" Text="{Binding Margen}" 
-                         PreviewTextInput="entradas_PreviewTextInput" Foreground="{Binding ColoresEntradas.Venta}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="GotFocus">
-                            <i:InvokeCommandAction Command="{Binding GotFocus}" 
-                               CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
-                        </i:EventTrigger>
-                        <i:EventTrigger EventName="LostFocus">
-                            <i:InvokeCommandAction Command="{Binding LostFocus}" 
-                               CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </TextBox>
-                <TextBlock Margin="10" FontFamily="Roboto Flex" 
-                           FontSize="16"><Bold>- Campos obligatorios: </Bold> Todos los campos marcados con un asterisco
-                    <LineBreak/> (<Span Foreground="#990000">*</Span>) deben completarse sin excepción.</TextBlock>
-                <TextBlock Margin="10" FontFamily="Roboto Flex" 
-                           FontSize="16"><Bold>- Fecha de ingreso:</Bold> Se asigna automáticamente la fecha del día
-                    <LineBreak/> en curso al momento de la carga.
-                </TextBlock>
-                <TextBlock Margin="10" FontFamily="Roboto Flex" 
-                           FontSize="16"><Bold>- Fecha de vencimiento:</Bold> Por defecto se establece un año posterior
-                    <LineBreak/> a la fecha de ingreso.
-                </TextBlock>
-                <TextBlock Margin="10" FontFamily="Roboto Flex" 
-                           FontSize="16"><Bold>- Agregar categorías:</Bold> Para ampliar tu listado, utilizá la opción 
-                    <LineBreak/><Span Foreground="#FF265B71">“Administrar categorías”</Span> disponible dentro de la sección “Stock”.
-                </TextBlock>
-            </StackPanel>
-            <StackPanel Grid.Column="1">
                 <Grid >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -159,6 +129,36 @@
                         </i:Interaction.Triggers>
                     </ComboBox>
                 </Grid>
+                <TextBlock Margin="10" FontFamily="Roboto Flex" 
+                           FontSize="16"><Bold>- Campos obligatorios: </Bold> Todos los campos marcados con un asterisco
+                    <LineBreak/> (<Span Foreground="#990000">*</Span>) deben completarse sin excepción.</TextBlock>
+                <TextBlock Margin="10" FontFamily="Roboto Flex" 
+                           FontSize="16"><Bold>- Fecha de ingreso:</Bold> Se asigna automáticamente la fecha del día
+                    <LineBreak/> en curso al momento de la carga.
+                </TextBlock>
+                <TextBlock Margin="10" FontFamily="Roboto Flex" 
+                           FontSize="16"><Bold>- Fecha de vencimiento:</Bold> Por defecto se establece un año posterior
+                    <LineBreak/> a la fecha de ingreso.
+                </TextBlock>
+                <TextBlock Margin="10" FontFamily="Roboto Flex" 
+                           FontSize="16"><Bold>- Agregar categorías:</Bold> Para ampliar tu listado, utilizá la opción 
+                    <LineBreak/><Span Foreground="#FF265B71">“Administrar categorías”</Span> disponible dentro de la sección “Stock”.
+                </TextBlock>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <TextBox x:Name="entrada_venta" Style="{StaticResource entrada_form}" Text="{Binding Margen}" 
+                         PreviewTextInput="entradas_PreviewTextInput" Foreground="{Binding ColoresEntradas.Venta}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="GotFocus">
+                            <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                               CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="LostFocus">
+                            <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                               CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
                 <TextBox x:Name="entrada_proveedor" Style="{StaticResource entrada_form}" Text="{Binding Proveedor}" 
                          Foreground="{Binding ColoresEntradas.Proveedor}">
                     <i:Interaction.Triggers>

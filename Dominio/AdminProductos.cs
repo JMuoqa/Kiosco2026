@@ -160,6 +160,8 @@ namespace Dominio
                 throw new Exception("El campo 'Cantidad' esta vacio");
             if(prod.Ingreso >= prod.Vencimiento)
                 throw new Exception("La fecha de vencimiento es inferior o igual a la de ingreso");
+            if (prod.Nombre.Length > 100)
+                throw new Exception("El nombre del producto no puede superar los 100 caracteres.");
             return;
         }
     }
