@@ -85,9 +85,9 @@ namespace Dominio
         {
             return await _productos.Con_BusquedaCategorias(busqueda);
         }
-        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_ObtenerUltLotePorNombre(string busqueda)
+        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_ObtenerUltLotePorNombre(string busqueda, string categoria)
         {
-            return await _productos.Con_ObtenerUltLotePorNombre(busqueda);
+            return await _productos.Con_ObtenerUltLotePorNombre(busqueda, categoria);
         }
         public async Task<(bool estado, string mensaje, List<Productos> lista)> BusquedaPorIngreso(string codigo, DateTime? busqueda)
         {

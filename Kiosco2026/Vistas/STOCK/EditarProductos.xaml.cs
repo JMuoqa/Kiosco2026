@@ -33,6 +33,7 @@ namespace Kiosco2026.Vistas
         private Productos _prSelecionado;
         private void EstiloItems()
         {
+            //23/8/2026 ESTO SUSCRIBE A LOS COMBOBOX A EL EVENTO "CAMBIO DE ESTADO" Y CREO QUE ERA PARA EL COLOR DE LOS ITEMS DESPLEGADOS (FONDO BLANCO LETRA NEGRA)
             //Este evento se ejecuta cuando el itemcontainer cambia de estado (inicio, generando, terminado)
             //pero solo empieza a cambiar de estados cuando se abre por primera vez el dropdown
             cmb_categorias.ItemContainerGenerator.StatusChanged += (s, e) =>
@@ -55,6 +56,26 @@ namespace Kiosco2026.Vistas
                 }
             };
             cmb_categorias.IsDropDownOpen = true;
+            cmb_categoria_busqueda.ItemContainerGenerator.StatusChanged += (s, e) =>
+            {
+                if (cmb_categoria_busqueda.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
+                {
+                    //No podemos usar foreach por que los comboboxitem estan dentro de un ¿datatemplate?
+                    for (int i = 0; i < cmb_categoria_busqueda.Items.Count; i++)
+                    {
+                        //Aca accedemos al cmbitem nº'i'
+                        var container = cmb_categoria_busqueda.ItemContainerGenerator.ContainerFromIndex(i) as ComboBoxItem;
+                        if (container != null)
+                        {
+                            container.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+                            //container.Selected += ComboBoxItem_Selected_Categoria;
+                        }
+                    }
+                    cmb_categoria_busqueda.SelectedIndex = 0;
+                    cmb_categoria_busqueda.IsDropDownOpen = false;
+                }
+            };
+            cmb_categoria_busqueda.IsDropDownOpen = true;
         }
         private void ComboBoxItem_Selected_Categoria(object sender, RoutedEventArgs e)
         {
@@ -106,5 +127,6 @@ namespace Kiosco2026.Vistas
                 );
             }
         }
+
     }
 }

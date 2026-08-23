@@ -456,22 +456,24 @@ namespace Conexiones
         #endregion
         #region Con_ObtenerUltLotePorNombre
         //Esta es para buscar productos para editar cuando se busca por nombre
-        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_ObtenerUltLotePorNombre(string nombre)
+        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_ObtenerUltLotePorNombre(string nombre, string categoria)
         {
             using (var con = new MySqlConnection(cadenaDeConexion))
             {
                 try
                 {
                     con.Open();
+                    int idCategoria = await Con_ObtenerIDCategoria(con, categoria);
                     nombre = "%" + nombre + "%";
                     string obtenerUltLote = "SELECT ult.ID, ult.IDCategoria, ult.Nombre, ult.Codigo, ult.Compra, ult.Venta," +
                         " ult.Proveedor, ult.Mostrar, ult.Ingreso, ult.Vencimiento, ult.UnidadMedida, tot.Cantidad " +
                         " FROM ( SELECT ID, IDCategoria, Nombre, Codigo, Compra, Venta, Proveedor, Mostrar, Ingreso, Vencimiento, UnidadMedida" +
                         " FROM ( SELECT p.*, ROW_NUMBER() OVER (PARTITION BY Codigo ORDER BY Ingreso DESC) AS rn FROM Productos p ) t" +
-                        " WHERE rn = 1 AND (Nombre LIKE @nombre OR @nombre = \"\") )ult JOIN( SELECT Codigo, CAST(SUM(Cantidad) AS SIGNED) AS Cantidad" +
+                        " WHERE rn = 1 AND (Nombre LIKE @nombre OR @nombre = \"\") AND (IDCategoria = @idcategoria OR @idcategoria = -1) )ult JOIN( SELECT Codigo, CAST(SUM(Cantidad) AS SIGNED) AS Cantidad" +
                         " FROM Productos GROUP BY Codigo ) tot ON ult.Codigo = tot.Codigo;";
                     MySqlCommand cmd = new MySqlCommand(obtenerUltLote, con);
                     cmd.Parameters.AddWithValue("@nombre", nombre);
+                    cmd.Parameters.AddWithValue("@@idcategoria", idCategoria);
                     List<Productos> productos = new List<Productos>();
                     using (MySqlDataReader lector = cmd.ExecuteReader())
                     {

@@ -291,7 +291,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private async Task EjecutarObtenerCategoriasGenerales(object arg)
         {
             var respuesta = await _adminProductos.ObtenerCategoriasCliente();
-            Debug.WriteLine(respuesta);
             List<Categorias> lista = respuesta.lista; 
             lista.Insert(0, new Categorias { Nombre = "Categoria*" });
             ListaCategorias = new ObservableCollection<Categorias>(lista);

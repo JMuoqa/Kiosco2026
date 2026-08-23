@@ -24,9 +24,11 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             ActualizarAnchoActual = new ComandoModeloDeVista(EjecutarActualizarAnchoActual);
             ObtenerProductos = new ComandoModeloDeVista(EjecutarObtenerProductos);
             CargarDatos = new ComandoModeloDeVista(EjecutarCargarDatos);
-            ObtenerCategorias = new ComandoModeloDeVista(EjecutarObtenerCategoriasGenerales);
             GuardarCmb = new ComandoModeloDeVista(EjecutarGuardarCmb);
+            ObtenerCategorias = new ComandoModeloDeVista(EjecutarObtenerCategoriasGenerales);
+            GuardarCmbParaBusqueda = new ComandoModeloDeVista(EjecutarGuardarCmbParaBusqueda);
             SelectionChanged = new ComandoModeloDeVista(EjecutarSelected);
+            SelectionChangedParaBusqueda = new ComandoModeloDeVista(EjecutarSelectedParaBusqueda);
             ValoresPredeterminados = new ComandoModeloDeVista(EjecutarValoresPredeterminados);
             GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
             LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
@@ -216,9 +218,20 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private AdminProductos _adminProductos;
         private ColoresTexto _colores;
         private ObservableCollection<Categorias> _listaCategorias;
+        private ObservableCollection<Categorias> _listaCategoriasParaBusquedas;
+        public ObservableCollection<Categorias> ListaCategoriasParaBusquedas
+        {
+            get => _listaCategoriasParaBusquedas;
+            set
+            {
+                _listaCategoriasParaBusquedas = value;
+                OnPropertyChanged(nameof(ListaCategoriasParaBusquedas));
+            }
+        }
         private Categorias _categoria;
         private Productos _producto;
         private ComboBox cmbCat;
+        private ComboBox cmbCatParaBusqueda;
         private string _colorMensaje;
         private string _venta;
         private string _compra;
@@ -271,7 +284,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             set
             {
                 _coloresEntradas = value;
-                OnPropertyChanged(nameof(_coloresEntradas));
+                OnPropertyChanged(nameof(ColoresEntradas));
             }
         }
         public Productos Producto
@@ -349,6 +362,16 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 OnPropertyChanged(nameof(Categoria));
             }
         }
+        private Categorias _categoriaParaBusqueda;
+        public Categorias CategoriaParaBusqueda
+        {
+            get => _categoriaParaBusqueda;
+            set
+            {
+                _categoriaParaBusqueda = value;
+                OnPropertyChanged(nameof(_categoriaParaBusqueda));
+            }
+        }
         #endregion
         #region Comandos
         public ICommand ActualizarAnchoActual { get; }
@@ -361,7 +384,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand GotFocus { get; }
         public ICommand LostFocus { get; }
         public ICommand GuardarCmb { get; }
+        public ICommand GuardarCmbParaBusqueda { get; }
         public ICommand SelectionChanged { get; }
+        public ICommand SelectionChangedParaBusqueda { get; }
         public ICommand EditarProducto { get; }
         public ICommand KeyDownObtenerProductos { get; }
         #endregion
@@ -436,6 +461,11 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             ComboBox cmb = (ComboBox)arg;
             cmbCat = cmb;
         }
+        private async Task EjecutarGuardarCmbParaBusqueda(object arg)
+        {
+            ComboBox cmb = (ComboBox)arg;
+            cmbCatParaBusqueda = cmb;
+        }
         private async Task EjecutarSelected(object arg)
         {
             Categorias cate = (Categorias)arg;
@@ -444,6 +474,15 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 ColoresEntradas.Categoria = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
             else
                 ColoresEntradas.Categoria = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+        }
+        private async Task EjecutarSelectedParaBusqueda(object arg)
+        {
+            Categorias cate = (Categorias)arg;
+            string str = cate.Nombre.ToLower();
+            if (str != "categoria*")
+                ColoresEntradas.CategoriaParaBusqueda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+            else
+                ColoresEntradas.CategoriaParaBusqueda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
         }
         private async Task EjecutarCargarDatos(object obj)
         {
@@ -505,14 +544,16 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private async Task ObtenerProductosPorNombreYCategoria(string valor)
         {
+            string categoria = CategoriaParaBusqueda is Categorias ? CategoriaParaBusqueda.Nombre : "";
             BusquedaCodigo = "Buscar por codigo";
             ColoresEntradas.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
-            var res = await _adminProductos.Con_ObtenerUltLotePorNombre(valor);
+            var res = await _adminProductos.Con_ObtenerUltLotePorNombre(valor, categoria);
             ListaProductos = new ObservableCollection<Productos>(res.lista);
         }
         private async Task EjecutarBusquedaPorCodigoUltLote(object obj)
         {
             Busqueda = "Buscar por nombre";
+            cmbCatParaBusqueda.SelectedIndex = 0;
             ColoresEntradas.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
             var res = await _adminProductos.BusquedaProductoPorCodigoUltLote(BusquedaCodigo);
             ListaProductos = new ObservableCollection<Productos>(res.lista);
@@ -548,6 +589,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             var respuesta = await _adminProductos.ObtenerCategoriasCliente();
             List<Categorias> lista = respuesta.lista;
+            lista.Insert(0, new Categorias { Nombre = "Categoria*" });
+            ListaCategoriasParaBusquedas = new ObservableCollection<Categorias>(lista);
             ListaCategorias = new ObservableCollection<Categorias>(lista);
         }
         private async Task EjecutarValoresPredeterminados(object arg)

@@ -14,8 +14,8 @@
     </UserControl.DataContext>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding ObtenerProductos}"/>
             <i:InvokeCommandAction Command="{Binding ObtenerCategorias}"/>
+            <i:InvokeCommandAction Command="{Binding ObtenerProductos}"/>
             <i:InvokeCommandAction Command="{Binding ValoresPredeterminados}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
@@ -68,6 +68,29 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </TextBox>
+                    <ComboBox      x:Name="cmb_categoria_busqueda" Height="40" Width="250" Margin="10, 0, 10, 0" 
+                                   PreviewMouseDown="cmb_categorias_PreviewMouseDown"
+                                   Style="{StaticResource cmb_entrada_form}" 
+                                   ItemsSource="{Binding ListaCategoriasParaBusquedas}"
+                                   SelectedItem="{Binding CategoriaParaBusqueda}"
+                                   Foreground="{Binding ColoresEntradas.CategoriaParaBusqueda}"
+                                   Cursor="Hand">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Loaded">
+                                <i:InvokeCommandAction Command="{Binding GuardarCmbParaBusqueda}" 
+                                                           CommandParameter="{Binding ElementName=cmb_categoria_busqueda}"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding SelectionChangedParaBusqueda}"
+                                                           CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ComboBox}}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate >
+                                <TextBlock Text="{Binding Nombre}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                     <RadioButton Grid.Column="1"  Style="{StaticResource boton_buscar}" Height="40" 
                                 VerticalAlignment="Center" Margin="0" Width="60" Command="{Binding ObtenerProductos}">
                         <fa:IconImage Icon="Search" Margin="0" Style="{StaticResource iconos_menu}"/>

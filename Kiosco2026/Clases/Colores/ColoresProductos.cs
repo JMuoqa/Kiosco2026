@@ -1,4 +1,5 @@
-﻿using Kiosco2026.ModeloDeLasVistas;
+﻿using Entidades;
+using Kiosco2026.ModeloDeLasVistas;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,6 +30,16 @@ namespace Kiosco2026.Clases.Colores
         private Brush _descuento;
         private Brush _montoPagado;
         private Brush _unidadMedida;
+        private Brush _categoriaParaBusqueda;
+        public Brush CategoriaParaBusqueda
+        {
+            get => _categoriaParaBusqueda;
+            set
+            {
+                _categoriaParaBusqueda = value;
+                OnPropertyChanged(nameof(CategoriaParaBusqueda));
+            }
+        }
         public Brush UnidadMedida
         {
             get => _unidadMedida;
