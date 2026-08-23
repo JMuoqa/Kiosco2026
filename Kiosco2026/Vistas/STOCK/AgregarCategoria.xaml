@@ -21,8 +21,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <TextBox Grid.Column="0" x:Name="entrada_categoria_carga" Style="{StaticResource entrada_form}" 
-                     Text="{Binding NombreCargar}" Foreground="{Binding ColorBusqueda}" >
-
+                     Text="{Binding NombreCargar, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding ColorBusqueda}" >
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotFocus">
                         <i:InvokeCommandAction Command="{Binding GotFocus}" 
@@ -31,6 +30,10 @@
                     <i:EventTrigger EventName="LostFocus">
                         <i:InvokeCommandAction Command="{Binding LostFocus}" 
                                CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="KeyDown">
+                        <i:InvokeCommandAction Command="{Binding KeyDownCargar}" 
+                               PassEventArgsToCommand="True"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </TextBox>

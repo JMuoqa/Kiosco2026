@@ -1,5 +1,7 @@
 ﻿using Dominio;
 using Entidades;
+using Kiosco2026.Clases.Colores;
+using Kiosco2026.Vistas;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,12 +10,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
-using System.Windows.Controls;
 using static System.Runtime.InteropServices.JavaScript.JSType;
-using Kiosco2026.Clases.Colores;
 
 namespace Kiosco2026.ModeloDeLasVistas.Hijas
 {
@@ -28,6 +30,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
             Cancelar = new ComandoModeloDeVista(EjecutarCancelar);
             LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
+            KeyDownEditar = new ComandoModeloDeVista(EjecutarKeyDownEditar);
+            RestablecerTodo = new ComandoModeloDeVista(EjecutarRestablecerTodo);
+            AbrirMAC = new ComandoModeloDeVista(EjecutarAbrirMAC);
+            SelecionarTextBox = new ComandoModeloDeVista(EjecutarSelecionarTextBox);
             _adminProductos = new AdminProductos();
             _coloresEntradas = new ColoresProductos();
             SoloLectura = true;
@@ -214,7 +220,36 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand GotFocus { get; }
         public ICommand LostFocus { get; }
         public ICommand Cancelar { get; }
+        public ICommand KeyDownEditar { get; }
+        public ICommand RestablecerTodo { get; }
+        public ICommand AbrirMAC { get; }
+        public ICommand SelecionarTextBox { get; }
         #endregion
+        private async Task EjecutarSelecionarTextBox(object arg)
+        {
+            if (arg is TextBox txt)
+            {
+                await Task.Delay(100);
+                txt.Focus();
+                Keyboard.Focus(txt);
+            }
+        }
+        private async Task EjecutarAbrirMAC(object arg)
+        {
+            AgregarCategoria window = new AgregarCategoria();
+            window.Owner = Application.Current.MainWindow; //Aca le decimo cual es el padre de "window"
+            window.Closed += (sender, e) =>
+            {
+                EjecutarRestablecerTodo(null);
+            };
+            window.ShowDialog();
+        }
+        private async Task EjecutarRestablecerTodo(object arg)
+        {
+            EjecutarCancelar(null);
+            Busqueda = "";
+            EjecutarBuscarCategorias(null);
+        }
         private async Task EjecutarCancelar(object arg)
         {
             SoloLectura = true;
@@ -230,6 +265,16 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 valor = Busqueda;
             var res = await _adminProductos.BusquedaCategorias(valor);
             ListaCategorias = new ObservableCollection<Categorias>(res.lista);
+        }
+        private async Task EjecutarKeyDownEditar(object arg)
+        {
+            if (arg is KeyEventArgs e)
+            {
+                if (e.Key == Key.Enter)
+                {
+                    EjecutarBuscarCategorias(null);
+                }
+            }
         }
         private async Task EjecutarEditarCategoria(object arg)
         {
@@ -283,7 +328,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             Categorias categoria = (Categorias)arg;
             Edicion = categoria.Nombre;
             SoloLectura = false;
-            if (categoria.Mostrar == "si")
+            if (categoria.Mostrar == "SI")
                 Visualizacion = true;
             else
                 Visualizacion = false;

@@ -9,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
@@ -25,6 +24,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             CargarCategoria = new ComandoModeloDeVista(EjecutarCargarCategoria);
             GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
             LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
+            KeyDownCargar = new ComandoModeloDeVista(EjecutarKeyDownCargar);
             _adminProductos = new AdminProductos();
             _colores = new ColoresTexto();
             NombreCargar = "Nombre de la categoria";
@@ -80,6 +80,18 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand CargarCategoria { get; }
         public ICommand GotFocus { get; }
         public ICommand LostFocus { get; }
+        public ICommand KeyDownCargar { get; }
+        private async Task EjecutarKeyDownCargar(object arg)
+        {
+
+            if (arg is KeyEventArgs e)
+            {
+                if (e.Key == Key.Enter)
+                {
+                    EjecutarCargarCategoria(null);
+                }
+            }
+        }
         private void EjecutarPostCarga()
         {
             NombreCargar = "Nombre de la categoria";

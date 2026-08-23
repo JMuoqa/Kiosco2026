@@ -32,7 +32,7 @@
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock FontSize="20" FontWeight="SemiBold" FontFamily="Roboto Flex" 
                            VerticalAlignment="Center" Margin="0, 0, 10, 0">Buscar categoria</TextBlock>
-                    <TextBox x:Name="entrada_busqueda" Style="{StaticResource entrada_form}" Margin="0, 0, 10, 0" Text="{Binding Busqueda}" 
+                    <TextBox x:Name="entrada_busqueda" Style="{StaticResource entrada_form}" Margin="0, 0, 10, 0" Text="{Binding Busqueda, UpdateSourceTrigger=PropertyChanged}" 
                          Height="40" Width="250" Foreground="{Binding ColoresProductos.Busuqeda}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="GotFocus">
@@ -43,19 +43,34 @@
                                 <i:InvokeCommandAction Command="{Binding LostFocus}" 
                                CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
                             </i:EventTrigger>
+                            <i:EventTrigger EventName="KeyDown">
+                                <i:InvokeCommandAction Command="{Binding KeyDownEditar}" 
+                                PassEventArgsToCommand="True"/>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="Loaded">
+                                <i:InvokeCommandAction Command="{Binding SelecionarTextBox}" 
+                                CommandParameter="{Binding ElementName=entrada_busqueda}"/>
+                            </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </TextBox>
+                    <!--
                     <RadioButton Grid.Column="1"  Style="{StaticResource boton_buscar}" Height="40" 
                              VerticalAlignment="Center" Margin="0" Width="200" Command="{Binding BuscarCategorias}">
                         <TextBlock Background="Transparent" Foreground="#141414" FontFamily="Roboto Flex"
                          FontSize="18" FontWeight="Medium">Buscar</TextBlock>
-                    </RadioButton>
+                    </RadioButton>-->
                     <RadioButton Grid.Column="1"  Style="{StaticResource boton_buscar}" Height="40" 
                              VerticalAlignment="Center" Margin="5, 0, 0, 0" Width="50" Command="{Binding BuscarCategorias}">
                              <fa:IconImage Icon="ArrowRotateForward" Margin="0" Style="{StaticResource iconos_menu}"/>
+
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <i:InvokeCommandAction Command="{Binding RestablecerTodo}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                     </RadioButton>
                 </StackPanel>
-                <RadioButton Style="{StaticResource boton_neutral}" Grid.Column="1" Click="RadioButton_Click"
+                <RadioButton Style="{StaticResource boton_neutral}" Grid.Column="1" Command="{Binding AbrirMAC}"
                              VerticalAlignment="Center" Margin="0" Width="240" HorizontalAlignment="Right">
                     <TextBlock Background="Transparent" Foreground="#FFFFFF" FontFamily="Roboto Flex"
                          FontSize="18" FontWeight="Medium">Ver opciones para agregar</TextBlock>
