@@ -107,7 +107,7 @@
                                     <ColumnDefinition Width="40"/>
                                     <ColumnDefinition Width="40"/>
                                 </Grid.ColumnDefinitions>
-                                <Button Grid.Column="2">
+                                <Button Grid.Column="2" Command="{Binding AbrirConfiguracion}">
                                     <Button.Style>
                                         <Style TargetType="Button">
                                             <Setter Property="Background" Value="Transparent"/>

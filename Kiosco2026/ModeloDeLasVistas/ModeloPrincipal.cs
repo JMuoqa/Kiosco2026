@@ -1,6 +1,7 @@
 ﻿using Dominio;
 using Entidades;
 using Kiosco2026.ModeloDeLasVistas.Hijas;
+using Kiosco2026.Vistas.CONFIGURACION;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,6 +11,7 @@ using System.Runtime.InteropServices.ObjectiveC;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Shapes;
 
@@ -24,6 +26,7 @@ namespace Kiosco2026.ModeloDeLasVistas
             MostrarEdicionProducto = new ComandoModeloDeVista(EjecutarMostrarEdicionProducto);
             IniciarSession = new ComandoModeloDeVista(EjecutarIniciarSession);
             MostrarVentaPrincipal = new ComandoModeloDeVista(EjecutarMostrarVentaPrincipal);
+            AbrirConfiguracion = new ComandoModeloDeVista(EjecutarAbrirConfiguracion);
             _aut = new AdminAut();
             EjecutarIniciarSession(null);
         }
@@ -51,8 +54,15 @@ namespace Kiosco2026.ModeloDeLasVistas
         public ICommand MostrarVistaAdicionProducto { get; }
         public ICommand MostrarEdicionProducto { get; }
         public ICommand MostrarAdministrarCategorias { get; }
+        public ICommand AbrirConfiguracion { get; }
         public ICommand IniciarSession { get; }
         public ICommand MostrarVentaPrincipal { get; }
+        private async Task EjecutarAbrirConfiguracion(object arg)
+        {
+            MenuConfiguracion window = new MenuConfiguracion();
+            window.Owner = Application.Current.MainWindow;
+            window.ShowDialog();
+        }
         private async Task EjecutarMostrarVentaPrincipal(object arg)
         {
             //El nombre del modelo esta mal "redactado" seria la ventana principal de la sección ventas

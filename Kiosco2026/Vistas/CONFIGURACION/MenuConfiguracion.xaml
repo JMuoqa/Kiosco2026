@@ -4,9 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kiosco2026.Vistas.CONFIGURACION"
+        xmlns:modelo="clr-namespace:Kiosco2026.ModeloDeLasVistas.Hijas"
         mc:Ignorable="d"
         Title="MenuConfiguracion" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+    <Window.DataContext>
+        <modelo:ModeloConfiguracion/>
+    </Window.DataContext>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Cursor="Hand" FontFamily="Robot flex" FontSize="14" Header="Base de datos"/>
+            <MenuItem Cursor="Hand" FontFamily="Robot flex" FontSize="14" Header="Ticket"/>
+        </Menu>
+        <ContentControl Grid.Row="1" Content="{Binding VistaHijaActual}"
+                                x:Name="pruebaAncho"/>
+    </DockPanel>
 </Window>
