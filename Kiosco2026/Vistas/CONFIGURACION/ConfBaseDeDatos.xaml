@@ -6,12 +6,40 @@
              xmlns:local="clr-namespace:Kiosco2026.Vistas.CONFIGURACION"
              xmlns:modelo="clr-namespace:Kiosco2026.ModeloDeLasVistas.Hijas"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-
+             Height="365.24" Width="750" >
     <UserControl.DataContext>
         <modelo:ModeloConfBD/>
     </UserControl.DataContext>
-    <Grid>
-            
+    <Grid Background="#FFFFFF">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Vertical">
+            <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
+                       Margin="10, 10, 10, 0" Text="IP host"/>
+            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="">
+            </TextBox>
+            <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
+                       Margin="10, 10, 10, 0" Text="Base de datos"/>
+            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="">
+            </TextBox>
+            <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
+                       Margin="10, 10, 10, 0" Text="Usuario"/>
+            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="">
+            </TextBox>
+            <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
+                       Margin="10, 10, 10, 0" Text="Contraseña"/>
+            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="">
+            </TextBox>
+        </StackPanel>
+        <Grid Grid.Column="1">
+            <StackPanel >
+            </StackPanel>
+            <RadioButton Style="{StaticResource boton_confirmar}" VerticalAlignment="Bottom"
+                         Margin="10, 10, 10, 47">
+                <TextBlock Style="{StaticResource texto_botones_uno}">Guardar</TextBlock>
+            </RadioButton>
+        </Grid>
     </Grid>
 </UserControl>
