@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Kiosco2026.Vistas.CONFIGURACION"
         xmlns:modelo="clr-namespace:Kiosco2026.ModeloDeLasVistas.Hijas"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="MenuConfiguracion" Height="400" Width="800">
     <Window.Resources>
         <DataTemplate DataType="{x:Type modelo:ModeloConfBD}">

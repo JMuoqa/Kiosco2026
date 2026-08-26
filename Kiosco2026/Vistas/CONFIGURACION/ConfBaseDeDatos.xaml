@@ -18,19 +18,19 @@
         <StackPanel Orientation="Vertical">
             <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
                        Margin="10, 10, 10, 0" Text="IP host"/>
-            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="">
+            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="{Binding IpHost}">
             </TextBox>
             <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
                        Margin="10, 10, 10, 0" Text="Base de datos"/>
-            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="">
+            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="{Binding NombreBaseDatos}">
             </TextBox>
             <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
                        Margin="10, 10, 10, 0" Text="Usuario"/>
-            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="">
+            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="{Binding Usuario}">
             </TextBox>
             <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
                        Margin="10, 10, 10, 0" Text="Contraseña"/>
-            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="">
+            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="{Binding Contrasena}">
             </TextBox>
         </StackPanel>
         <Grid Grid.Column="1">

@@ -10,6 +10,7 @@ namespace Entidades
     public class Configuracion
     {
         public string CodigoSeguridad { get; set; }
+        public string IPHOST { get; set; }
         public string NombreNegocio { get; set; }
         public int NumeroDeCaja { get; set; }
         public int NumeroDeSucursal { get; set; }
@@ -17,7 +18,8 @@ namespace Entidades
         public string DireccionDelLocal { get; set; }
         public string BaseDeDatos { get; set; }
         public string Usuario { get; set; }
-        public string Contrasena { get; set; }
+        public string UsuarioBD { get; set; }
+        public string ContrasenaBD { get; set; }
     }
     public class ColoresTexto
     {
