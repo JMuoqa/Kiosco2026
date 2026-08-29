@@ -31,6 +31,46 @@ namespace Kiosco2026.Clases.Colores
         private Brush _montoPagado;
         private Brush _unidadMedida;
         private Brush _categoriaParaBusqueda;
+        private Brush _ipHost;
+        public Brush IpHost
+        {
+            get => _ipHost;
+            set
+            {
+                _ipHost = value;
+                OnPropertyChanged(nameof(IpHost));
+            }
+        }
+        private Brush _nombreBaseDatos;
+        public Brush NombreBaseDatos
+        {
+            get => _nombreBaseDatos;
+            set
+            {
+                _nombreBaseDatos = value;
+                OnPropertyChanged(nameof(NombreBaseDatos));
+            }
+        }
+        private Brush _usuarioBD;
+        public Brush UsuarioBD
+        {
+            get => _usuarioBD;
+            set
+            {
+                _usuarioBD = value;
+                OnPropertyChanged(nameof(UsuarioBD));
+            }
+        }
+        private Brush _contrasenaBD;
+        public Brush ContrasenaBD
+        {
+            get => _contrasenaBD;
+            set
+            {
+                _contrasenaBD = value;
+                OnPropertyChanged(nameof(ContrasenaBD));
+            }
+        }
         public Brush CategoriaParaBusqueda
         {
             get => _categoriaParaBusqueda;

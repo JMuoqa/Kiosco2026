@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Kiosco2026.Vistas.CONFIGURACION"
              xmlns:modelo="clr-namespace:Kiosco2026.ModeloDeLasVistas.Hijas"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              Height="365.24" Width="750" >
     <UserControl.DataContext>
@@ -18,26 +19,70 @@
         <StackPanel Orientation="Vertical">
             <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
                        Margin="10, 10, 10, 0" Text="IP host"/>
-            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="{Binding IpHost}">
+            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="{Binding IpHost}"
+                     x:Name="entrada_iphost" Foreground="{Binding ColoresEntradas.IpHost}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="GotFocus">
+                    <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="LostFocus">
+                    <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                                           CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             </TextBox>
             <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
                        Margin="10, 10, 10, 0" Text="Base de datos"/>
-            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="{Binding NombreBaseDatos}">
+            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="{Binding NombreBaseDatos}"
+                     x:Name="entrada_bd" Foreground="{Binding ColoresEntradas.NombreBaseDatos}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="GotFocus">
+                        <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="LostFocus">
+                        <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                                           CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
             </TextBox>
             <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
                        Margin="10, 10, 10, 0" Text="Usuario"/>
-            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="{Binding Usuario}">
+            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="{Binding Usuario}"
+                     x:Name="entrada_usuario" Foreground="{Binding ColoresEntradas.UsuarioBD}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="GotFocus">
+                        <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="LostFocus">
+                        <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                                           CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
             </TextBox>
             <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
                        Margin="10, 10, 10, 0" Text="Contraseña"/>
-            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="{Binding Contrasena}">
+            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="{Binding Contrasena}"
+                     x:Name="entrada_contrasena" Foreground="{Binding ColoresEntradas.ContrasenaBD}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="GotFocus">
+                        <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="LostFocus">
+                        <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                                           CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
             </TextBox>
         </StackPanel>
         <Grid Grid.Column="1">
             <StackPanel >
             </StackPanel>
             <RadioButton Style="{StaticResource boton_confirmar}" VerticalAlignment="Bottom"
-                         Margin="10, 10, 10, 47">
+                         Margin="10, 10, 10, 47" Command="{Binding GuardarDatos}">
                 <TextBlock Style="{StaticResource texto_botones_uno}">Guardar</TextBlock>
             </RadioButton>
         </Grid>
