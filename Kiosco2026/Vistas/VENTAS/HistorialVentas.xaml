@@ -78,44 +78,54 @@
                    VerticalAlignment="Center" Text="TOTAL" Margin="10, 0, 0, 0"/>
                         </Border>
                     </StackPanel>
-                    <ScrollViewer  Grid.Row="1" VerticalScrollBarVisibility="Auto" >
-                        <ItemsControl  ItemsSource="{Binding ListaVentas}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Button Background="Transparent" BorderThickness="0" Cursor="Hand" 
+                    <ListBox Grid.Row="1"
+        ItemsSource="{Binding ListaVentas}"
+        BorderThickness="0"
+        Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Margin" Value="0"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+
+                        <ListBox.ItemTemplate >
+                            <DataTemplate>
+                                <Button Background="Transparent" BorderThickness="0" Cursor="Hand" 
                             HorizontalAlignment="Left" Height="40" Command="{Binding DataContext.VerMasInfo, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                             CommandParameter="{Binding }">
-                                        <StackPanel Orientation="Horizontal">
-                                            <Border Width="{Binding DataContext.TColumna_uno, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
-                                                <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
+                                    <StackPanel Orientation="Horizontal">
+                                        <Border Width="{Binding DataContext.TColumna_uno, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                            <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
                                        VerticalAlignment="Center"  Text="{Binding Id }" Margin="10, 0, 0, 0"/>
-                                            </Border>
-                                            <Border Width="{Binding DataContext.TColumna_dos, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
-                                                <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
+                                        </Border>
+                                        <Border Width="{Binding DataContext.TColumna_dos, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                            <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
                                        VerticalAlignment="Center"  Text="{Binding Fecha }" Margin="10, 0, 0, 0"/>
-                                            </Border>
-                                            <Border Width="{Binding DataContext.TColumna_tres, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
-                                                <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
+                                        </Border>
+                                        <Border Width="{Binding DataContext.TColumna_tres, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                            <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
                                        VerticalAlignment="Center"  Text="{Binding Items }" Margin="10, 0, 0, 0"/>
-                                            </Border>
-                                            <Border Width="{Binding DataContext.TColumna_cuatro, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
-                                                <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
+                                        </Border>
+                                        <Border Width="{Binding DataContext.TColumna_cuatro, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                            <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
                                        VerticalAlignment="Center"  Text="{Binding CantidadProductos }" Margin="10, 0, 0, 0"/>
-                                            </Border>
-                                            <Border Width="{Binding DataContext.TColumna_cinco, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
-                                                <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
+                                        </Border>
+                                        <Border Width="{Binding DataContext.TColumna_cinco, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                            <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
                                        VerticalAlignment="Center"  Text="{Binding FormaDePago }" Margin="10, 0, 0, 0"/>
-                                            </Border>
-                                            <Border Width="{Binding DataContext.TColumna_seis, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
-                                                <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
+                                        </Border>
+                                        <Border Width="{Binding DataContext.TColumna_seis, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                            <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
                                        VerticalAlignment="Center"  Text="{Binding Total }" Margin="10, 0, 0, 0"/>
-                                            </Border>
-                                        </StackPanel>
-                                    </Button>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
+                                        </Border>
+                                    </StackPanel>
+                                </Button>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </Grid>
             </Border>
         </Grid>
