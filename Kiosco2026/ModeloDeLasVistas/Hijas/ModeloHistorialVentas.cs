@@ -3,8 +3,10 @@ using Entidades;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,8 +15,14 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
 {
     public class ModeloHistorialVentas : ModeloDeVistaBase
     {
+        private Configuracion _configuracion { get; }
+        private bool _metodoEnEjecucion;
         public ModeloHistorialVentas()
         {
+            _metodoEnEjecucion = false;
+            string ruta = "config.json";
+            string jsonDeConfiguracion = File.ReadAllText(ruta);
+            _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             _adminVentas = new AdminVentas();
             BuscarVentas = new ComandoModeloDeVista(EjecutarBuscarVentas);
             VerMasInfo = new ComandoModeloDeVista(EjecutarVerMasInfo);
@@ -185,7 +193,17 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         #region Funciones 
         private async Task EjecutarBuscarVentas(object arg)
         {
-
+            try
+            {
+                var res = await _adminVentas.BuscarVentas(FechaDesde, FechaHasta);
+                List<Ventas> lista = res.ventas;
+                ListaVentas = new ObservableCollection<Ventas>(lista);
+            }
+            catch (Exception ex) 
+            {
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloHistorialVentas", "EjecutarBuscarVentas", _configuracion.NombreDeCaja);
+                EscribirEnTXTError(error);
+            }
         }
         private async Task EjecutarVerMasInfo(object arg) 
         {
@@ -199,17 +217,18 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 double anchoActual = grid.ActualWidth;
                 double nueve = (anchoActual * 9) / 100;
-                double relleno = (anchoActual * 18.2) / 100;
+                double doce = (anchoActual * 12) / 100;
+                double relleno = (anchoActual * 23.3) / 100;
                 EColumna_uno = nueve;
                 EColumna_dos = relleno;
-                EColumna_tres = relleno;
-                EColumna_cuatro = relleno;
+                EColumna_tres = nueve;
+                EColumna_cuatro = doce;
                 EColumna_cinco = relleno;
                 EColumna_seis = relleno;
                 TColumna_uno = nueve;
                 TColumna_dos = relleno;
-                TColumna_tres = relleno;
-                TColumna_cuatro = relleno;
+                TColumna_tres = nueve;
+                TColumna_cuatro = doce;
                 TColumna_cinco = relleno;
                 TColumna_seis = relleno;
             }

@@ -150,7 +150,8 @@ namespace Conexiones
                     {
                         while (lector.Read())
                         {
-                            listaVentas.Add(new Ventas()
+
+                            listaVentas.Add(new Ventas
                             {
                                 Id = lector.GetInt32("id"),
                                 Fecha = lector.GetDateTime("fecha"),

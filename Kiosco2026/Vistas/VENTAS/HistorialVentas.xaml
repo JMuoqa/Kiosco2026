@@ -103,7 +103,7 @@
                                         </Border>
                                         <Border Width="{Binding DataContext.TColumna_dos, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
                                             <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
-                                       VerticalAlignment="Center"  Text="{Binding Fecha }" Margin="10, 0, 0, 0"/>
+                                       VerticalAlignment="Center"  Text="{Binding FechaARG }" Margin="10, 0, 0, 0"/>
                                         </Border>
                                         <Border Width="{Binding DataContext.TColumna_tres, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
                                             <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"

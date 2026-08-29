@@ -8,6 +8,7 @@ namespace Entidades
 {
     public class Ventas
     {
+        
         public Ventas()
         {
             _productos = new List<Productos>();
@@ -22,10 +23,18 @@ namespace Entidades
             CantidadProductos = cantidadProductos;
             FormaDePago = formaDePago ?? "";
         }
-        public int Id;
-        public DateTime Fecha;
-        public int Items;
-        public int CantidadProductos;
+        public int Id { get; set; }
+        public DateTime Fecha { get; set; }
+        public string FechaARG
+        {
+            get
+            {
+                string fecha = $"{Fecha.Day.ToString().PadLeft(2, '0')}/{Fecha.Month.ToString().PadLeft(2, '0')}/{Fecha.Year} {Fecha.Hour.ToString().PadLeft(2, '0')}:{Fecha.Minute.ToString().PadLeft(2, '0')}";
+                return fecha;
+            }
+        }
+        public int Items { get; set;  }
+        public int CantidadProductos { get; set; }
         private List<Productos> _productos;
         public List<Productos> Productos
         {
@@ -44,8 +53,8 @@ namespace Entidades
                 _formaDePago = value.ToUpper();
             }
         }
-        public decimal Descuento;
-        public decimal SubTotal;
-        public decimal Total;
+        public decimal Descuento { get; set; }
+        public decimal SubTotal { get; set; }
+        public decimal Total { get; set; }
     }
 }
