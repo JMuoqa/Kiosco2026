@@ -480,20 +480,18 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private async Task EjecutarActualizarAnchoActual(object arg)
         {
-            double anchoActual;
-            if (arg == null)
-                anchoActual = 1100;
-            else
-                anchoActual = (double)arg;
-            double tamano = (anchoActual * 25) / 100;
-            EColumna_uno = tamano;
-            EColumna_dos = tamano;
-            EColumna_tres = tamano;
-            EColumna_cuatro = tamano;
-            TColumna_uno = tamano;
-            TColumna_dos = tamano;
-            TColumna_tres = tamano;
-            TColumna_cuatro = tamano;
+            if (arg is Grid grid) { 
+                double anchoActual = grid.ActualWidth;
+                double tamano = (anchoActual * 25) / 100;
+                EColumna_uno = tamano;
+                EColumna_dos = tamano;
+                EColumna_tres = tamano;
+                EColumna_cuatro = tamano;
+                TColumna_uno = tamano;
+                TColumna_dos = tamano;
+                TColumna_tres = tamano;
+                TColumna_cuatro = tamano;
+            }
         }
         private void RestablecerValoresPostItem()
         {

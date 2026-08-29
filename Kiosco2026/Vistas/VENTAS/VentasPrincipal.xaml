@@ -79,11 +79,11 @@
             </Border>
             <Grid Grid.Row="1"  >
                 <Border  BorderThickness="0.6" CornerRadius="10" BorderBrush="#000000">
-                    <Grid >
+                    <Grid x:Name="grillaAncho">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SizeChanged">
                                 <i:InvokeCommandAction Command="{Binding ActualizarAnchoActual}"                                   
-                                   CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=Grid}}"/>
+                                   CommandParameter="{Binding ElementName=grillaAncho}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <Grid.RowDefinitions>
@@ -91,12 +91,22 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal">
+                            <!-- Se usa el evento "loeaded", antes intente usarlo, pero usaba el evento "load" que no existe. Por eso use LayouUpdate-->
+                            <i:Interaction.Triggers> 
+                                <i:EventTrigger EventName="Loaded">
+                                    <i:InvokeCommandAction Command="{Binding ActualizarAnchoActual}"                                   
+                                   CommandParameter="{Binding ElementName=grillaAncho}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <!-- LayouUpdate se ejecuta muchas veces, CREO UN CUELLO DE BOTELLA EN "HISTORIAL DE VENTAS"
+                            SE VA OPTAR POR OTRA FORMA 
+                            En principio se uso por que no muestra las columnas la primera vez que carga
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="LayoutUpdated">
                                     <i:InvokeCommandAction Command="{Binding ActualizarAnchoActual}"                                   
                                                        CommandParameter="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}" />
                                 </i:EventTrigger>
-                            </i:Interaction.Triggers>
+                            </i:Interaction.Triggers>-->
                             <Border Width="{Binding EColumna_uno}">
                                 <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
                                        VerticalAlignment="Center" Text="CODIGO" Margin="10, 0, 0, 0"/>

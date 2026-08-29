@@ -46,7 +46,7 @@ namespace Conexiones
                             var resultadoDetalleVentas = await RestarProductoVendido(venta.Productos[i], conexion, ultimoIdVenta);
                         }
                     }
-                    return (true, "Pruebas", ultimoIdVenta);
+                    return (true, "Se registro correctamente", ultimoIdVenta);
                 }
                 catch (Exception ex)
                 {
@@ -131,6 +131,46 @@ namespace Conexiones
             cmd.Parameters.AddWithValue("@subtotal", subTotal);
             cmd.ExecuteNonQuery();
             return true;
+        }
+        #endregion
+        #region Con_BuscarVentas
+        public async Task<(bool estado, string mensaje, List<Ventas> ventas)> Con_BuscarVentas(DateTime? desde, DateTime? hasta)
+        {
+            try
+            {
+                using (var con = new MySqlConnection(cadenaDeConexion))
+                {
+                    con.Open();
+                    string buscar = "SELECT * FROM Ventas WHERE (fecha >= @desde OR @desde IS NULL) AND (fecha <= @hasta OR @hasta IS NULL)";
+                    MySqlCommand cmd = new MySqlCommand(buscar, con);
+                    cmd.Parameters.AddWithValue("@desde", desde);
+                    cmd.Parameters.AddWithValue("@hasta", hasta);
+                    List<Ventas> listaVentas = new List<Ventas>();
+                    using (MySqlDataReader lector = cmd.ExecuteReader())
+                    {
+                        while (lector.Read())
+                        {
+                            listaVentas.Add(new Ventas()
+                            {
+                                Id = lector.GetInt32("id"),
+                                Fecha = lector.GetDateTime("fecha"),
+                                Items = lector.GetInt32("items"),
+                                CantidadProductos = lector.GetInt32("cantidad_total_productos"),
+                                FormaDePago = lector.GetString("forma_pago"),
+                                Total = lector.GetDecimal("total")
+                            });
+                        }
+                    }
+                    return (true, "Se obtuvieron los datos correctamente", listaVentas);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Ventas", "Con_RegistrarVenta", _configuracion.NombreDeCaja);
+                RegistrarErrorBDLocal(error);
+                return (false, ex.Message, new List<Ventas>());
+            }
         }
         #endregion
         public string ObtenerTokenJWT()

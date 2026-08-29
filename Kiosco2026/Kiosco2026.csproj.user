@@ -32,6 +32,9 @@
     <Compile Update="Vistas\VENTAS\FinalizarVenta.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Vistas\VENTAS\HistorialVentas.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Vistas\VENTAS\VentasPrincipal.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

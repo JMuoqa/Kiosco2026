@@ -373,20 +373,19 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private async Task EjecutarActualizarAnchoActual(object arg)
         {
-            double anchoActual;
-            if (arg == null)
-                anchoActual = 1100;
-            else
-                anchoActual = (double)arg;
-            double quince = (anchoActual * 15) / 100;
-            double treinta = (anchoActual * 25) / 100;
-            double setenta = (anchoActual * 60) / 100;
-            EColumna_uno = quince;
-            EColumna_dos = treinta;
-            EColumna_tres = setenta;
-            TColumna_uno = quince;
-            TColumna_dos = treinta;
-            TColumna_tres = setenta;
+            if(arg is Grid grid)
+            {
+                double anchoActual = grid.ActualWidth;
+                double quince = (anchoActual * 15) / 100;
+                double treinta = (anchoActual * 25) / 100;
+                double setenta = (anchoActual * 60) / 100;
+                EColumna_uno = quince;
+                EColumna_dos = treinta;
+                EColumna_tres = setenta;
+                TColumna_uno = quince;
+                TColumna_dos = treinta;
+                TColumna_tres = setenta;
+            }
         }
         private void ResetearMensaje(object source, ElapsedEventArgs e)
         {

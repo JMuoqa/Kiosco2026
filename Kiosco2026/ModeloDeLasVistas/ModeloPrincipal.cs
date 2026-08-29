@@ -2,6 +2,7 @@
 using Entidades;
 using Kiosco2026.ModeloDeLasVistas.Hijas;
 using Kiosco2026.Vistas.CONFIGURACION;
+using Kiosco2026.Vistas.VENTAS;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -27,6 +28,7 @@ namespace Kiosco2026.ModeloDeLasVistas
             IniciarSession = new ComandoModeloDeVista(EjecutarIniciarSession);
             MostrarVentaPrincipal = new ComandoModeloDeVista(EjecutarMostrarVentaPrincipal);
             AbrirConfiguracion = new ComandoModeloDeVista(EjecutarAbrirConfiguracion);
+            MostrarHistorialVentas = new ComandoModeloDeVista(EjecutarMostrarHistorialVentas);
             _aut = new AdminAut();
             EjecutarIniciarSession(null);
         }
@@ -57,6 +59,12 @@ namespace Kiosco2026.ModeloDeLasVistas
         public ICommand AbrirConfiguracion { get; }
         public ICommand IniciarSession { get; }
         public ICommand MostrarVentaPrincipal { get; }
+        public ICommand MostrarHistorialVentas { get; }
+        private async Task EjecutarMostrarHistorialVentas(object arg)
+        {
+            VistaHijaActual = new ModeloHistorialVentas();
+            NombreVentana = "Ventas | Busqueda";
+        }
         private async Task EjecutarAbrirConfiguracion(object arg)
         {
             MenuConfiguracion window = new MenuConfiguracion();

@@ -15,5 +15,9 @@ namespace Dominio
         {
             return await _ventas.Con_RegistrarVenta(venta);
         }
+        public async Task<(bool estado, string mensaje, List<Ventas> ventas)> BuscarVentas(DateTime? desde, DateTime? hasta)
+        {
+            return await _ventas.Con_BuscarVentas(desde, hasta);
+        }
     }
 }

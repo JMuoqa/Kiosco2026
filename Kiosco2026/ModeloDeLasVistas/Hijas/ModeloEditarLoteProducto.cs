@@ -448,29 +448,28 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private async Task EjecutarActualizarAnchoActual(object arg)
         {
-            double anchoActual;
-            if (arg == null)
-                anchoActual = 1100;
-            else
-                anchoActual = (double)arg;
-            double nueve = (anchoActual * 9) / 100;
-            double relleno = (anchoActual * 13) / 100;
-            EColumna_uno = nueve;
-            EColumna_dos = relleno;
-            EColumna_tres = relleno;
-            EColumna_cuatro = relleno;
-            EColumna_cinco = relleno;
-            EColumna_seis = relleno;
-            EColumna_siete = relleno;
-            EColumna_ocho = relleno;
-            TColumna_uno = nueve;
-            TColumna_dos = relleno;
-            TColumna_tres = relleno;
-            TColumna_cuatro = relleno;
-            TColumna_cinco = relleno;
-            TColumna_seis = relleno;
-            TColumna_siete = relleno;
-            TColumna_ocho = relleno;
+            if (arg is Grid grid)
+            {
+                double anchoActual = grid.ActualWidth;
+                double nueve = (anchoActual * 9) / 100;
+                double relleno = (anchoActual * 13) / 100;
+                EColumna_uno = nueve;
+                EColumna_dos = relleno;
+                EColumna_tres = relleno;
+                EColumna_cuatro = relleno;
+                EColumna_cinco = relleno;
+                EColumna_seis = relleno;
+                EColumna_siete = relleno;
+                EColumna_ocho = relleno;
+                TColumna_uno = nueve;
+                TColumna_dos = relleno;
+                TColumna_tres = relleno;
+                TColumna_cuatro = relleno;
+                TColumna_cinco = relleno;
+                TColumna_seis = relleno;
+                TColumna_siete = relleno;
+                TColumna_ocho = relleno;
+            }
         }
         private async Task EjecutarGotFocus(object arg)
         {

@@ -77,11 +77,11 @@
                 </RadioButton>
             </Grid>
             <Border Grid.Row="1" BorderThickness="0.6" CornerRadius="10" BorderBrush="#000000">
-                <Grid Margin="4">
+                <Grid Margin="4" x:Name="grillaAncho">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SizeChanged">
                             <i:InvokeCommandAction Command="{Binding ActualizarAnchoActual}"                                   
-                                                   CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=Grid}}"/>
+                                                   CommandParameter="{Binding ElementName=grillaAncho}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <Grid.RowDefinitions>
@@ -90,9 +90,9 @@
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal">
                         <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="LayoutUpdated">
+                            <i:EventTrigger EventName="Loaded">
                                 <i:InvokeCommandAction Command="{Binding ActualizarAnchoActual}"                                   
-                                    CommandParameter="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Grid}}" />
+                                    CommandParameter="{Binding ElementName=grillaAncho}" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <Border Width="{Binding EColumna_uno}">

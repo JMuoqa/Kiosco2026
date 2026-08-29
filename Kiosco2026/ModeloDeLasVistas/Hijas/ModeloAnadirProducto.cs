@@ -287,8 +287,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                         {
                             ProductoNuevo = res.mensaje;
                         }
-                        _metodoEnEjecucion = false;
                     }
+                    _metodoEnEjecucion = false;
                 }
             }
             catch (Exception ex)
