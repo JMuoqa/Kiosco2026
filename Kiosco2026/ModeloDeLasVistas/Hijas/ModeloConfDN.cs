@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -111,15 +112,44 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private async Task EjecutarGuardarDatos(object arg)
         {
-            _configuracion.NombreNegocio = NombreNegocio;
-            _configuracion.DireccionDelLocal = DireccionNegocio;
-            _configuracion.NumeroDeCaja = int.Parse(NumeroDeCaja);
-            _configuracion.NombreDeCaja = NombreDeCaja;
-            _configuracion.NumeroDeSucursal = int.Parse(NumeroDeSucursal);
-            //Convertimos de vuelta a formato json
-            string nuevoJson = JsonSerializer.Serialize(_configuracion, new JsonSerializerOptions { WriteIndented = true });
-            //Sobrescribimos el archivo con las nuevas modificaciones
-            File.WriteAllText(_ruta, nuevoJson);
+            try
+            {
+                if (string.IsNullOrWhiteSpace(NombreNegocio) || NombreNegocio == "Nombre del negocio*")
+                    throw new Exception("Hay campos vacios, llenalos para poder guardar");
+                if (string.IsNullOrWhiteSpace(DireccionNegocio) || DireccionNegocio == "Dirección del negocio")
+                    throw new Exception("Hay campos vacios, llenalos para poder guardar");
+                if (string.IsNullOrWhiteSpace(NumeroDeCaja) || NumeroDeCaja == "Numero de caja")
+                    throw new Exception("Hay campos vacios, llenalos para poder guardar");
+                if (string.IsNullOrWhiteSpace(NombreDeCaja) || NombreDeCaja == "Cajero")
+                    throw new Exception("Hay campos vacios, llenalos para poder guardar");
+                if (string.IsNullOrWhiteSpace(NumeroDeSucursal) || NumeroDeSucursal == "Numero de sucursal")
+                    throw new Exception("Hay campos vacios, llenalos para poder guardar");
+                _configuracion.NombreNegocio = NombreNegocio;
+                _configuracion.DireccionDelLocal = DireccionNegocio;
+                _configuracion.NumeroDeCaja = int.Parse(NumeroDeCaja);
+                _configuracion.NombreDeCaja = NombreDeCaja;
+                _configuracion.NumeroDeSucursal = int.Parse(NumeroDeSucursal);
+                //Convertimos de vuelta a formato json
+                string nuevoJson = JsonSerializer.Serialize(_configuracion, new JsonSerializerOptions { WriteIndented = true });
+                //Sobrescribimos el archivo con las nuevas modificaciones
+                File.WriteAllText(_ruta, nuevoJson);
+                MessageBox.Show(
+                    "Se guardaron los datos correctamente",
+                    "Guardado!",
+                    MessageBoxButton.OK
+                );
+            }
+            catch (Exception ex) 
+            {
+
+                MessageBox.Show(
+                    ex.Message,
+                    "Campos vacios",
+                    MessageBoxButton.OK
+                );
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloConfBD", "EjecutarGuardarDatos", _configuracion.NombreDeCaja);
+                EscribirEnTXTError(error);
+            }
         }
         #endregion
         #region Funciones graficas

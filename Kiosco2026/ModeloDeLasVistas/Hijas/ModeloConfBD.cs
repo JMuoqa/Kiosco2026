@@ -3,11 +3,13 @@ using Kiosco2026.Clases.Colores;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -100,14 +102,40 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private async Task EjecutarGuardarDatos (object arg)
         {
-            _configuracion.BaseDeDatos = NombreBaseDatos;
-            _configuracion.IPHOST = IpHost;
-            _configuracion.UsuarioBD = Usuario;
-            _configuracion.ContrasenaBD = Contrasena;
-            //Convertimos de vuelta a formato json
-            string nuevoJson = JsonSerializer.Serialize(_configuracion, new JsonSerializerOptions { WriteIndented = true });
-            //Sobrescribimos el archivo con las nuevas modificaciones
-            File.WriteAllText(_ruta, nuevoJson);
+            try
+            {
+                if (string.IsNullOrWhiteSpace(NombreBaseDatos) || NombreBaseDatos == "Base de datos*")
+                    throw new Exception("Hay campos vacios, llenalos para poder guardar");
+                if (string.IsNullOrWhiteSpace(IpHost) || IpHost == "Server*")
+                    throw new Exception("Hay campos vacios, llenalos para poder guardar");
+                if (string.IsNullOrWhiteSpace(Usuario) || Usuario == "Usuario*")
+                    throw new Exception("Hay campos vacios, llenalos para poder guardar");
+                if (string.IsNullOrWhiteSpace(Contrasena) || Contrasena == "Contraseña*")
+                    throw new Exception("Hay campos vacios, llenalos para poder guardar");
+                _configuracion.BaseDeDatos = NombreBaseDatos;
+                _configuracion.IPHOST = IpHost;
+                _configuracion.UsuarioBD = Usuario;
+                _configuracion.ContrasenaBD = Contrasena;
+                //Convertimos de vuelta a formato json
+                string nuevoJson = JsonSerializer.Serialize(_configuracion, new JsonSerializerOptions { WriteIndented = true });
+                //Sobrescribimos el archivo con las nuevas modificaciones
+                File.WriteAllText(_ruta, nuevoJson);
+                MessageBox.Show(
+                    "Se guardaron los datos correctamente",
+                    "Guardado!",
+                    MessageBoxButton.OK
+                );
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show(
+                    ex.Message,
+                    "Campos vacios",
+                    MessageBoxButton.OK
+                );
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloConfBD", "EjecutarGuardarDatos", _configuracion.NombreDeCaja);
+                EscribirEnTXTError(error);
+            }
         }
         #endregion
         #region Funciones graficas
