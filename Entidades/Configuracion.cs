@@ -32,4 +32,11 @@ namespace Entidades
         public string ColorExito;
         public string Normal;
     }
+    public class ConfiguracionImpresora
+    {
+        public string NombreImpresora { get; set;  }
+        public int AnchoPapel { get; set;  }
+        public bool ImprimirAutomaticamente { get;set; }
+        public int Copias { get; set; }
+    }
 }

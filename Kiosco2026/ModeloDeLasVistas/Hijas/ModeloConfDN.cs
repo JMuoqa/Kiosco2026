@@ -114,7 +114,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(NombreNegocio) || NombreNegocio == "Nombre del negocio*")
+                if (string.IsNullOrWhiteSpace(NombreNegocio) || NombreNegocio == "Nombre del negocio")
                     throw new Exception("Hay campos vacios, llenalos para poder guardar");
                 if (string.IsNullOrWhiteSpace(DireccionNegocio) || DireccionNegocio == "Dirección del negocio")
                     throw new Exception("Hay campos vacios, llenalos para poder guardar");

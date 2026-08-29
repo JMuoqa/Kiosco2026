@@ -8,6 +8,9 @@
     <Compile Update="Vistas\CONFIGURACION\ConfDatosNegocio.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Vistas\CONFIGURACION\ConfImpresora.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Vistas\CONFIGURACION\MenuConfiguracion.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

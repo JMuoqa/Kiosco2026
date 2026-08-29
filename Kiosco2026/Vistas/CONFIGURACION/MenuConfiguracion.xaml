@@ -15,6 +15,9 @@
         <DataTemplate DataType="{x:Type modelo:ModeloConfDN}">
             <local:ConfDatosNegocio/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type modelo:ModeloConfImpresora}">
+            <local:ConfImpresora/>
+        </DataTemplate>
     </Window.Resources>
     <Window.DataContext>
         <modelo:ModeloConfiguracion/>
@@ -23,6 +26,7 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Cursor="Hand" FontFamily="Robot flex" FontSize="14" Header="Base de datos" Command="{Binding MostrarConfBD}"/>
             <MenuItem Cursor="Hand" FontFamily="Robot flex" FontSize="14" Header="Datos del negocio" Command="{Binding MostrarConfDN}"/>
+            <MenuItem Cursor="Hand" FontFamily="Robot flex" FontSize="14" Header="Impresora" Command="{Binding MostrarConfImpresora}"/>
         </Menu>
         <ContentControl Grid.Row="1" Content="{Binding VistaHijaActual}"
                                 x:Name="pruebaAncho"/>

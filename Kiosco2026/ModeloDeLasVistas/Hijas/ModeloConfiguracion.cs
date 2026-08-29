@@ -14,6 +14,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             VistaHijaActual = new ModeloConfBD();
             MostrarConfBD = new ComandoModeloDeVista(EjecutarMostrarConfBD);
             MostrarConfDN = new ComandoModeloDeVista(EjecutarMostrarConfDN);
+            MostrarConfImpresora = new ComandoModeloDeVista(EjecutarMostrarConfImpresora);
         }
         private ModeloDeVistaBase _vistaHijaActual;
         public ModeloDeVistaBase VistaHijaActual
@@ -28,6 +29,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         #region Comandos
         public ICommand MostrarConfBD { get; }
         public ICommand MostrarConfDN { get; }
+        public ICommand MostrarConfImpresora { get; }
         #endregion
         #region Funciones 
         public async Task EjecutarMostrarConfBD (object arg)
@@ -37,6 +39,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public async Task EjecutarMostrarConfDN(object arg)
         {
             VistaHijaActual = new ModeloConfDN();
+        }
+        public async Task EjecutarMostrarConfImpresora(object arg)
+        {
+            VistaHijaActual = new ModeloConfImpresora();
         }
         #endregion
     }

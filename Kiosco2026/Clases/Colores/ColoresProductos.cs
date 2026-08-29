@@ -34,6 +34,16 @@ namespace Kiosco2026.Clases.Colores
         private Brush _ipHost;
         private Brush _nombreNegocio;
         private Brush _direccionNegocio;
+        private Brush _nombreImpresora;
+        public Brush NombreImpresora
+        {
+            get => _nombreImpresora;
+            set
+            {
+                _nombreImpresora = value;
+                OnPropertyChanged(nameof(NombreImpresora));
+            }
+        }
         public Brush DireccionNegocio
         {
             get => _direccionNegocio;

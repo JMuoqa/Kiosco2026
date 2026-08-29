@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="Kiosco2026.Vistas.CONFIGURACION.ConfImpresora"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Kiosco2026.Vistas.CONFIGURACION"
+             xmlns:modelo="clr-namespace:Kiosco2026.ModeloDeLasVistas.Hijas"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d" 
+             Height="365.24" Width="750">
+    <UserControl.DataContext>
+        <modelo:ModeloConfImpresora/>
+    </UserControl.DataContext>
+    <Grid Background="#FFFFFF">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Vertical">
+            <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
+       Margin="10, 10, 10, 0" Text="Nombre del negocio"/>
+            <TextBox Style="{StaticResource entrada_form}" Margin="10, 5, 10, 0" Text="{Binding NombreImpresora}"
+                x:Name="entrada_nombreImpresora" Foreground="{Binding ColoresEntradas.NombreImpresora}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="GotFocus">
+                        <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="LostFocus">
+                        <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                           CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </TextBox>
+            <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
+                       Margin="10, 10, 10, 0" Text="Ancho del papel: 80mm"/>
+        </StackPanel>
+        <RadioButton Style="{StaticResource boton_confirmar}" VerticalAlignment="Bottom"
+                         Margin="10, 10, 10, 47" Command="{Binding GuardarDatos}">
+            <TextBlock Style="{StaticResource texto_botones_uno}">Guardar</TextBlock>
+        </RadioButton>
+    </Grid>
+</UserControl>

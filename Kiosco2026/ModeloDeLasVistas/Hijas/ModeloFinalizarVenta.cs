@@ -6,6 +6,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Printing;
@@ -23,6 +24,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
     public class ModeloFinalizarVenta : ModeloDeVistaBase
     {
         #region Propiedades
+        ConfiguracionImpresora _impresora;
         private List<Productos> _listaProductos;
         private ObservableCollection<Productos> _listadoDeProductos;
         public ObservableCollection<Productos> ListadoDeProductos
@@ -229,11 +231,16 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private async Task EjecutarImprimirPagina(object arg)
         {
-            PrintDocument pd = new PrintDocument(); 
-            pd.PrinterSettings.PrinterName = "FUKUNTickets"; 
+            PrintDocument pd = new PrintDocument();
+            string ruta = "configImpresora.json";
+            string jsonDeConfiguracion = File.ReadAllText(ruta);
+            _impresora = JsonSerializer.Deserialize<ConfiguracionImpresora>(jsonDeConfiguracion);
+            //Aca convertimos el 80 mm a centésimas de pulgada. PaperSize usa centésimas de pulgada (1/100 inch)
+            int anchoPapel = (int)(_impresora.AnchoPapel / 25.4 * 100);
+            pd.PrinterSettings.PrinterName = _impresora.NombreImpresora; 
             pd.DefaultPageSettings.Margins = new Margins(0, 0, 0, 0);
             Font fuenteInfo = new Font("Roboto Flex", 8);
-            pd.DefaultPageSettings.PaperSize = new PaperSize("Ticket", 280, 10000);
+            pd.DefaultPageSettings.PaperSize = new PaperSize("Ticket", anchoPapel, 10000);
             //Sucribimos lso eventos para cuando empiece y termine una impresion 
             pd.PrintPage += new PrintPageEventHandler(ImpresionDePagina);
             pd.EndPrint += new PrintEventHandler(FinDeImpresion); 
@@ -258,7 +265,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 float limiteDerecho = e.MarginBounds.Right;
                 string nombreNegocio = _nombreTienda.ToUpper(); ;
                 string ticket = IdVenta;
-                string direccionDelNegocio = "Gabriela Mistral 3591 - Cordoba Argentina";
+                string direccionDelNegocio = DireccionTienda;
                 string numeroTicket = TicketDeCompra;
                 string divisor = "---------------------------------------------------------";
                 SizeF anchoNombreTiendaUno = e.Graphics.MeasureString(_nombreTienda, fuenteInfo);
