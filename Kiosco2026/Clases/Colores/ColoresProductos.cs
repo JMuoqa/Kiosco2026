@@ -32,6 +32,56 @@ namespace Kiosco2026.Clases.Colores
         private Brush _unidadMedida;
         private Brush _categoriaParaBusqueda;
         private Brush _ipHost;
+        private Brush _nombreNegocio;
+        private Brush _direccionNegocio;
+        public Brush DireccionNegocio
+        {
+            get => _direccionNegocio;
+            set
+            {
+                _direccionNegocio = value;
+                OnPropertyChanged(nameof(DireccionNegocio));
+            }
+        }
+        private Brush _numeroDeCaja;
+        public Brush NumeroDeCaja
+        {
+            get => _numeroDeCaja;
+            set
+            {
+                _numeroDeCaja = value;
+                OnPropertyChanged(nameof(NumeroDeCaja));
+            }
+        }
+        private Brush _nombreDeCaja;
+        public Brush NombreDeCaja
+        {
+            get => _nombreDeCaja;
+            set
+            {
+                _nombreDeCaja = value;
+                OnPropertyChanged(nameof(NombreDeCaja));
+            }
+        }
+        private Brush _numeroDeSucursal;
+        public Brush NumeroDeSucursal
+        {
+            get => _numeroDeSucursal;
+            set
+            {
+                _numeroDeSucursal = value;
+                OnPropertyChanged(nameof(NumeroDeSucursal));
+            }
+        }
+        public Brush NombreNegocio
+        {
+            get => _nombreNegocio;
+            set
+            {
+                _nombreNegocio = value;
+                OnPropertyChanged(nameof(NombreNegocio));
+            }
+        }
         public Brush IpHost
         {
             get => _ipHost;

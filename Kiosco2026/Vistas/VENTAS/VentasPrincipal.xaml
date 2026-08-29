@@ -75,11 +75,6 @@
             <Border Grid.Column="1" Width="200" HorizontalAlignment="Right">
                 <RadioButton x:Name="botonRestablecer" Style="{StaticResource boton_cancelar}"  Margin="25, 0, 15, 0" Command="{Binding RestablecerValores}">
                     <TextBlock Style="{StaticResource texto_botones_uno}" Text="Restablecer" Margin="15, 0" />
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <i:InvokeCommandAction Command="{Binding RestablecerValoresConfirmado}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
                 </RadioButton>
             </Border>
             <Grid Grid.Row="1"  >

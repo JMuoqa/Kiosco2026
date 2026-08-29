@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Kiosco2026.ModeloDeLasVistas.Hijas
 {
@@ -11,6 +12,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ModeloConfiguracion()
         {
             VistaHijaActual = new ModeloConfBD();
+            MostrarConfBD = new ComandoModeloDeVista(EjecutarMostrarConfBD);
+            MostrarConfDN = new ComandoModeloDeVista(EjecutarMostrarConfDN);
         }
         private ModeloDeVistaBase _vistaHijaActual;
         public ModeloDeVistaBase VistaHijaActual
@@ -22,5 +25,19 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 OnPropertyChanged(nameof(VistaHijaActual));
             }
         }
+        #region Comandos
+        public ICommand MostrarConfBD { get; }
+        public ICommand MostrarConfDN { get; }
+        #endregion
+        #region Funciones 
+        public async Task EjecutarMostrarConfBD (object arg)
+        {
+            VistaHijaActual = new ModeloConfBD();
+        }
+        public async Task EjecutarMostrarConfDN(object arg)
+        {
+            VistaHijaActual = new ModeloConfDN();
+        }
+        #endregion
     }
 }

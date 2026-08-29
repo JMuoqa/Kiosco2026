@@ -17,19 +17,17 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
     public class ModeloConfBD : ModeloDeVistaBase
     {
         private Configuracion _configuracion;
+        private string _ruta;
         public ModeloConfBD() 
         {
-            string ruta = "config.json";
-            string jsonDeConfiguracion = File.ReadAllText(ruta);
+            _ruta = "config.json";
+            string jsonDeConfiguracion = File.ReadAllText(_ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             ColoresEntradas = new ColoresProductos();
             GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
             LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
             GuardarDatos = new ComandoModeloDeVista(EjecutarGuardarDatos);
-            IpHost = _configuracion.IPHOST;
-            NombreBaseDatos = _configuracion.BaseDeDatos;
-            Usuario = _configuracion.UsuarioBD;
-            Contrasena = _configuracion.ContrasenaBD;
+            EjecutarCargarDatos(null);
             ColoresEntradas.IpHost = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
             ColoresEntradas.NombreBaseDatos = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
             ColoresEntradas.UsuarioBD = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
@@ -93,9 +91,15 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand GuardarDatos { get; set; }
         #endregion
         #region Funciones
+        private async Task EjecutarCargarDatos(object arg)
+        {
+            IpHost = _configuracion.IPHOST;
+            NombreBaseDatos = _configuracion.BaseDeDatos;
+            Usuario = _configuracion.UsuarioBD;
+            Contrasena = _configuracion.ContrasenaBD;
+        }
         private async Task EjecutarGuardarDatos (object arg)
         {
-            string ruta = "config.json";
             _configuracion.BaseDeDatos = NombreBaseDatos;
             _configuracion.IPHOST = IpHost;
             _configuracion.UsuarioBD = Usuario;
@@ -103,7 +107,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             //Convertimos de vuelta a formato json
             string nuevoJson = JsonSerializer.Serialize(_configuracion, new JsonSerializerOptions { WriteIndented = true });
             //Sobrescribimos el archivo con las nuevas modificaciones
-            File.WriteAllText(ruta, nuevoJson);
+            File.WriteAllText(_ruta, nuevoJson);
         }
         #endregion
         #region Funciones graficas
