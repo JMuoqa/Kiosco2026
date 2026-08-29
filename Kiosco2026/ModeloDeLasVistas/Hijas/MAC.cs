@@ -25,6 +25,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
 
         public MAC()
         {
+            _metodoEnEjecucion = false;
             string ruta = "config.json";
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
@@ -41,6 +42,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             tiempo.Enabled = false;
             tiempo.AutoReset = true;
         }
+        private bool _metodoEnEjecucion;
         private System.Timers.Timer tiempo;
         private AdminProductos _adminProductos;
         private ColoresTexto _colores;
@@ -108,19 +110,26 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             try
             {
-                Categorias cate = new Categorias
+                if (!_metodoEnEjecucion)
                 {
-                    Nombre = NombreCargar.ToUpper()
-                };
-                var respuesta = await _adminProductos.CargarCategoria(cate);
-                if (respuesta.estado){
-                    ColorMensaje = _colores.ColorExito;
-                    EjecutarPostCarga();
+                    _metodoEnEjecucion = true;
+                    Categorias cate = new Categorias
+                    {
+                        Nombre = NombreCargar.ToUpper()
+                    };
+                    var respuesta = await _adminProductos.CargarCategoria(cate);
+                    if (respuesta.estado)
+                    {
+                        ColorMensaje = _colores.ColorExito;
+                        EjecutarPostCarga();
+                    }
+                    else
+                    {
+                        ColorMensaje = _colores.ColorError;
+                    }
+                    Mensaje = respuesta.mensaje;
+                    _metodoEnEjecucion = false;
                 }
-                else{
-                    ColorMensaje = _colores.ColorError;
-                }
-                Mensaje = respuesta.mensaje;
             }
             catch (Exception ex)
             {

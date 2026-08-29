@@ -24,6 +24,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
     {
         private Configuracion _configuracion { get; }
         #region Propiedades
+        private bool _metodoEnEjecucion;
         private ComboBoxItem _comboBoxItem;
         public ComboBoxItem ComboBoxItem
         {
@@ -195,6 +196,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         #endregion
         public ModeloAnadirProducto()
         {
+            _metodoEnEjecucion = false;
             string ruta = "config.json";
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
@@ -248,39 +250,44 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             try
             {
-                var e = (KeyEventArgs)arg;
-                if (e.Key == Key.Enter)
+                if (!_metodoEnEjecucion)
                 {
-                    var res = await _adminProductos.RevisarExistenciaProducto(Codigo);
-                    if (!res.estado)
-                        throw new Exception("Ocurrio un error. Contacta a soporte para solucionarlo");
-                    if (res.existencia)
+                    _metodoEnEjecucion = true;
+                    var e = (KeyEventArgs)arg;
+                    if (e.Key == Key.Enter)
                     {
-                        ProductoNuevo = res.mensaje;
-                        Codigo = res.producto.Codigo;
-                        Nombre = res.producto.Nombre;
-                        Proveedor = res.producto.Proveedor;
-                        ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-                        ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-                        ColoresEntradas.UnidadMedida = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-                        ColoresEntradas.Proveedor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-                        for (int i = 0; i < _cmbCat.Items.Count; i++)
+                        var res = await _adminProductos.RevisarExistenciaProducto(Codigo);
+                        if (!res.estado)
+                            throw new Exception("Ocurrio un error. Contacta a soporte para solucionarlo");
+                        if (res.existencia)
                         {
-                            Categorias cate = (Categorias)_cmbCat.Items[i];
-                            if (cate.ID == res.producto.IDCategoria)
-                                _cmbCat.SelectedIndex = i;
+                            ProductoNuevo = res.mensaje;
+                            Codigo = res.producto.Codigo;
+                            Nombre = res.producto.Nombre;
+                            Proveedor = res.producto.Proveedor;
+                            ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+                            ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+                            ColoresEntradas.UnidadMedida = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+                            ColoresEntradas.Proveedor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+                            for (int i = 0; i < _cmbCat.Items.Count; i++)
+                            {
+                                Categorias cate = (Categorias)_cmbCat.Items[i];
+                                if (cate.ID == res.producto.IDCategoria)
+                                    _cmbCat.SelectedIndex = i;
+                            }
+                            for (int i = 0; i < _cmbUni.Items.Count; i++)
+                            {
+                                ComboBoxItem cmbItem = (ComboBoxItem)_cmbUni.Items[i];
+                                string texto = cmbItem.Content.ToString();
+                                if (texto == res.producto.UnidadMedida)
+                                    _cmbUni.SelectedIndex = i;
+                            }
                         }
-                        for (int i = 0; i < _cmbUni.Items.Count; i++)
+                        else
                         {
-                            ComboBoxItem cmbItem = (ComboBoxItem)_cmbUni.Items[i];
-                            string texto = cmbItem.Content.ToString();
-                            if (texto == res.producto.UnidadMedida)
-                                _cmbUni.SelectedIndex = i;
+                            ProductoNuevo = res.mensaje;
                         }
-                    }
-                    else
-                    {
-                        ProductoNuevo = res.mensaje;
+                        _metodoEnEjecucion = false;
                     }
                 }
             }
@@ -308,38 +315,44 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             try
             {
-                ComboBox cmb = (ComboBox)arg; // ComboBox cmb = arg as Combobox;
-                DateTime horaActual = DateTime.Now;
-                DateTime fechaSeleccionadaHoraActual = new DateTime(
-                    Ingreso.Year,
-                    Ingreso.Month,
-                    Ingreso.Day,
-                    horaActual.Hour,
-                    horaActual.Minute,
-                    horaActual.Second
-                );
-                ProductosDto producto = new ProductosDto
+                if (!_metodoEnEjecucion)
                 {
-                    Nombre = this.Nombre.ToUpper(),
-                    Categoria = this.Categoria.Nombre, //Categoria deberia ser un numero
-                    Codigo = this.Codigo,
-                    Margen = this.Margen,
-                    Compra = this.Compra.Replace(".", ""),
-                    Cantidad = this.Cantidad,
-                    Proveedor = this.Proveedor.ToUpper(),
-                    Ingreso = fechaSeleccionadaHoraActual,
-                    Vencimiento = this.Vencimiento,
-                    UnidadMedida = this.UnidadMedida
-                };
-                var respuesta = await _adminProductos.CargarProducto(producto);
-                if (respuesta.estado){
-                    ColorMensaje = _colores.ColorExito;
-                    PostCarga();
-                    cmb.SelectedIndex = 0;
+                    _metodoEnEjecucion = true;
+                    ComboBox cmb = (ComboBox)arg; // ComboBox cmb = arg as Combobox;
+                    DateTime horaActual = DateTime.Now;
+                    DateTime fechaSeleccionadaHoraActual = new DateTime(
+                        Ingreso.Year,
+                        Ingreso.Month,
+                        Ingreso.Day,
+                        horaActual.Hour,
+                        horaActual.Minute,
+                        horaActual.Second
+                    );
+                    ProductosDto producto = new ProductosDto
+                    {
+                        Nombre = this.Nombre.ToUpper(),
+                        Categoria = this.Categoria.Nombre, //Categoria deberia ser un numero
+                        Codigo = this.Codigo,
+                        Margen = this.Margen,
+                        Compra = this.Compra.Replace(".", ""),
+                        Cantidad = this.Cantidad,
+                        Proveedor = this.Proveedor.ToUpper(),
+                        Ingreso = fechaSeleccionadaHoraActual,
+                        Vencimiento = this.Vencimiento,
+                        UnidadMedida = this.UnidadMedida
+                    };
+                    var respuesta = await _adminProductos.CargarProducto(producto);
+                    if (respuesta.estado)
+                    {
+                        ColorMensaje = _colores.ColorExito;
+                        PostCarga();
+                        cmb.SelectedIndex = 0;
+                    }
+                    else
+                        ColorMensaje = _colores.ColorError;
+                    Mensaje = respuesta.mensaje;
+                    _metodoEnEjecucion = false;
                 }
-                else
-                    ColorMensaje = _colores.ColorError;
-                Mensaje = respuesta.mensaje;
             }
             catch (Exception ex) 
             {

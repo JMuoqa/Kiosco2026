@@ -25,8 +25,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
     public class ModeloAdministrarCategorias : ModeloDeVistaBase
     {
         private Configuracion _configuracion { get; }
+        private bool _metodoEnEjecucion;
         public ModeloAdministrarCategorias()
         {
+            _metodoEnEjecucion = false;
             string ruta = "config.json";
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
@@ -37,7 +39,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
             Cancelar = new ComandoModeloDeVista(EjecutarCancelar);
             LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
-            KeyDownEditar = new ComandoModeloDeVista(EjecutarKeyDownEditar);
+            KeyDownBuscar = new ComandoModeloDeVista(EjecutarKeyDownBuscar);
             RestablecerTodo = new ComandoModeloDeVista(EjecutarRestablecerTodo);
             AbrirMAC = new ComandoModeloDeVista(EjecutarAbrirMAC);
             SelecionarTextBox = new ComandoModeloDeVista(EjecutarSelecionarTextBox);
@@ -227,7 +229,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand GotFocus { get; }
         public ICommand LostFocus { get; }
         public ICommand Cancelar { get; }
-        public ICommand KeyDownEditar { get; }
+        public ICommand KeyDownBuscar { get; }
         public ICommand RestablecerTodo { get; }
         public ICommand AbrirMAC { get; }
         public ICommand SelecionarTextBox { get; }
@@ -267,13 +269,33 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private async Task EjecutarBuscarCategorias(object arg)
         {
-            string valor = "";
-            if (Busqueda != "Buscar por nombre")
-                valor = Busqueda;
-            var res = await _adminProductos.BusquedaCategorias(valor);
-            ListaCategorias = new ObservableCollection<Categorias>(res.lista);
+            try
+            {
+                if (!_metodoEnEjecucion) 
+                {
+                    _metodoEnEjecucion = true;
+                    string valor = "";
+                    if (Busqueda != "Buscar por nombre")
+                        valor = Busqueda;
+                    var res = await _adminProductos.BusquedaCategorias(valor);
+                    ListaCategorias = new ObservableCollection<Categorias>(res.lista);
+                    _metodoEnEjecucion = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                ColorMensajeEdicion = _colores.ColorError;
+                MensajeEdicion = ex.Message;
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloAdministrarCategorias", "EjecutarBuscarCategorias", _configuracion.NombreDeCaja);
+                EscribirEnTXTError(error);
+            }
+            finally
+            {
+                tiempo.Interval = 10000;
+                tiempo.Enabled = true;
+            }
         }
-        private async Task EjecutarKeyDownEditar(object arg)
+        private async Task EjecutarKeyDownBuscar(object arg)
         {
             if (arg is KeyEventArgs e)
             {
@@ -287,37 +309,42 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(CategoriaSeleccionada) ||CategoriaSeleccionada == "Ninguna seleccionada")
-                    throw new Exception("No hay ninguna categoria seleccionada");
-                string visualizacion;
-                if (Visualizacion)
-                    visualizacion = "SI";
-                else
-                    visualizacion = "NO";
-                int idCategoria;
-                if (!int.TryParse(CategoriaSeleccionada, out idCategoria))
-                    throw new Exception("Algo salio mal, contactanos");
-                Categorias cate = new Categorias
+                if (!_metodoEnEjecucion)
                 {
-                    Nombre = Edicion.ToUpper(),
-                    ID = idCategoria,
-                    Mostrar = visualizacion
-                };
-                var respuesta = await _adminProductos.EditarCategoria(cate);
-                if (respuesta.estado)
-                {
-                    Busqueda = "Buscar por nombre";
-                    Edicion = "Editar nombre";
-                    CategoriaSeleccionada = "Ninguna seleccionada";
-                    ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
-                    ColorMensajeEdicion = _colores.ColorExito;
-                    EjecutarBuscarCategorias(null);
+                    _metodoEnEjecucion = true;
+                    if (string.IsNullOrWhiteSpace(CategoriaSeleccionada) || CategoriaSeleccionada == "Ninguna seleccionada")
+                        throw new Exception("No hay ninguna categoria seleccionada");
+                    string visualizacion;
+                    if (Visualizacion)
+                        visualizacion = "SI";
+                    else
+                        visualizacion = "NO";
+                    int idCategoria;
+                    if (!int.TryParse(CategoriaSeleccionada, out idCategoria))
+                        throw new Exception("Algo salio mal, contactanos");
+                    Categorias cate = new Categorias
+                    {
+                        Nombre = Edicion.ToUpper(),
+                        ID = idCategoria,
+                        Mostrar = visualizacion
+                    };
+                    var respuesta = await _adminProductos.EditarCategoria(cate);
+                    _metodoEnEjecucion = false;
+                    if (respuesta.estado)
+                    {
+                        Busqueda = "Buscar por nombre";
+                        Edicion = "Editar nombre";
+                        CategoriaSeleccionada = "Ninguna seleccionada";
+                        ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+                        ColorMensajeEdicion = _colores.ColorExito;
+                        EjecutarBuscarCategorias(null);
+                    }
+                    else
+                    {
+                        ColorMensajeEdicion = _colores.ColorError;
+                    }
+                    MensajeEdicion = respuesta.mensaje;
                 }
-                else
-                {
-                    ColorMensajeEdicion = _colores.ColorError;
-                }
-                MensajeEdicion = respuesta.mensaje;
             }
             catch (Exception ex) 
             {

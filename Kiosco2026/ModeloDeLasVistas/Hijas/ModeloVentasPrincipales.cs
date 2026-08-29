@@ -26,8 +26,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
     public class ModeloVentasPrincipales : ModeloDeVistaBase
     {
         private Configuracion _configuracion { get; }
+        private bool _metodoEnEjecucion;
         public ModeloVentasPrincipales()
         {
+            _metodoEnEjecucion = false;
             string ruta = "config.json";
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
@@ -159,7 +161,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private string _subtotal;
         private TextBox txtBox;
         private string _cantidadProductos;
-        private bool permitido = true;
         private Ventas _venta;
         private AdminVentas _adminVenta;
         private AdminProductos _adminProductos;
@@ -295,21 +296,26 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             try
             {
-                if (ListaProductos.Count < 1)
-                    throw new Exception("No hay productos cargados en la lista para vender");
-                Venta.Fecha = DateTime.Now;
-                decimal descuento;
-                if (!decimal.TryParse(Descuento, NumberStyles.Any, new CultureInfo("es-AR"), out descuento))
-                    throw new Exception("Descuento no es un numero");
-                Venta.Descuento = decimal.Parse(_descuento, NumberStyles.Any, new CultureInfo("es-AR"));
-                Venta.Total = Venta.Total - Venta.Descuento;
-                FinalizarVenta window = new FinalizarVenta(Venta);
-                window.Owner = Application.Current.MainWindow;
-                window.Closed += (sender, e) =>
+                if (!_metodoEnEjecucion)
                 {
-                    EjecutarRestablecerValoresConfirmado();
-                };
-                window.ShowDialog();
+                    _metodoEnEjecucion = true;
+                    if (ListaProductos.Count < 1)
+                        throw new Exception("No hay productos cargados en la lista para vender");
+                    Venta.Fecha = DateTime.Now;
+                    decimal descuento;
+                    if (!decimal.TryParse(Descuento, NumberStyles.Any, new CultureInfo("es-AR"), out descuento))
+                        throw new Exception("Descuento no es un numero");
+                    Venta.Descuento = decimal.Parse(_descuento, NumberStyles.Any, new CultureInfo("es-AR"));
+                    Venta.Total = Venta.Total - Venta.Descuento;
+                    FinalizarVenta window = new FinalizarVenta(Venta);
+                    window.Owner = Application.Current.MainWindow;
+                    window.Closed += (sender, e) =>
+                    {
+                        EjecutarRestablecerValoresConfirmado();
+                    };
+                    window.ShowDialog();
+                    _metodoEnEjecucion = false;
+                }
             }
             catch (Exception ex)
             {
@@ -431,9 +437,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             try
             {
-                if (permitido)
+                if (!_metodoEnEjecucion)
                 {
-                    permitido = false;
+                    _metodoEnEjecucion = true;
                     int c;
                     if (!int.TryParse(Cantidad, out c))
                         throw new Exception("El campo cantidad no es numerico");
@@ -450,7 +456,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     p.Add(productoElejido);
                     ListaProductos = new ObservableCollection<Productos>(p);
                     RestablecerValoresPostItem();
-                    permitido = true;
+                    _metodoEnEjecucion = false;
                 }
             }
             catch(Exception ex)
@@ -465,7 +471,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 tiempo.Interval = 15000;
                 tiempo.Enabled = true;
-                permitido = true;
             }
         }
         private async Task EjecutarSelected(object arg)

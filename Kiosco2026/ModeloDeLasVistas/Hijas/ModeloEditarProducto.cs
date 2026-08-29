@@ -23,8 +23,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
     public class ModeloEditarProducto : ModeloDeVistaBase
     {
         private Configuracion _configuracion { get; }
+        private bool _metodoEnEjecucion;
         public ModeloEditarProducto()
         {
+            _metodoEnEjecucion = false;
             string ruta = "config.json";
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
@@ -527,14 +529,17 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
 
             try
             {
+                
                 string valor;
-                if (BusquedaCodigo == "Buscar por codigo" || string.IsNullOrWhiteSpace(BusquedaCodigo))
+                if (!_metodoEnEjecucion && (BusquedaCodigo == "Buscar por codigo" || string.IsNullOrWhiteSpace(BusquedaCodigo)))
                 {
+                    _metodoEnEjecucion = true;
                     valor = Busqueda != "Buscar por nombre" ? Busqueda : "";
                     ObtenerProductosPorNombreYCategoria(valor);
                 }
-                else
+                else if(!_metodoEnEjecucion)
                 {
+                    _metodoEnEjecucion = true;
                     EjecutarBusquedaPorCodigoUltLote(null);
                 }
             }
@@ -549,6 +554,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 tiempo.Interval = 10000;
                 tiempo.Enabled = true;
+                _metodoEnEjecucion = false;
             }
         }
         private async Task ObtenerProductosPorNombreYCategoria(string valor)

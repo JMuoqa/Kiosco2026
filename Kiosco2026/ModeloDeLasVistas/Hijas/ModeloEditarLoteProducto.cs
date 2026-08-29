@@ -22,8 +22,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
     public class ModeloEditarLoteProducto : ModeloDeVistaBase
     {
         private Configuracion _configuracion { get; }
+        private bool _metodoEnEjecucion;
         public ModeloEditarLoteProducto(Productos pr)
         {
+            _metodoEnEjecucion = false;
             string ruta = "config.json";
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
@@ -364,8 +366,13 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             try
             {
-                var res = await _adminProductos.BusquedaPorIngreso(_pr.Codigo, null);
-                ListaProductos = new ObservableCollection<Productos>(res.lista);
+                if (!_metodoEnEjecucion)
+                {
+                    _metodoEnEjecucion = true;
+                    var res = await _adminProductos.BusquedaPorIngreso(_pr.Codigo, null);
+                    ListaProductos = new ObservableCollection<Productos>(res.lista);
+                    _metodoEnEjecucion = false;
+                }
             }
             catch (Exception ex)
             {
@@ -381,39 +388,51 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 var res = await _adminProductos.BusquedaPorIngreso(_pr.Codigo, BusquedaIngreso);
                 ListaProductos = new ObservableCollection<Productos>(res.lista);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
+                ColorMensaje = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#990000"));
+                Mensaje = ex.Message;
                 Debug.WriteLine(ex.Message);
                 HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloEditarLoteProducto", "EjecutarBusquedaLotes", _configuracion.NombreDeCaja);
                 EscribirEnTXTError(error);
+            }
+            finally
+            {
+                tiempo.Interval = 10000;
+                tiempo.Enabled = true;
             }
         }
         private async Task EjecutarEditarLote(object obj)
         {
             try
             {
-                if (Producto.ID < 1)
-                    throw new Exception("No hay ningun lote seleccionado");
-                int cantidad;
-                if (!int.TryParse(Cantidad, out cantidad))
-                    throw new Exception("El campo 'cantidad' no es un numero");
-                Productos nuevoProducto = new Productos
+                if (!_metodoEnEjecucion)
                 {
-                    Nombre = this.Nombre.ToUpper(),
-                    Cantidad = cantidad,
-                    Compra = this.Compra.Replace(".", ""),
-                    Venta = this.Venta.Replace(".", ""),
-                    Vencimiento = this.Vencimiento ?? new DateTime(),
-                    Ingreso = this.Ingreso ?? new DateTime(),
-                    ID = this.Producto.ID,
-                };
-                var res = await _adminProductos.EditarLote(nuevoProducto);
-                ColorMensaje = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#009933"));
-                if (!res.estado)
-                    ColorMensaje = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#990000"));
-                Mensaje = res.menasje;
-                EjecutarObtenerProductos(null);
-                EjecutarRestablecerEntradas();
+                    _metodoEnEjecucion = true;
+                    if (Producto.ID < 1)
+                        throw new Exception("No hay ningun lote seleccionado");
+                    int cantidad;
+                    if (!int.TryParse(Cantidad, out cantidad))
+                        throw new Exception("El campo 'cantidad' no es un numero");
+                    Productos nuevoProducto = new Productos
+                    {
+                        Nombre = this.Nombre.ToUpper(),
+                        Cantidad = cantidad,
+                        Compra = this.Compra.Replace(".", ""),
+                        Venta = this.Venta.Replace(".", ""),
+                        Vencimiento = this.Vencimiento ?? new DateTime(),
+                        Ingreso = this.Ingreso ?? new DateTime(),
+                        ID = this.Producto.ID,
+                    };
+                    var res = await _adminProductos.EditarLote(nuevoProducto);
+                    ColorMensaje = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#009933"));
+                    if (!res.estado)
+                        ColorMensaje = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#990000"));
+                    Mensaje = res.menasje;
+                    _metodoEnEjecucion = false;
+                    EjecutarObtenerProductos(null);
+                    EjecutarRestablecerEntradas();
+                }
             }catch (Exception ex)
             {
                 ColorMensaje = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#990000"));
