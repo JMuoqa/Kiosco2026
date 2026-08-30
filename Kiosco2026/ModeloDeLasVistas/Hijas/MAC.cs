@@ -137,6 +137,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 Mensaje = ex.Message;
                 HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "MAC", "EjecutarCargarCategoria", _configuracion.NombreDeCaja);
                 EscribirEnTXTError(error);
+                _metodoEnEjecucion = false;
             }
             finally
             {

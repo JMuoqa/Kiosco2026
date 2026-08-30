@@ -19,5 +19,9 @@ namespace Dominio
         {
             return await _ventas.Con_BuscarVentas(desde, hasta);
         }
+        public async Task<(bool estado, string mensaje, Ventas venta)> BuscarDetalles(Ventas ventaGuia)
+        {
+            return await _ventas.Con_BuscarDetalles(ventaGuia);
+        }
     }
 }

@@ -9,6 +9,11 @@
              xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              d:DesignHeight="700" d:DesignWidth="1190">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding BuscarVentas}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <UserControl.DataContext>
         <modelo:ModeloHistorialVentas/>
     </UserControl.DataContext>

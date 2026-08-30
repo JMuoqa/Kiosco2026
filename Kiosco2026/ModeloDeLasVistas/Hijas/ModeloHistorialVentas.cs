@@ -1,5 +1,6 @@
 ﻿using Dominio;
 using Entidades;
+using Kiosco2026.Vistas.VENTAS;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -207,10 +209,23 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private async Task EjecutarVerMasInfo(object arg) 
         {
+            try
+            {
+                if(arg is Ventas v)
+                {
+
+                    DetalleVenta window = new DetalleVenta(v);
+                    window.Owner = Application.Current.MainWindow;
+                    window.ShowDialog();
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
         }
         #endregion
         #region Funciones graficas
-
         private async Task EjecutarActualizarAnchoActual(object arg)
         {
             if(arg is Grid grid)

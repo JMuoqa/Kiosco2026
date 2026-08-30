@@ -39,6 +39,25 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private Ventas _venta;
         private string _metodoDePago;
         private DateTime _fechaRegistrada;
+        /*
+                string fechaActual = _fechaRegistrada.ToString("dd/MM/yyyy");
+                SizeF anchoTituloFecha = e.Graphics.MeasureString(tituloFecha, fuenteInfo);
+                SizeF anchoTituloHora = e.Graphics.MeasureString(titulohora, fuenteInfo);
+                string horaActual = _fechaRegistrada.ToString("HH:mm:ss");*/
+        public string FechaDiaMesAno { 
+            get{
+                string fecha = _fechaRegistrada.ToString("dd/MM/yyyy");
+                return fecha;
+            } 
+        }
+        public string HoraMinutoSeg
+        {
+            get
+            {
+                string horaActual = _fechaRegistrada.ToString("HH:mm:ss");
+                return horaActual;
+            }
+        }
         private decimal _subTotal;
         public string SubTotal
         {

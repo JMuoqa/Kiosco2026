@@ -314,7 +314,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                         EjecutarRestablecerValoresConfirmado();
                     };
                     window.ShowDialog();
-                    _metodoEnEjecucion = false;
                 }
             }
             catch (Exception ex)
@@ -328,6 +327,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 tiempo.Interval = 15000;
                 tiempo.Enabled = true;
+                _metodoEnEjecucion = false;
             }
         }
         private async Task EjecutarFocusACodigos(object arg)
@@ -456,7 +456,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     p.Add(productoElejido);
                     ListaProductos = new ObservableCollection<Productos>(p);
                     RestablecerValoresPostItem();
-                    _metodoEnEjecucion = false;
                 }
             }
             catch(Exception ex)
@@ -471,6 +470,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 tiempo.Interval = 15000;
                 tiempo.Enabled = true;
+                _metodoEnEjecucion = false;
             }
         }
         private async Task EjecutarSelected(object arg)

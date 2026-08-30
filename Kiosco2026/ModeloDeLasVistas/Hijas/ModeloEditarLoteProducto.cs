@@ -371,7 +371,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     _metodoEnEjecucion = true;
                     var res = await _adminProductos.BusquedaPorIngreso(_pr.Codigo, null);
                     ListaProductos = new ObservableCollection<Productos>(res.lista);
-                    _metodoEnEjecucion = false;
                 }
             }
             catch (Exception ex)
@@ -379,6 +378,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 Debug.WriteLine(ex.Message);
                 HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloEditarLoteProducto", "EjecutarObtenerProductos", _configuracion.NombreDeCaja);
                 EscribirEnTXTError(error);
+            }
+            finally
+            {
+                _metodoEnEjecucion = false;
             }
         }
         private async Task EjecutarBusquedaLotes(object obj)
@@ -439,6 +442,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 Mensaje = ex.Message;
                 HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloEditarLoteProducto", "EjecutarEditarLote", _configuracion.NombreDeCaja);
                 EscribirEnTXTError(error);
+                _metodoEnEjecucion = false;
             }
             finally
             {

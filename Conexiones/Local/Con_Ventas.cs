@@ -29,12 +29,13 @@ namespace Conexiones
             {
                 try
                 {
-                    string registrarUsuario = "INSERT INTO ventas (fecha, items, cantidad_total_productos, forma_pago, total) VALUES( @fecha, @items, @cantidad_total, @forma_pago, @total);";
+                    string registrarUsuario = "INSERT INTO ventas (fecha, items, cantidad_total_productos, forma_pago, descuento, total) VALUES( @fecha, @items, @cantidad_total, @forma_pago, @descuento, @total);";
                     MySqlCommand cmd = new MySqlCommand(registrarUsuario, conexion);
                     cmd.Parameters.AddWithValue("@fecha", venta.Fecha);
                     cmd.Parameters.AddWithValue("@items", venta.Productos.Count);
                     cmd.Parameters.AddWithValue("@cantidad_total", venta.CantidadProductos);
                     cmd.Parameters.AddWithValue("@forma_pago", venta.FormaDePago);
+                    cmd.Parameters.AddWithValue("@descuento", venta.Descuento);
                     cmd.Parameters.AddWithValue("@total", venta.Total);
                     conexion.Open(); 
                     var resultado = cmd.ExecuteNonQuery();
@@ -158,6 +159,7 @@ namespace Conexiones
                                 Items = lector.GetInt32("items"),
                                 CantidadProductos = lector.GetInt32("cantidad_total_productos"),
                                 FormaDePago = lector.GetString("forma_pago"),
+                                Descuento = lector.GetDecimal("descuento"),
                                 Total = lector.GetDecimal("total")
                             });
                         }
@@ -171,6 +173,53 @@ namespace Conexiones
                 HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Ventas", "Con_RegistrarVenta", _configuracion.NombreDeCaja);
                 RegistrarErrorBDLocal(error);
                 return (false, ex.Message, new List<Ventas>());
+            }
+        }
+        #endregion
+        #region Con_BuscarDetalles
+        public async Task<(bool estado, string mensaje, Ventas venta)> Con_BuscarDetalles(Ventas ventaGuia)
+        {
+            try
+            {
+                using (var con = new MySqlConnection(cadenaDeConexion))
+                {
+                    con.Open();
+                    //Inner join establece que seleccione donde coinciden p.ID y dv.id_producto
+                    string buscar = "SELECT dv.id_producto, dv.codigo, dv.cantidad, dv.precio_unitario, dv.subtotal," +
+                        " p.Nombre FROM detalle_ventas dv INNER JOIN Productos p ON p.ID = dv.id_producto WHERE dv.id_venta = @id";
+                    MySqlCommand cmd = new MySqlCommand(buscar, con);
+                    cmd.Parameters.AddWithValue("@id", ventaGuia.Id);
+                    List<Productos> lista = new List<Productos>();
+                    using (MySqlDataReader lector = cmd.ExecuteReader())
+                    {
+                        while (lector.Read())
+                        {
+                            Productos producto = new Productos
+                            {
+
+                                ID = lector.GetInt32("id_producto"),
+                                Codigo = lector.GetString("codigo"),
+                                Nombre = lector.GetString("Nombre"),
+                                Cantidad = lector.GetInt32("cantidad"),
+                                Venta = lector.GetDecimal("precio_unitario").ToString(),
+                                SubTotal = lector.GetDecimal("subtotal")
+                            };
+                            lista.Add(producto);
+                        }
+                    }
+                    Ventas v = new Ventas
+                    {
+                        Productos = lista
+                    };
+                    return (true, "Se obtuvieron los datos correctamente", v);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Ventas", "Con_RegistrarVenta", _configuracion.NombreDeCaja);
+                RegistrarErrorBDLocal(error);
+                return (false, ex.Message, new Ventas());
             }
         }
         #endregion

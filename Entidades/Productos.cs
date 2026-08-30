@@ -1,4 +1,6 @@
-﻿namespace Entidades
+﻿using System.Globalization;
+
+namespace Entidades
 {
     public class Productos
     {
@@ -78,6 +80,18 @@
                 string fecha = $"{Vencimiento.Day.ToString().PadLeft(2, '0')}/{Vencimiento.Month.ToString().PadLeft(2, '0')}/{Vencimiento.Year}";
                 return fecha;
             }
+        }
+        public string SubTotalCalculado
+        {
+            get
+            {
+                decimal d = Cantidad * decimal.Parse(Venta);
+                return d.ToString("N2", new CultureInfo("es-AR"));
+            }
+        }
+        public decimal SubTotal 
+        {
+            get; set;
         }
     }
     public class ProductosDto

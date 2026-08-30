@@ -288,6 +288,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 MensajeEdicion = ex.Message;
                 HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloAdministrarCategorias", "EjecutarBuscarCategorias", _configuracion.NombreDeCaja);
                 EscribirEnTXTError(error);
+                _metodoEnEjecucion = false;
             }
             finally
             {
@@ -352,6 +353,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 MensajeEdicion = ex.Message;
                 HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloAdministrarCategorias", "EjecutarEditarCategoria", _configuracion.NombreDeCaja);
                 EscribirEnTXTError(error);
+                _metodoEnEjecucion = false;
             }
             finally
             {

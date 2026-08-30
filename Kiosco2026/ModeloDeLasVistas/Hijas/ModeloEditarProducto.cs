@@ -414,45 +414,53 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             try
             {
-                if(Producto == null)
-                    throw new Exception("No hay ningun producto seleccionado");
-                var confirmacion = MessageBox.Show(
-                    $"Los campos Nombre y Categoría afectan a todos los lotes asociados al producto con el código de barras: {Producto.Codigo}.\r\n",
-                    "¿Quieres continuar?",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question
-                );
-                if (confirmacion != MessageBoxResult.Yes)
-                    throw new Exception("Cancelaste la operación");
-                string mostrar = "SI";
-                if (!Marcado)
-                    mostrar = "NO";
-                Productos producto = new Productos
+                if (!_metodoEnEjecucion)
                 {
-                    Nombre = this.Nombre.ToUpper(),
-                    Categoria = this.Categoria.Nombre,
-                    Venta = this.Venta.Replace(".", ""),
-                    Compra = this.Compra.Replace(".", ""),
-                    Codigo = this.Producto.Codigo,
-                    ID = this._idProducto,
-                    Mostrar = mostrar
-                };
-                var res = await _adminProductos.EditarProductoPorCodigo(producto);
-                if(res.estado){
-                    ColorMensaje = _colores.ColorExito;
-                    cmbCat.SelectedIndex = 0;
-                    EjecutarValoresPredeterminados(null);
-                    EjecutarObtenerProductos(null);
+                    _metodoEnEjecucion = true;
+                    if (Producto == null)
+                        throw new Exception("No hay ningun producto seleccionado");
+                    var confirmacion = MessageBox.Show(
+                        $"Los campos Nombre y Categoría afectan a todos los lotes asociados al producto con el código de barras: {Producto.Codigo}.\r\n",
+                        "¿Quieres continuar?",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question
+                    );
+                    if (confirmacion != MessageBoxResult.Yes)
+                        throw new Exception("Cancelaste la operación");
+                    string mostrar = "SI";
+                    if (!Marcado)
+                        mostrar = "NO";
+                    Productos producto = new Productos
+                    {
+                        Nombre = this.Nombre.ToUpper(),
+                        Categoria = this.Categoria.Nombre,
+                        Venta = this.Venta.Replace(".", ""),
+                        Compra = this.Compra.Replace(".", ""),
+                        Codigo = this.Producto.Codigo,
+                        ID = this._idProducto,
+                        Mostrar = mostrar
+                    };
+                    var res = await _adminProductos.EditarProductoPorCodigo(producto);
+                    _metodoEnEjecucion = false;
+                    if (res.estado)
+                    {
+                        ColorMensaje = _colores.ColorExito;
+                        cmbCat.SelectedIndex = 0;
+                        EjecutarValoresPredeterminados(null);
+                        EjecutarObtenerProductos(null);
+                    }
+                    else
+                    {
+                        ColorMensaje = _colores.ColorError;
+                    }
+                    Mensaje = res.mensaje;
                 }
-                else{
-                    ColorMensaje = _colores.ColorError;
-                }
-                Mensaje = res.mensaje;
             }
             catch (Exception ex)
             {
                 ColorMensaje = _colores.ColorError;
                 Mensaje = ex.Message;
+                _metodoEnEjecucion = false;
             }
             finally
             {
