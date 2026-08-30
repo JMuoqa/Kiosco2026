@@ -26,10 +26,12 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
     public class ModeloVentasPrincipales : ModeloDeVistaBase
     {
         private Configuracion _configuracion { get; }
+        private CultureInfo _cultura { get; }
         private bool _metodoEnEjecucion;
         public ModeloVentasPrincipales()
         {
             _metodoEnEjecucion = false;
+            _cultura = new CultureInfo("es-AR");
             string ruta = "config.json";
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
@@ -406,7 +408,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             for (int i = 0; i < ListaProductos.Count; i++)
             {
                 decimal n = 0;
-                if (!decimal.TryParse(ListaProductos[i].Venta, NumberStyles.Any, new CultureInfo("es-AR"), out n))
+                if (!decimal.TryParse(ListaProductos[i].Venta, NumberStyles.Any, _cultura, out n))
                     throw new Exception("Hubo un problema");
                 total += n * ListaProductos[i].Cantidad;    
             }

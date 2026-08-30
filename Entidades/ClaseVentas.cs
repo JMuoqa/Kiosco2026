@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -53,8 +54,36 @@ namespace Entidades
                 _formaDePago = value.ToUpper();
             }
         }
-        public decimal Descuento { get; set; }
-        public decimal SubTotal { get; set; }
-        public decimal Total { get; set; }
+        private decimal _descuento;
+        private decimal _subTotal;
+        private decimal _total;
+        public decimal Descuento 
+        {
+            get => _descuento;
+            set
+            {
+                _descuento = value;
+            }
+        }
+        public decimal SubTotal
+        {
+            get => _subTotal;
+            set
+            {
+                _subTotal = value;
+            }
+        }
+        public decimal Total
+        {
+            get => _total;
+            set
+            {
+                _total = value;
+            }
+        }
+        public string STRDescuento { get => _descuento.ToString(new CultureInfo("es-AR")); }
+        public string STRSubTotal{ get => _subTotal.ToString(new CultureInfo("es-AR")); }
+        public string STRTotal{ get => _total.ToString(new CultureInfo("es-AR")); }
+
     }
 }

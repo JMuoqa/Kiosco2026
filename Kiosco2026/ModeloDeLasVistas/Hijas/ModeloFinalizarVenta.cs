@@ -25,6 +25,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
     {
         #region Propiedades
         ConfiguracionImpresora _impresora;
+        CultureInfo _cultura;
         private List<Productos> _listaProductos;
         private ObservableCollection<Productos> _listadoDeProductos;
         public ObservableCollection<Productos> ListadoDeProductos
@@ -64,7 +65,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             get => "$"+_subTotal.ToString("N2", new CultureInfo("es-AR"));
             set
             {
-                _subTotal = decimal.Parse(value.ToString(), NumberStyles.Any, new CultureInfo("es-AR"));
+                _subTotal = decimal.Parse(value, NumberStyles.Any, new CultureInfo("es-AR"));
                 OnPropertyChanged(nameof(SubTotal));
             }
         }
@@ -74,7 +75,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             get => "$"+_descuento.ToString("N2", new CultureInfo("es-AR"));
             set
             {
-                _descuento = decimal.Parse(value.ToString(), NumberStyles.Any, new CultureInfo("es-AR"));
+                _descuento = decimal.Parse(value, NumberStyles.Any, new CultureInfo("es-AR"));
                 OnPropertyChanged(nameof(Descuento));
             }
         }
@@ -84,7 +85,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             get => "$" + _total.ToString("N2", new CultureInfo("es-AR"));
             set
             {
-                _total = decimal.Parse(value.ToString(), NumberStyles.Any, new CultureInfo("es-AR"));
+                _total = decimal.Parse(value, NumberStyles.Any, new CultureInfo("es-AR"));
                 OnPropertyChanged(nameof(Total));
             }
         }
@@ -100,22 +101,18 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 OnPropertyChanged(nameof(Vuelto));
             }
         }
-        private decimal _montoPagado;
+        private string _montoPagado;
         public string MontoPagado
         {
-            get
-            {
-                if (_montoPagado != 0)
-                    return _montoPagado.ToString("N2", new CultureInfo("es-AR"));
-                else
-                    return "";
-            }
+            get => _montoPagado;
             set
             {
-                if (!string.IsNullOrWhiteSpace(value))
-                    _montoPagado = decimal.Parse(value.ToString(), NumberStyles.Any, new CultureInfo("es-AR"));
+                if (!string.IsNullOrWhiteSpace(value) && decimal.TryParse(value, out decimal n))
+                {
+                        _montoPagado = value;
+                }
                 else
-                    _montoPagado = 0;
+                    _montoPagado = "0";
                 ActualizarVuelto();
                 OnPropertyChanged(nameof(MontoPagado));
             }
@@ -205,6 +202,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         #endregion
         public ModeloFinalizarVenta(Ventas venta)
         {
+            _cultura = new CultureInfo("es-AR");
             _coloresEntradas = new ColoresProductos();
             ColoresEntradas.MontoPagado = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#FFFFFF"));
             GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
@@ -239,8 +237,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         #region Funciones
         private void ActualizarVuelto()
         {
-            decimal resultado = _montoPagado - _total;
-            Vuelto = resultado.ToString();
+            if(decimal.TryParse(_montoPagado, out decimal monto)){
+                decimal resultado = monto - _total;
+                Vuelto = resultado.ToString(_cultura);
+            }
         }
         private async Task EjecutarRegistrarVenta(object arg)
         {
@@ -458,9 +458,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             // Avanza unas líneas para que quede espacio debajo del ticket
             byte[] feed = new byte[] { 0x1B, 0x64, 0x06 }; // 6? líneas CREO QUE LA TERCER COLUMNA ES EL PARAMETRO DE LAS LINEAS
-            ComportamientoImpresora.SendBytesToPrinter("FUKUNTickets", feed);
+            ComportamientoImpresora.SendBytesToPrinter(_impresora.NombreImpresora, feed);
             byte[] cut = new byte[] { 0x1D, 0x56, 0x00 }; // ESC/POS corte total
-            ComportamientoImpresora.SendBytesToPrinter("FUKUNTickets", cut);
+            ComportamientoImpresora.SendBytesToPrinter(_impresora.NombreImpresora, cut);
         }
         private async Task EjecutarGotFocus(object arg)
         {

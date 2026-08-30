@@ -15,9 +15,11 @@ namespace Conexiones
     public class Con_Ventas : ConexionMySQL
     {
         private Configuracion _configuracion { get; }
+        private CultureInfo _cultura;
         public Con_Ventas()
         {
 
+            _cultura = new CultureInfo("es-AR");
             string ruta = "config.json";
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
@@ -79,8 +81,8 @@ namespace Conexiones
                             Mostrar = lector.GetString("Mostrar"),
                             Nombre = lector.GetString("Nombre"),
                             IDCategoria = lector.GetInt32("IDCategoria"),
-                            Compra = lector.GetDecimal("Compra").ToString(),
-                            Venta = lector.GetDecimal("Venta").ToString(),
+                            Compra = lector.GetDecimal("Compra").ToString(_cultura),
+                            Venta = lector.GetDecimal("Venta").ToString(_cultura),
                             Ingreso = lector.GetDateTime("Ingreso"),
                             Vencimiento = lector.GetDateTime("Vencimiento"),
                             Cantidad = lector.GetInt32("Cantidad"),
@@ -151,7 +153,6 @@ namespace Conexiones
                     {
                         while (lector.Read())
                         {
-
                             listaVentas.Add(new Ventas
                             {
                                 Id = lector.GetInt32("id"),
@@ -201,7 +202,7 @@ namespace Conexiones
                                 Codigo = lector.GetString("codigo"),
                                 Nombre = lector.GetString("Nombre"),
                                 Cantidad = lector.GetInt32("cantidad"),
-                                Venta = lector.GetDecimal("precio_unitario").ToString(),
+                                Venta = lector.GetDecimal("precio_unitario").ToString(_cultura),
                                 SubTotal = lector.GetDecimal("subtotal")
                             };
                             lista.Add(producto);

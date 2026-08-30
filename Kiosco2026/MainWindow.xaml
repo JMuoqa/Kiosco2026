@@ -12,7 +12,7 @@
         WindowStartupLocation="CenterScreen"
         Background="Transparent"
         WindowState="Maximized"
-        Title="Kiosco" Height="900" Width="1440">
+        Title="Muoqa stock" Height="900" Width="1440">
     <Window.Resources>
         <DataTemplate DataType="{x:Type modeloHijas:ModeloAnadirProducto}">
             <vistasStok:AnadirProducto/>

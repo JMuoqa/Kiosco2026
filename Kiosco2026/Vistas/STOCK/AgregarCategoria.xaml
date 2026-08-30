@@ -8,7 +8,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
-        Title="AgregarCategoria" Height="180" Width="900"
+        Title="Agregar categoria" Height="180" Width="900"
         MaxWidth="1100" MaxHeight="230">
     <Window.DataContext>
         <modelo:MAC/>

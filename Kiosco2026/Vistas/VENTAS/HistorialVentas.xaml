@@ -124,7 +124,7 @@
                                         </Border>
                                         <Border Width="{Binding DataContext.TColumna_seis, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
                                             <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
-                                       VerticalAlignment="Center"  Text="{Binding Total }" Margin="10, 0, 0, 0"/>
+                                       VerticalAlignment="Center"  Text="{Binding STRTotal }" Margin="10, 0, 0, 0"/>
                                         </Border>
                                     </StackPanel>
                                 </Button>

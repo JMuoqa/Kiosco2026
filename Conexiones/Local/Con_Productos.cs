@@ -12,12 +12,14 @@ namespace Conexiones
     public class Con_Productos : ConexionMySQL
     {
         private Configuracion _configuracion { get; }
+        private CultureInfo _cultura;
         public Con_Productos()
         {
 
             string ruta = "config.json";
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
+            _cultura = new CultureInfo("es-AR");
         }
         #region Con_CargarProducto
         public async Task<(bool estado, string mensaje)> Con_CargarProducto(Productos producto)
@@ -391,8 +393,8 @@ namespace Conexiones
                                 Mostrar = lector.GetString("Mostrar"),
                                 Nombre = lector.GetString("Nombre"),
                                 Codigo = lector.GetString("Codigo"),
-                                Compra = lector.GetDecimal("Compra").ToString(),
-                                Venta = lector.GetDecimal("Venta").ToString(),
+                                Compra = lector.GetDecimal("Compra").ToString(_cultura),
+                                Venta = lector.GetDecimal("Venta").ToString(_cultura),
                                 Cantidad = lector.GetInt32("Cantidad"),
                                 UnidadMedida = lector.GetString("UnidadMedida")
                             });
@@ -448,8 +450,8 @@ namespace Conexiones
                                 ID = lector.GetInt32("ID"),
                                 Mostrar = lector.GetString("Mostrar"),
                                 Nombre = lector.GetString("Nombre"),
-                                Compra = lector.GetDecimal("Compra").ToString(),
-                                Venta = lector.GetDecimal("Venta").ToString(),
+                                Compra = lector.GetDecimal("Compra").ToString(_cultura),
+                                Venta = lector.GetDecimal("Venta").ToString(_cultura),
                                 Ingreso = lector.GetDateTime("Ingreso"),
                                 Vencimiento = lector.GetDateTime("Vencimiento"),
                                 Cantidad = lector.GetInt32("Cantidad"),
@@ -513,8 +515,8 @@ namespace Conexiones
                                 Mostrar = lector.GetString("Mostrar"),
                                 Nombre = lector.GetString("Nombre"),
                                 IDCategoria = lector.GetInt32("IDCategoria"),
-                                Compra = lector.GetDecimal("Compra").ToString(),
-                                Venta = lector.GetDecimal("Venta").ToString(),
+                                Compra = lector.GetDecimal("Compra").ToString(_cultura),
+                                Venta = lector.GetDecimal("Venta").ToString(_cultura),
                                 Ingreso = lector.GetDateTime("Ingreso"),
                                 Vencimiento = lector.GetDateTime("Vencimiento"),
                                 Cantidad = lector.GetInt32("Cantidad"),

@@ -4,7 +4,9 @@ namespace Entidades
 {
     public class Productos
     {
-        public Productos() { }
+        public Productos()
+        {
+        }
         public Productos(string nombre)
         {
             this.Nombre = nombre;
@@ -81,18 +83,16 @@ namespace Entidades
                 return fecha;
             }
         }
-        public string SubTotalCalculado
-        {
-            get
-            {
-                decimal d = Cantidad * decimal.Parse(Venta);
-                return d.ToString("N2", new CultureInfo("es-AR"));
-            }
-        }
+        private decimal _subTotal;
         public decimal SubTotal 
         {
-            get; set;
+            get => _subTotal;
+            set
+            {
+                _subTotal = value;
+            }
         }
+        public string STRSubTotal { get => _subTotal.ToString(new CultureInfo("es-AR"));  }
     }
     public class ProductosDto
     {

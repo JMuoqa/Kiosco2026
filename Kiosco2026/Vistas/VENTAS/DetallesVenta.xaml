@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kiosco2026.Vistas.VENTAS"
         xmlns:modelo="clr-namespace:Kiosco2026.ModeloDeLasVistas.Hijas"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="Detalles" 
-        Height="750" Width="450">
+        Height="550" Width="450">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding ObtenerDetallesDeUnaVenta}"/>
@@ -47,7 +47,7 @@
             <ListBox Grid.Row="1" Margin="14, 0"
                      ItemsSource="{Binding ListaProductos}"
                      BorderThickness="0"
-                     MaxHeight="250"
+                     MaxHeight="200"
                      Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      ScrollViewer.VerticalScrollBarVisibility="Auto">
                 <ListBox.ItemContainerStyle>
@@ -80,7 +80,7 @@
                                 <TextBlock Text="{Binding Nombre, Converter={StaticResource TextTrimmer}, ConverterParameter=20}" Grid.Column="0" Style="{StaticResource textoInfoTicket}" Margin="0" HorizontalAlignment="Left"/>
                                 <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
                                     <TextBlock Text="$" Style="{StaticResource textoInfoTicket}" Margin="0" />
-                                    <TextBlock Text="{Binding SubTotalCalculado}" Style="{StaticResource textoInfoTicket}" Margin="0" />
+                                    <TextBlock Text="{Binding STRSubTotal}" Style="{StaticResource textoInfoTicket}" Margin="0" />
                                 </StackPanel>
                             </Grid>
                         </Grid>

@@ -9,13 +9,13 @@
         WindowStartupLocation="CenterOwner"
         mc:Ignorable="d"
         Title="Ticket" 
-        Height="750" Width="450">
+        Height="680" Width="450">
     <Grid>
         <StackPanel>
             <TextBlock Text="{Binding NombreTienda}" Style="{StaticResource titulosTicket}" HorizontalAlignment="Center"/>
             <TextBlock Text="{Binding DireccionTienda}" Style="{StaticResource textoInfoTicket}" HorizontalAlignment="Center"/>
             <TextBlock Text="--------------------------------------------------------------------------" Style="{StaticResource textoInfoTicket}"/>
-            <TextBlock Text="{Binding TicketDeCompra}" Style="{StaticResource titulosTicket}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+            <TextBlock Text="{Binding TicketDeCompra}" Style="{StaticResource textoBoldInfoTicket}" FontSize="18" HorizontalAlignment="Center" Margin="0,0,0,10"/>
             <TextBlock Text="--------------------------------------------------------------------------" Style="{StaticResource textoInfoTicket}"/>
             <Grid Margin="14, 0">
                 <Grid.RowDefinitions>
@@ -46,7 +46,7 @@
             <TextBlock Text="--------------------------------------------------------------------------" Style="{StaticResource textoInfoTicket}"/>
             <ListBox Grid.Row="1" Margin="14, 0"
                 ItemsSource="{Binding ListadoDeProductos}"
-                MaxHeight="100"
+                MaxHeight="80"
                 BorderThickness="0"
                 Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 ScrollViewer.VerticalScrollBarVisibility="Auto">
