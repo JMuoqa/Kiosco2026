@@ -25,6 +25,16 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private Configuracion _configuracion { get; }
         #region Propiedades
         private bool _metodoEnEjecucion;
+        private string _precioVentaEnVivo;
+        public string PrecioVentaEnVivo
+        {
+            get => _precioVentaEnVivo;
+            set
+            {
+                _precioVentaEnVivo = value;
+                OnPropertyChanged(nameof(PrecioVentaEnVivo));
+            }
+        }
         private ComboBoxItem _comboBoxItem;
         public ComboBoxItem ComboBoxItem
         {
@@ -135,6 +145,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             set
             {
                 _margen = value;
+                PrecioEnVivo();
                 OnPropertyChanged(nameof(Margen));
             }
         }
@@ -144,6 +155,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             set
             {
                 _compra = value;
+                PrecioEnVivo();
                 OnPropertyChanged(nameof(Compra));
             }
         }
@@ -153,6 +165,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             set
             {
                 _cantidad = value;
+                PrecioEnVivo();
                 OnPropertyChanged(nameof(Cantidad));
             }
         }
@@ -236,6 +249,15 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand SelecionarTextBox { get; }
         #endregion
         #region Funciones
+        private void PrecioEnVivo()
+        {
+            decimal d = 0;
+            if ((decimal.TryParse(Compra, out decimal n1) && decimal.TryParse(Cantidad, out decimal n2)) && decimal.TryParse(Margen, out decimal n3))
+            {
+                d = (n1 + (n1 * n3 / 100)) / n2;
+            }
+            PrecioVentaEnVivo = "$" + d.ToString("N2", new CultureInfo("es-AR"));
+        }
         private async Task EjecutarGuardarCmbCat(object arg)
         {
             ComboBox cmb = (ComboBox)arg;
@@ -479,6 +501,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             Cantidad = "Cantidad*";
             Proveedor = "Proveedor";
             Categoria = new Categorias("Categoria*");
+            _cmbUni.SelectedIndex = 0;
             ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
             ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
             ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));

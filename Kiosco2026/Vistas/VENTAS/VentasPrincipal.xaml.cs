@@ -39,8 +39,14 @@ namespace Kiosco2026.Vistas.VENTAS
         }
         private void entradas_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            if (!char.IsNumber(e.Text[0]))
-                e.Handled = true;
+            try
+            {
+                if (!char.IsNumber(e.Text[0]))
+                    e.Handled = true;
+            }catch (Exception ex)
+            {
+
+            }
         }
     }
 }
