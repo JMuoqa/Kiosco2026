@@ -48,6 +48,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             AbrirFinalizarVenta = new ComandoModeloDeVista(EjecutarAbrirFinalizarVenta);
             ListaProductos = new ObservableCollection<Productos>();
             SelecionarTextBox = new ComandoModeloDeVista(EjecutarSelecionarTextBox);
+            PreviewKeyDownParaFinalizar = new ComandoModeloDeVista(EjecutarPreviewKeyDownParaFinalizar);
             _adminVenta = new AdminVentas();
             _adminProductos = new AdminProductos();
             ColoresEntradas = new ColoresProductos();
@@ -269,9 +270,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             set
             {
                 _listaProductos = value;
-                CantidadItems = _listaProductos.Count.ToString();
+                CantidadItems = CalcularCantidadProductos().ToString();
                 decimal calculoTotal = CalcularTotal();
-                int calculoCantidadProductos = CalcularCantidadProductos();
+                int calculoCantidadProductos = _listaProductos.Count;
                 PrecioTotal = "$" + calculoTotal.ToString("N2", new CultureInfo("es-AR"));
                 CantidadProductos = calculoCantidadProductos.ToString();
                 Venta = new Ventas(_listaProductos.ToList(), 0, calculoTotal, calculoTotal, _listaProductos.Count, calculoCantidadProductos, FormaDePago);
@@ -280,6 +281,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         #endregion
         #region Comandos
+        public ICommand PreviewKeyDownParaFinalizar { get; }
         public ICommand ActualizarAnchoActual { get; }
         public ICommand SelectionChanged { get; }
         public ICommand RestablecerValores { get; }
@@ -294,6 +296,31 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand FocusACodigos { get; }
         #endregion
         #region Funciones
+        //La dejo aca por que tiene mucha relacion con la funcion
+        private DateTime? primeraPulsacionF9;
+        private async Task EjecutarPreviewKeyDownParaFinalizar(object arg)
+        {
+            if (arg is not KeyEventArgs e)
+                return; 
+            if (e.Key != Key.F9)
+                return; 
+            DateTime ahora = DateTime.Now;
+            if (primeraPulsacionF9 == null)
+            {
+                primeraPulsacionF9 = ahora;
+                return;
+            }
+            TimeSpan diferencia = ahora - primeraPulsacionF9.Value;
+            if (diferencia.TotalSeconds <= 1)
+            {
+                primeraPulsacionF9 = null;
+                EjecutarAbrirFinalizarVenta(null);
+            }
+            else
+            {
+                primeraPulsacionF9 = ahora;
+            }
+        }
         private async Task EjecutarAbrirFinalizarVenta(object arg)
         {
             try
@@ -418,7 +445,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             try
             {
-                ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+                ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
                 CodigoBarras = CodigoBarras.Replace("Codigo de barras", "");
                 if (arg is KeyEventArgs e)
                 {
@@ -478,7 +505,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private async Task EjecutarSelected(object arg)
         {
             Categorias cate = (Categorias)arg;
-            ColoresEntradas.Categoria = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Categoria = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
         }
         private async Task EjecutarActualizarAnchoActual(object arg)
         {
@@ -499,17 +526,18 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             CodigoBarras = "Codigo de barras";
             Cantidad = "1";
-            ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
         }
         private async Task EjecutarValoresPredeterminados(object arg)
         {
+            Debug.WriteLine("valor predeterminado");
             CodigoBarras = "Codigo de barras";
             Descuento = "0";
             Cantidad = "1";
-            ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
-            ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-            ColoresEntradas.Categoria = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-            ColoresEntradas.Descuento = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+            ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
+            ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
+            ColoresEntradas.Categoria = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
+            ColoresEntradas.Descuento = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
         }
         private async Task EjecutarGotFocus(object arg)
         {
@@ -523,7 +551,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 switch (entrada.Name)
                 {
-                    case "entrada_codigo": CodigoBarras = string.Empty; ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                    case "entrada_codigo": CodigoBarras = string.Empty; ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020")); break;
                 }
             }
         }
@@ -532,7 +560,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             string nombre = (string)arg;
             switch (nombre)
             {
-                case "entrada_codigo": if (string.IsNullOrWhiteSpace(CodigoBarras) || CodigoBarras.Trim() == "Codigo de barras") { CodigoBarras = "Codigo de barras"; ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+                case "entrada_codigo": if (string.IsNullOrWhiteSpace(CodigoBarras) || CodigoBarras.Trim() == "Codigo de barras") { CodigoBarras = "Codigo de barras"; ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
                 case "entrada_descuento": if (string.IsNullOrWhiteSpace(Descuento)) Descuento = "0"; break;
                 case "entrada_cantidad": if (string.IsNullOrWhiteSpace(Cantidad)) Cantidad = "1"; break;
             }

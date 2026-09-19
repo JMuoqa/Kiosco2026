@@ -104,11 +104,11 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             NumeroDeCaja = _configuracion.NumeroDeCaja.ToString();
             NombreDeCaja = _configuracion.NombreDeCaja;
             NumeroDeSucursal = _configuracion.NumeroDeSucursal.ToString();
-            ColoresEntradas.NombreNegocio = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-            ColoresEntradas.DireccionNegocio = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-            ColoresEntradas.NumeroDeCaja = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-            ColoresEntradas.NombreDeCaja = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-            ColoresEntradas.NumeroDeSucursal = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+            ColoresEntradas.NombreNegocio = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
+            ColoresEntradas.DireccionNegocio = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
+            ColoresEntradas.NumeroDeCaja = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
+            ColoresEntradas.NombreDeCaja = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
+            ColoresEntradas.NumeroDeSucursal = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
         }
         private async Task EjecutarGuardarDatos(object arg)
         {
@@ -160,11 +160,11 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 switch (entrada.Name)
                 {
-                    case "entrada_nombreNegocio": NombreNegocio = string.Empty; ColoresEntradas.NombreNegocio = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
-                    case "entrada_direccion": DireccionNegocio = string.Empty; ColoresEntradas.DireccionNegocio = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
-                    case "entrada_numeroCaja": NumeroDeCaja = string.Empty; ColoresEntradas.NumeroDeCaja = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
-                    case "entrada_nombreCaja": NombreDeCaja = string.Empty; ColoresEntradas.NombreDeCaja = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
-                    case "entrada_numeroSucursal": NumeroDeSucursal = string.Empty; ColoresEntradas.NumeroDeSucursal = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                    case "entrada_nombreNegocio": NombreNegocio = string.Empty; ColoresEntradas.NombreNegocio = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020")); break;
+                    case "entrada_direccion": DireccionNegocio = string.Empty; ColoresEntradas.DireccionNegocio = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020")); break;
+                    case "entrada_numeroCaja": NumeroDeCaja = string.Empty; ColoresEntradas.NumeroDeCaja = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020")); break;
+                    case "entrada_nombreCaja": NombreDeCaja = string.Empty; ColoresEntradas.NombreDeCaja = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020")); break;
+                    case "entrada_numeroSucursal": NumeroDeSucursal = string.Empty; ColoresEntradas.NumeroDeSucursal = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020")); break;
                 }
             }
         }
@@ -173,11 +173,11 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             string nombre = (string)arg;
             switch (nombre)
             {
-                case "entrada_nombreNegocio": if (string.IsNullOrWhiteSpace(NombreNegocio) || NombreNegocio.Trim() == "Nombre del negocio") { NombreNegocio = "Nombre del negocio"; ColoresEntradas.NombreNegocio = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
-                case "entrada_direccion": if (string.IsNullOrWhiteSpace(DireccionNegocio) || DireccionNegocio.Trim() == "Dirección del negocio") { DireccionNegocio = "Dirección del negocio"; ColoresEntradas.DireccionNegocio = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
-                case "entrada_numeroCaja": if (string.IsNullOrWhiteSpace(NumeroDeCaja) || NumeroDeCaja.Trim() == "Numero de caja") { NumeroDeCaja = "Numero de caja"; ColoresEntradas.NumeroDeCaja = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
-                case "entrada_nombreCaja": if (string.IsNullOrWhiteSpace(NombreDeCaja) || NombreDeCaja.Trim() == "Cajero") { NombreDeCaja = "Cajero"; ColoresEntradas.NombreDeCaja = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
-                case "entrada_numeroSucursal": if (string.IsNullOrWhiteSpace(NumeroDeSucursal) || NumeroDeSucursal.Trim() == "Numero de sucursal") { NumeroDeSucursal = "Numero de sucursal"; ColoresEntradas.NumeroDeSucursal = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+                case "entrada_nombreNegocio": if (string.IsNullOrWhiteSpace(NombreNegocio) || NombreNegocio.Trim() == "Nombre del negocio") { NombreNegocio = "Nombre del negocio"; ColoresEntradas.NombreNegocio = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
+                case "entrada_direccion": if (string.IsNullOrWhiteSpace(DireccionNegocio) || DireccionNegocio.Trim() == "Dirección del negocio") { DireccionNegocio = "Dirección del negocio"; ColoresEntradas.DireccionNegocio = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
+                case "entrada_numeroCaja": if (string.IsNullOrWhiteSpace(NumeroDeCaja) || NumeroDeCaja.Trim() == "Numero de caja") { NumeroDeCaja = "Numero de caja"; ColoresEntradas.NumeroDeCaja = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
+                case "entrada_nombreCaja": if (string.IsNullOrWhiteSpace(NombreDeCaja) || NombreDeCaja.Trim() == "Cajero") { NombreDeCaja = "Cajero"; ColoresEntradas.NombreDeCaja = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
+                case "entrada_numeroSucursal": if (string.IsNullOrWhiteSpace(NumeroDeSucursal) || NumeroDeSucursal.Trim() == "Numero de sucursal") { NumeroDeSucursal = "Numero de sucursal"; ColoresEntradas.NumeroDeSucursal = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
             }
         }
         private bool RevisarEntradas(TextBox entrada)

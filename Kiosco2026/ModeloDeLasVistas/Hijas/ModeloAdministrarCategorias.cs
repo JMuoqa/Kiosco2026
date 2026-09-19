@@ -265,7 +265,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             Visualizacion = default;
             Edicion = "Editar nombre";
             CategoriaSeleccionada = "Ninguna seleccionada";
-            ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
         }
         private async Task EjecutarBuscarCategorias(object arg)
         {
@@ -336,7 +336,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                         Busqueda = "Buscar por nombre";
                         Edicion = "Editar nombre";
                         CategoriaSeleccionada = "Ninguna seleccionada";
-                        ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+                        ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
                         ColorMensajeEdicion = _colores.ColorExito;
                         EjecutarBuscarCategorias(null);
                     }
@@ -370,7 +370,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 Visualizacion = true;
             else
                 Visualizacion = false;
-            ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+            ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
             CategoriaSeleccionada = categoria.ID.ToString();
         }
         private async Task EjecutarActualizarAnchoActual(object arg)
@@ -404,8 +404,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 switch (entrada.Name)
                 {
-                    case "entrada_busqueda": Busqueda = string.Empty; ColoresProductos.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
-                    case "entrada_edicion": Edicion = string.Empty; ColoresProductos.BusuqedaUno= new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                    case "entrada_busqueda": Busqueda = string.Empty; ColoresProductos.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020")); break;
+                    case "entrada_edicion": Edicion = string.Empty; ColoresProductos.BusuqedaUno= new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020")); break;
                 }
             }
         }
@@ -414,8 +414,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             string nombre = (string)arg;
             switch (nombre)
             {
-                case "entrada_busqueda": if (string.IsNullOrWhiteSpace(Busqueda) || Busqueda.Trim() == "Buscar por nombre") { Busqueda = "Buscar por nombre"; ColoresProductos.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
-                case "entrada_edicion": if (string.IsNullOrWhiteSpace(Edicion) || Edicion.Trim() == "Editar nombre") { Edicion = "Editar nombre"; ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+                case "entrada_busqueda": if (string.IsNullOrWhiteSpace(Busqueda) || Busqueda.Trim() == "Buscar por nombre") { Busqueda = "Buscar por nombre"; ColoresProductos.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
+                case "entrada_edicion": if (string.IsNullOrWhiteSpace(Edicion) || Edicion.Trim() == "Editar nombre") { Edicion = "Editar nombre"; ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
             }
         }
         private bool RevisarEntradas(TextBox entrada)

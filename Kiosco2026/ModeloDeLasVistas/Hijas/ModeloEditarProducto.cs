@@ -488,18 +488,18 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             Categorias cate = (Categorias)arg;
             string str = cate.Nombre.ToLower();
             if (str != "categoria*")
-                ColoresEntradas.Categoria = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+                ColoresEntradas.Categoria = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
             else
-                ColoresEntradas.Categoria = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+                ColoresEntradas.Categoria = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
         }
         private async Task EjecutarSelectedParaBusqueda(object arg)
         {
             Categorias cate = (Categorias)arg;
             string str = cate.Nombre.ToLower();
             if (str != "categoria*")
-                ColoresEntradas.CategoriaParaBusqueda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+                ColoresEntradas.CategoriaParaBusqueda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
             else
-                ColoresEntradas.CategoriaParaBusqueda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+                ColoresEntradas.CategoriaParaBusqueda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
         }
         private async Task EjecutarCargarDatos(object obj)
         {
@@ -509,10 +509,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             Venta = Producto.Venta;
             Compra = Producto.Compra;
             _idProducto = Producto.ID;
-            ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-            ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-            ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-            ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+            ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
+            ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
+            ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
+            ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
             for (int i = 0; i < cmbCat.Items.Count; i++) 
             {
                 Categorias cate = (Categorias)cmbCat.Items[i];
@@ -527,9 +527,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private async Task ResetearTabla(object arg)
         {
             BusquedaCodigo = "Buscar por codigo";
-            ColoresEntradas.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
             Busqueda = "Buscar por nombre";
-            ColoresEntradas.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
             EjecutarObtenerProductos(null);
         }
         private async Task EjecutarObtenerProductos(object obj)
@@ -569,7 +569,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             string categoria = CategoriaParaBusqueda is Categorias ? CategoriaParaBusqueda.Nombre : "";
             BusquedaCodigo = "Buscar por codigo";
-            ColoresEntradas.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
             var res = await _adminProductos.Con_ObtenerUltLotePorNombre(valor, categoria);
             ListaProductos = new ObservableCollection<Productos>(res.lista);
         }
@@ -577,7 +577,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             Busqueda = "Buscar por nombre";
             cmbCatParaBusqueda.SelectedIndex = 0;
-            ColoresEntradas.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
             var res = await _adminProductos.BusquedaProductoPorCodigoUltLote(BusquedaCodigo);
             ListaProductos = new ObservableCollection<Productos>(res.lista);
         }
@@ -630,10 +630,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             Compra = "Costo de compra*";
             Marcado = default;
             Producto = null;
-            ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
-            ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
-            ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
-            ColoresEntradas.Categoria = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9"));
+            ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
+            ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
+            ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
+            ColoresEntradas.Categoria = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
         }
         #endregion
         #region Grafica
@@ -645,11 +645,11 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 switch (entrada.Name)
                 {
-                    case "entrada_busqueda": Busqueda = string.Empty; ColoresEntradas.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
-                    case "entrada_nombre": Nombre = string.Empty; ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
-                    case "entrada_venta": Venta = string.Empty; ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
-                    case "entrada_compra": Compra = string.Empty; ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
-                    case "entrada_codigo": BusquedaCodigo = string.Empty; ColoresEntradas.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                    case "entrada_busqueda": Busqueda = string.Empty; ColoresEntradas.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020")); break;
+                    case "entrada_nombre": Nombre = string.Empty; ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020")); break;
+                    case "entrada_venta": Venta = string.Empty; ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020")); break;
+                    case "entrada_compra": Compra = string.Empty; ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020")); break;
+                    case "entrada_codigo": BusquedaCodigo = string.Empty; ColoresEntradas.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020")); break;
                 }
             }
         }
@@ -658,11 +658,11 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             string nombre = (string)arg;
             switch (nombre)
             {
-                case "entrada_busqueda": if (string.IsNullOrWhiteSpace(Busqueda) || Busqueda.Trim() == "Buscar por nombre") { Busqueda = "Buscar por nombre"; ColoresEntradas.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
-                case "entrada_nombre": if (string.IsNullOrWhiteSpace(Nombre) || Nombre.Trim() == "Nombre*") { Nombre = "Nombre*"; ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
-                case "entrada_venta": if (string.IsNullOrWhiteSpace(Venta) || Venta.Trim() == "Precio de venta*") { Venta = "Precio de venta*"; ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
-                case "entrada_compra": if (string.IsNullOrWhiteSpace(Compra) || Compra.Trim() == "Costo de compra*") { Compra = "Costo de compra*"; ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
-                case "entrada_codigo": if (string.IsNullOrWhiteSpace(BusquedaCodigo) || BusquedaCodigo.Trim() == "Buscar por codigo") { BusquedaCodigo = "Buscar por codigo"; ColoresEntradas.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+                case "entrada_busqueda": if (string.IsNullOrWhiteSpace(Busqueda) || Busqueda.Trim() == "Buscar por nombre") { Busqueda = "Buscar por nombre"; ColoresEntradas.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
+                case "entrada_nombre": if (string.IsNullOrWhiteSpace(Nombre) || Nombre.Trim() == "Nombre*") { Nombre = "Nombre*"; ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
+                case "entrada_venta": if (string.IsNullOrWhiteSpace(Venta) || Venta.Trim() == "Precio de venta*") { Venta = "Precio de venta*"; ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
+                case "entrada_compra": if (string.IsNullOrWhiteSpace(Compra) || Compra.Trim() == "Costo de compra*") { Compra = "Costo de compra*"; ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
+                case "entrada_codigo": if (string.IsNullOrWhiteSpace(BusquedaCodigo) || BusquedaCodigo.Trim() == "Buscar por codigo") { BusquedaCodigo = "Buscar por codigo"; ColoresEntradas.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
             }
         }
         private bool RevisarEntradas(TextBox entrada)

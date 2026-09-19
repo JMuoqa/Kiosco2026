@@ -66,7 +66,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private async Task EjecutarCargarDatos(object arg)
         {
             NombreImpresora = _configuracionImpresora.NombreImpresora;
-            ColoresEntradas.NombreImpresora = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+            ColoresEntradas.NombreImpresora = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
         }
         private async Task EjecutarGuardarDatos(object arg)
         {
@@ -106,7 +106,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 {
                     switch (entrada.Name)
                     {
-                        case "entrada_nombreImpresora": NombreImpresora = string.Empty; ColoresEntradas.NombreImpresora = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                        case "entrada_nombreImpresora": NombreImpresora = string.Empty; ColoresEntradas.NombreImpresora = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020")); break;
                     }
                 }
             }
@@ -115,7 +115,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 string nombre = (string)arg;
                 switch (nombre)
                 {
-                    case "entrada_nombreImpresora": if (string.IsNullOrWhiteSpace(NombreImpresora) || NombreImpresora.Trim() == "Nombre de la impresora") { NombreImpresora = "Nombre de la impresora"; ColoresEntradas.NombreImpresora = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+                    case "entrada_nombreImpresora": if (string.IsNullOrWhiteSpace(NombreImpresora) || NombreImpresora.Trim() == "Nombre de la impresora") { NombreImpresora = "Nombre de la impresora"; ColoresEntradas.NombreImpresora = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
                 }
             }
             private bool RevisarEntradas(TextBox entrada)

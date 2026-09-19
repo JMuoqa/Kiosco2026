@@ -2,19 +2,48 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Style x:Key="entrada_form" TargetType="TextBox">
         <Setter Property="FontSize" Value="18"/>
-        <Setter Property="Padding" Value="5, 10, 5, 10"/>
         <Setter Property="FontFamily" Value="Roboto Flex"/>
-        <Setter Property="Background" Value="#090920"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Foreground" Value="#B9B9B9"/>
+        <Setter Property="Foreground" Value="#202020"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="#C8C8D0"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="12,8"/>
         <Setter Property="Margin" Value="10"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
-                    <Border CornerRadius="10" Background="{TemplateBinding Background}">
-                        <ScrollViewer x:Name="PART_ContentHost" Background="Transparent">
-                        </ScrollViewer>
+
+                    <Border
+                    x:Name="Borde"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="10">
+                        <ScrollViewer
+                        x:Name="PART_ContentHost"
+                        Margin="0"
+                        VerticalAlignment="Center"/>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <!-- Cuando está seleccionado -->
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter
+                            TargetName="Borde"
+                            Property="BorderBrush"
+                            Value="#090920"/>
+                            <Setter
+                            TargetName="Borde"
+                            Property="BorderThickness"
+                            Value="2"/>
+                        </Trigger>
+                        <!-- Deshabilitado -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter
+                            TargetName="Borde"
+                            Property="Opacity"
+                            Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -24,15 +53,14 @@
         <Setter Property="Padding" Value="5, 10, 5, 10"/>
         <Setter Property="Height" Value="40"/>
         <Setter Property="FontFamily" Value="Roboto Flex"/>
-        <Setter Property="Background" Value="#090920"/>
-        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="White"/>
         <Setter Property="Foreground" Value="#B9B9B9"/>
         <Setter Property="Margin" Value="10"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ComboBox">
                     <Grid>
-                        <Border CornerRadius="10" Background="{TemplateBinding Background}">
+                        <Border CornerRadius="10" BorderBrush="#C8C8D0" BorderThickness="1"  Background="{TemplateBinding Background}">
                             <ContentPresenter
                                 Margin="5"
                                 Content="{TemplateBinding SelectionBoxItem}"

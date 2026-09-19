@@ -16,6 +16,10 @@
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding ValoresPredeterminados}"/>
         </i:EventTrigger>
+        <i:EventTrigger EventName="PreviewKeyDown">
+            <i:InvokeCommandAction Command="{Binding PreviewKeyDownParaFinalizar}"
+                                   PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
     </i:Interaction.Triggers>
     <Border CornerRadius="10" Margin="30" Background="#FFFFFF">
         <Grid Margin="15">
@@ -78,7 +82,7 @@
                 </RadioButton>
             </Border>
             <Grid Grid.Row="1"  >
-                <Border  BorderThickness="0.6" CornerRadius="10" BorderBrush="#000000">
+                <Border  BorderThickness="1" CornerRadius="10" BorderBrush="#C8C8D0">
                     <Grid x:Name="grillaAncho">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SizeChanged">
@@ -173,34 +177,34 @@
             </Grid>
             <Grid Grid.Row="1" Grid.Column="1" Margin="5">
                 <StackPanel>
-                    <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
-                           Text="Detalles">
+                    <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20" Margin="0,0,0,20"
+                           Text="Resumen de venta">
                     </TextBlock>
-                    <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0">
+                    <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 20">
                         <TextBlock FontFamily="Roboto Flex" FontWeight="SemiBold" FontSize="18"
-                           Text="Items: ">
+                           Text="Unidades: ">
                         </TextBlock>
                         <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" Margin="0, 0, 10, 0" FontSize="18"
                            Text="{Binding CantidadItems}">
                         </TextBlock>
                         <TextBlock FontFamily="Roboto Flex" FontWeight="SemiBold" FontSize="18"
-                           Text="Total: ">
-                        </TextBlock>
-                        <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" Margin="0, 0, 10, 0" FontSize="18"
-                           Text="{Binding PrecioTotal}">
-                        </TextBlock>
-                        <TextBlock FontFamily="Roboto Flex" FontWeight="SemiBold" FontSize="18"
-                           Text="Cantidad de productos: ">
+                           Text="Productos: ">
                         </TextBlock>
                         <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" Margin="0, 0, 10, 0" FontSize="18"
                            Text="{Binding CantidadProductos}">
                         </TextBlock>
                     </StackPanel>
-                    <StackPanel Orientation="Vertical" Margin="0, 10, 0, 0">
-                        <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
-                           Text="Forma de pago">
+                    <StackPanel Orientation="Vertical" Margin="0, 0, 0, 10">
+                        <TextBlock FontFamily="Roboto Flex" FontWeight="SemiBold" FontSize="18"
+                           Text="Total: ">
                         </TextBlock>
-                        <ComboBox  x:Name="cmb_categorias" Margin="0, 5" Width="300"
+                        <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" Margin="5, 0, 0, 20" FontSize="18"
+                           Text="{Binding PrecioTotal}">
+                        </TextBlock>
+                        <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
+                           Text="Forma de pago:">
+                        </TextBlock>
+                        <ComboBox  x:Name="cmb_categorias" Margin="0,0,0,15" Width="300" 
                                    PreviewMouseDown="cmb_categorias_PreviewMouseDown"
                                    HorizontalAlignment="Left"
                                    Style="{StaticResource cmb_entrada_form}"
@@ -214,7 +218,10 @@
                             <ComboBoxItem Content="Transferencia" Foreground="#000000"/>
                             <ComboBoxItem Content="Debito" Foreground="#000000"/>
                         </ComboBox>
-                        <TextBox Style="{StaticResource entrada_form}" Width="300" Margin="0, 10, 0, 10"
+                        <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
+                           Text="Aplicar descuento %:">
+                        </TextBlock>
+                        <TextBox Style="{StaticResource entrada_form}" Width="300" Margin="0,10,0,15"
                                  Text="{Binding Descuento, UpdateSourceTrigger=PropertyChanged}" 
                                  Foreground="{Binding ColoresEntradas.Descuento}" PreviewTextInput="entradas_PreviewTextInput"
                                  HorizontalAlignment="Left" x:Name="entrada_descuento">
@@ -231,7 +238,7 @@
                         </TextBox>
                         <RadioButton Style="{StaticResource boton_confirmar}" Margin="0, 5"
                                      Command="{Binding AbrirFinalizarVenta}">
-                            <TextBlock Style="{StaticResource texto_botones_uno}">Guardar venta</TextBlock>
+                            <TextBlock Style="{StaticResource texto_botones_uno}">Finalizar venta</TextBlock>
                         </RadioButton>
                         <TextBlock Margin="10" FontFamily="Roboto Flex" 
                            FontSize="16" Text="{Binding Mensaje}" Foreground="{Binding ColorMensaje}" TextWrapping="Wrap" ></TextBlock>

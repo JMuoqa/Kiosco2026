@@ -14,9 +14,15 @@ namespace Kiosco2026.Vistas.VENTAS
         public FinalizarVenta(Ventas venta)
         {
             InitializeComponent();
-            this.DataContext = new ModeloFinalizarVenta(venta);
-        }
+            var _viewModel = new ModeloFinalizarVenta(venta);
+            this.DataContext = _viewModel;
+            _viewModel.CerrarVentana += CerrarVentaana;
 
+        }
+        private void CerrarVentaana()
+        {
+            this.Close();
+        }
     }
 
     

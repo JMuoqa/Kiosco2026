@@ -10,6 +10,12 @@
         mc:Ignorable="d"
         Title="Ticket" 
         Height="680" Width="450">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="PreviewKeyDown">
+            <i:InvokeCommandAction Command="{Binding PreviewKeyDownParaCerrarOImprimir}"
+                                   PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
         <StackPanel>
             <TextBlock Text="{Binding NombreTienda}" Style="{StaticResource titulosTicket}" HorizontalAlignment="Center"/>

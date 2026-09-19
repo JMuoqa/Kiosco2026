@@ -30,10 +30,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
             GuardarDatos = new ComandoModeloDeVista(EjecutarGuardarDatos);
             EjecutarCargarDatos(null);
-            ColoresEntradas.IpHost = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-            ColoresEntradas.NombreBaseDatos = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-            ColoresEntradas.UsuarioBD = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-            ColoresEntradas.ContrasenaBD = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
+            ColoresEntradas.IpHost = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
+            ColoresEntradas.NombreBaseDatos = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
+            ColoresEntradas.UsuarioBD = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
+            ColoresEntradas.ContrasenaBD = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
         }
         #region Propiedades
         private string _ipHost;
@@ -146,10 +146,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 switch (entrada.Name)
                 {
-                    case "entrada_iphost": IpHost = string.Empty; ColoresEntradas.IpHost = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
-                    case "entrada_bd": NombreBaseDatos = string.Empty; ColoresEntradas.NombreBaseDatos = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
-                    case "entrada_usuario": Usuario = string.Empty; ColoresEntradas.UsuarioBD = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
-                    case "entrada_contrasena": Contrasena = string.Empty; ColoresEntradas.ContrasenaBD = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF")); break;
+                    case "entrada_iphost": IpHost = string.Empty; ColoresEntradas.IpHost = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020")); break;
+                    case "entrada_bd": NombreBaseDatos = string.Empty; ColoresEntradas.NombreBaseDatos = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020")); break;
+                    case "entrada_usuario": Usuario = string.Empty; ColoresEntradas.UsuarioBD = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020")); break;
+                    case "entrada_contrasena": Contrasena = string.Empty; ColoresEntradas.ContrasenaBD = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020")); break;
                 }
             }
         }
@@ -158,10 +158,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             string nombre = (string)arg;
             switch (nombre)
             {
-                case "entrada_iphost": if (string.IsNullOrWhiteSpace(IpHost) || IpHost.Trim() == "Server*") { IpHost = "Server*"; ColoresEntradas.IpHost = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
-                case "entrada_bd": if (string.IsNullOrWhiteSpace(NombreBaseDatos) || NombreBaseDatos.Trim() == "Base de datos*") { NombreBaseDatos = "Base de datos*"; ColoresEntradas.NombreBaseDatos = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
-                case "entrada_usuario": if (string.IsNullOrWhiteSpace(Usuario) || Usuario.Trim() == "Usuario*") { Usuario = "Usuario*"; ColoresEntradas.UsuarioBD = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
-                case "entrada_contrasena": if (string.IsNullOrWhiteSpace(Contrasena) || Contrasena.Trim() == "Contraseña*") { Contrasena = "Contraseña*"; ColoresEntradas.ContrasenaBD = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#B9B9B9")); } break;
+                case "entrada_iphost": if (string.IsNullOrWhiteSpace(IpHost) || IpHost.Trim() == "Server*") { IpHost = "Server*"; ColoresEntradas.IpHost = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
+                case "entrada_bd": if (string.IsNullOrWhiteSpace(NombreBaseDatos) || NombreBaseDatos.Trim() == "Base de datos*") { NombreBaseDatos = "Base de datos*"; ColoresEntradas.NombreBaseDatos = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
+                case "entrada_usuario": if (string.IsNullOrWhiteSpace(Usuario) || Usuario.Trim() == "Usuario*") { Usuario = "Usuario*"; ColoresEntradas.UsuarioBD = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
+                case "entrada_contrasena": if (string.IsNullOrWhiteSpace(Contrasena) || Contrasena.Trim() == "Contraseña*") { Contrasena = "Contraseña*"; ColoresEntradas.ContrasenaBD = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
             }
         }
         private bool RevisarEntradas(TextBox entrada)

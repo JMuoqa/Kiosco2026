@@ -16,7 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Kiosco2026.ModeloDeLasVistas.Hijas
@@ -204,7 +204,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             _cultura = new CultureInfo("es-AR");
             _coloresEntradas = new ColoresProductos();
-            ColoresEntradas.MontoPagado = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#FFFFFF"));
+            ColoresEntradas.MontoPagado = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#202020"));
             GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
             LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
             string ruta = "config.json";
@@ -228,13 +228,61 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             EjecutarRegistrarVenta(null);
             DireccionTienda = _configuracion.DireccionDelLocal;
             ImprimirPagina = new ComandoModeloDeVista(EjecutarImprimirPagina);
+            PreviewKeyDownParaCerrarOImprimir = new ComandoModeloDeVista(EjecutarPreviewKeyDownParaCerrarOImprimir);
         }
         #region Comandos
         public ICommand ImprimirPagina { get; }
         public ICommand GotFocus { get; }
         public ICommand LostFocus { get; }
+        public ICommand PreviewKeyDownParaCerrarOImprimir { get; }
         #endregion
         #region Funciones
+        public event Action CerrarVentana;
+        private DateTime? primeraPulsacionF9;
+        private async Task EjecutarPreviewKeyDownParaCerrarOImprimir (object arg)
+        {
+            if (arg is not System.Windows.Input.KeyEventArgs e)
+                return;
+            Debug.WriteLine("Tecla" + e.Key);
+            if (e.Key == Key.F9)
+            {
+                DateTime ahora = DateTime.Now;
+                if (primeraPulsacionF9 == null)
+                {
+                    primeraPulsacionF9 = ahora;
+                    return;
+                }
+                TimeSpan diferencia = ahora - primeraPulsacionF9.Value;
+                if (diferencia.TotalSeconds <= 1)
+                {
+                    primeraPulsacionF9 = null;
+                    EjecutarImprimirPagina(null);
+                }
+                else
+                {
+                    primeraPulsacionF9 = ahora;
+                }
+            }
+            else if(e.Key == Key.Escape)
+            {
+                DateTime ahora = DateTime.Now;
+                if (primeraPulsacionF9 == null)
+                {
+                    primeraPulsacionF9 = ahora;
+                    return;
+                }
+                TimeSpan diferencia = ahora - primeraPulsacionF9.Value;
+                if (diferencia.TotalSeconds <= 1)
+                {
+                    primeraPulsacionF9 = null; 
+                    CerrarVentana?.Invoke();
+                }
+                else
+                {
+                    primeraPulsacionF9 = ahora;
+                }
+            }
+        }
         private void ActualizarVuelto()
         {
             if(decimal.TryParse(_montoPagado, out decimal monto)){
@@ -276,9 +324,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
 
                 Font fuenteDeco = new Font("Roboto Flex", 10);
                 Font fuenteInfo = new Font("Roboto Flex", 8);
-                Font fuenteInfoBold = new Font("Roboto Flex", 8, FontStyle.Bold);
-                Font fuenteTitutlo = new Font("Roboto Flex", 18, FontStyle.Bold);
-                Font fuenteIntermedia = new Font("Roboto Flex", 12, FontStyle.Bold);
+                Font fuenteInfoBold = new Font("Roboto Flex", 8, System.Drawing.FontStyle.Bold);
+                Font fuenteTitutlo = new Font("Roboto Flex", 18, System.Drawing.FontStyle.Bold);
+                Font fuenteIntermedia = new Font("Roboto Flex", 12, System.Drawing.FontStyle.Bold);
                 int nLocal = _configuracion.NumeroDeSucursal;
                 float limiteIzquierdo = e.MarginBounds.Left;
                 float limiteDerecho = e.MarginBounds.Right;
