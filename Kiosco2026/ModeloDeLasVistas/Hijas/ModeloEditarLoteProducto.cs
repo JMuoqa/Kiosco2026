@@ -36,6 +36,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             EditarLote = new ComandoModeloDeVista(EjecutarEditarLote);
             CargarDatosLote = new ComandoModeloDeVista(EjecutarCargarDatosLote);
             BuscarProductos = new ComandoModeloDeVista(EjecutarBusquedaLotes);
+            PreviewKeyDownParaCerrar = new ComandoModeloDeVista(EjecutarPreviewKeyDownParaCerrar);
             _pr = pr;
             Producto = new Productos("-");
             _adminProductos = new AdminProductos();
@@ -214,6 +215,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         #endregion
         private Productos _pr;
         private Productos _producto;
+        public event Action CerrarVentana;
         private string _venta;
         private string _compra;
         private string _cantidad;
@@ -345,8 +347,32 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand LostFocus { get; }
         public ICommand RestablecerEntradas { get; }
         public ICommand ResetearBusqueda { get; }
+        public ICommand PreviewKeyDownParaCerrar { get; }
         #endregion
         #region Eventos y funciones
+        private DateTime? primeraPulsacion;
+        private async Task EjecutarPreviewKeyDownParaCerrar(object arg)
+        {
+            if (arg is not System.Windows.Input.KeyEventArgs e)
+                return;
+            if (e.Key != Key.Escape) return;
+            DateTime ahora = DateTime.Now;
+            if (primeraPulsacion == null)
+            {
+                primeraPulsacion = ahora;
+                return;
+            }
+            TimeSpan diferencia = ahora - primeraPulsacion.Value;
+            if (diferencia.TotalSeconds <= 1)
+            {
+                primeraPulsacion = null;
+                CerrarVentana?.Invoke();
+            }
+            else
+            {
+                primeraPulsacion = ahora;
+            }
+        }
         private async Task EjecutarCargarDatosLote(object obj)
         {
             Productos productoSeleccionado = obj as Productos;

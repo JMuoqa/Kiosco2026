@@ -10,9 +10,12 @@
         WindowStartupLocation="CenterOwner"
         Title="Agregar categoria" Height="180" Width="900"
         MaxWidth="1100" MaxHeight="230">
-    <Window.DataContext>
-        <modelo:MAC/>
-    </Window.DataContext>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="PreviewKeyDown">
+            <i:InvokeCommandAction Command="{Binding PreviewKeyDownParaCerrar}"
+                                   PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <StackPanel Orientation="Vertical">
         <TextBlock Margin="10" FontSize="22" FontWeight="SemiBold" FontFamily="Roboto Flex">Agregar categoria</TextBlock>
         <Grid>

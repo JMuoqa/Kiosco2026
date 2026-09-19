@@ -238,48 +238,47 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         #endregion
         #region Funciones
         public event Action CerrarVentana;
-        private DateTime? primeraPulsacionF9;
+        private DateTime? primeraPulsacion;
         private async Task EjecutarPreviewKeyDownParaCerrarOImprimir (object arg)
         {
             if (arg is not System.Windows.Input.KeyEventArgs e)
                 return;
-            Debug.WriteLine("Tecla" + e.Key);
             if (e.Key == Key.F9)
             {
                 DateTime ahora = DateTime.Now;
-                if (primeraPulsacionF9 == null)
+                if (primeraPulsacion == null)
                 {
-                    primeraPulsacionF9 = ahora;
+                    primeraPulsacion = ahora;
                     return;
                 }
-                TimeSpan diferencia = ahora - primeraPulsacionF9.Value;
+                TimeSpan diferencia = ahora - primeraPulsacion.Value;
                 if (diferencia.TotalSeconds <= 1)
                 {
-                    primeraPulsacionF9 = null;
+                    primeraPulsacion = null;
                     EjecutarImprimirPagina(null);
                 }
                 else
                 {
-                    primeraPulsacionF9 = ahora;
+                    primeraPulsacion = ahora;
                 }
             }
             else if(e.Key == Key.Escape)
             {
                 DateTime ahora = DateTime.Now;
-                if (primeraPulsacionF9 == null)
+                if (primeraPulsacion == null)
                 {
-                    primeraPulsacionF9 = ahora;
+                    primeraPulsacion = ahora;
                     return;
                 }
-                TimeSpan diferencia = ahora - primeraPulsacionF9.Value;
+                TimeSpan diferencia = ahora - primeraPulsacion.Value;
                 if (diferencia.TotalSeconds <= 1)
                 {
-                    primeraPulsacionF9 = null; 
+                    primeraPulsacion = null; 
                     CerrarVentana?.Invoke();
                 }
                 else
                 {
-                    primeraPulsacionF9 = ahora;
+                    primeraPulsacion = ahora;
                 }
             }
         }

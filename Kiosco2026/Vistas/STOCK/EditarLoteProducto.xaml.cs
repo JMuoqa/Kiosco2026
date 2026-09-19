@@ -32,7 +32,13 @@ namespace Kiosco2026.Vistas
         {
             InitializeComponent();
             _pr = pr;
-            this.DataContext = new ModeloEditarLoteProducto(_pr);
+            var _viewModel = new ModeloEditarLoteProducto(_pr);
+            this.DataContext = _viewModel;
+            _viewModel.CerrarVentana += CerrarVentaana;
+        }
+        private void CerrarVentaana()
+        {
+            this.Close();
         }
     }
 }

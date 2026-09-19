@@ -28,7 +28,13 @@ namespace Kiosco2026.Vistas.VENTAS
         public DetalleVenta(Ventas v)
         {
             InitializeComponent();
-            this.DataContext = new ModeloDetallesVenta(v);
+            var _viewModel = new ModeloDetallesVenta(v);
+            this.DataContext = _viewModel;
+            _viewModel.CerrarVentana += CerrarVentaana;
+        }
+        private void CerrarVentaana()
+        {
+            this.Close();
         }
     }
 }

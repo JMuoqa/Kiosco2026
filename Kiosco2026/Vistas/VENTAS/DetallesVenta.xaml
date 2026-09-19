@@ -13,6 +13,10 @@
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding ObtenerDetallesDeUnaVenta}"/>
         </i:EventTrigger>
+        <i:EventTrigger EventName="PreviewKeyDown">
+            <i:InvokeCommandAction Command="{Binding PreviewKeyDownParaCerrar}"
+                                   PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid Background="#ffffff">
         <StackPanel>

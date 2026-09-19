@@ -28,8 +28,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             _venta = venta;
             _adminVentas = new AdminVentas();
             ObtenerDetallesDeUnaVenta = new ComandoModeloDeVista(EjecutarObtenerDetallesDeUnaVenta);
+            PreviewKeyDownParaCerrar = new ComandoModeloDeVista(EjecutarPreviewKeyDownParaCerrar);
         }
         #region Propiedades
+        public event Action CerrarVentana;
         private AdminVentas _adminVentas;
         private Ventas _venta;
         public string Dia
@@ -131,8 +133,32 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         #endregion
         #region Comandos
         public ICommand ObtenerDetallesDeUnaVenta { get; }
+        public ICommand PreviewKeyDownParaCerrar { get; }
         #endregion
         #region Funciones
+        private DateTime? primeraPulsacion;
+        private async Task EjecutarPreviewKeyDownParaCerrar(object arg)
+        {
+            if (arg is not System.Windows.Input.KeyEventArgs e)
+                return;
+            if (e.Key != Key.Escape) return;
+            DateTime ahora = DateTime.Now;
+            if (primeraPulsacion == null)
+            {
+                primeraPulsacion = ahora;
+                return;
+            }
+            TimeSpan diferencia = ahora - primeraPulsacion.Value;
+            if (diferencia.TotalSeconds <= 1)
+            {
+                primeraPulsacion = null;
+                CerrarVentana?.Invoke();
+            }
+            else
+            {
+                primeraPulsacion = ahora;
+            }
+        }
         private decimal CalcularTotal()
         {
             decimal total = 0;

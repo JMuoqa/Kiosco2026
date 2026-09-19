@@ -33,6 +33,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
             LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
             KeyDownCargar = new ComandoModeloDeVista(EjecutarKeyDownCargar);
+            PreviewKeyDownParaCerrar = new ComandoModeloDeVista(EjecutarPreviewKeyDownParaCerrar);
             _adminProductos = new AdminProductos();
             _colores = new ColoresTexto();
             NombreCargar = "Nombre de la categoria";
@@ -43,6 +44,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             tiempo.AutoReset = true;
         }
         private bool _metodoEnEjecucion;
+        public event Action CerrarVentana;
         private System.Timers.Timer tiempo;
         private AdminProductos _adminProductos;
         private ColoresTexto _colores;
@@ -90,6 +92,30 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand GotFocus { get; }
         public ICommand LostFocus { get; }
         public ICommand KeyDownCargar { get; }
+        public ICommand PreviewKeyDownParaCerrar { get; }
+        private DateTime? primeraPulsacion;
+        private async Task EjecutarPreviewKeyDownParaCerrar(object arg)
+        {
+            if (arg is not System.Windows.Input.KeyEventArgs e)
+                return;
+            if (e.Key != Key.Escape) return;
+            DateTime ahora = DateTime.Now;
+            if (primeraPulsacion == null)
+            {
+                primeraPulsacion = ahora;
+                return;
+            }
+            TimeSpan diferencia = ahora - primeraPulsacion.Value;
+            if (diferencia.TotalSeconds <= 1)
+            {
+                primeraPulsacion = null;
+                CerrarVentana?.Invoke();
+            }
+            else
+            {
+                primeraPulsacion = ahora;
+            }
+        }
         private async Task EjecutarKeyDownCargar(object arg)
         {
 

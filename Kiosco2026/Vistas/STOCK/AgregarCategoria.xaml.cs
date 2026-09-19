@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Kiosco2026.ModeloDeLasVistas.Hijas;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,13 @@ namespace Kiosco2026.Vistas
         public AgregarCategoria()
         {
             InitializeComponent();
+            var _viewModel = new MAC();
+            this.DataContext = _viewModel;
+            _viewModel.CerrarVentana += CerrarVentaana;
+        }
+        private void CerrarVentaana()
+        {
+            this.Close();
         }
     }
 }

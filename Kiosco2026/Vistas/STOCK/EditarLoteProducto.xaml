@@ -15,6 +15,10 @@
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding ObtenerProductos}"/>
         </i:EventTrigger>
+        <i:EventTrigger EventName="PreviewKeyDown">
+            <i:InvokeCommandAction Command="{Binding PreviewKeyDownParaCerrar}"
+                                   PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid >
         <Grid.RowDefinitions>
