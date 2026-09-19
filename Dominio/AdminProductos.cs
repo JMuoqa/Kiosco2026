@@ -30,7 +30,7 @@ namespace Dominio
             decimal precioCompraUnitario = precioCompra / cantidadProductos;
             Productos producto = new Productos
             {
-                Nombre = productoDto.Nombre,
+                Nombre = productoDto.Nombre.ToUpper(),
                 Categoria = productoDto.Categoria, //Es texto 
                 Codigo = productoDto.Codigo,
                 Venta = precioVentaUnitario.ToString(CultureInfo.InvariantCulture), 
@@ -68,13 +68,13 @@ namespace Dominio
         } 
         public async Task ValidarDatosParaEdicionProducto(Productos producto)
         {
-            if (string.IsNullOrWhiteSpace(producto.Nombre) || producto.Nombre == "Nombre*")
+            if (string.IsNullOrWhiteSpace(producto.Nombre) || producto.Nombre.ToLower().Trim() == "Nombre*".ToLower().Trim())
                 throw new Exception("El campo 'Nombre' esta vacio");
-            if (string.IsNullOrWhiteSpace(producto.Categoria) || producto.Categoria == "Categoria*")
+            if (string.IsNullOrWhiteSpace(producto.Categoria) || producto.Categoria.ToLower().Trim() == "Categoria*".ToLower().Trim())
                 throw new Exception("El campo 'Categoria' esta vacio");
-            if (string.IsNullOrWhiteSpace(producto.Compra) || producto.Compra == "Costo de compra*")
+            if (string.IsNullOrWhiteSpace(producto.Compra) || producto.Compra.ToLower().Trim() == "Costo de compra*".ToLower().Trim())
                 throw new Exception("El campo 'Compra' esta vacio");
-            if (string.IsNullOrWhiteSpace(producto.Venta) || producto.Venta == "Precio de venta*")
+            if (string.IsNullOrWhiteSpace(producto.Venta) || producto.Venta.ToLower().Trim() == "Precio de venta*".ToLower().Trim())
                 throw new Exception("El campo 'Venta' esta vacio");
             if (producto.Nombre.Length > 100)
                 throw new Exception("El nombre del producto no puede superar los 100 caracteres.");
@@ -115,7 +115,7 @@ namespace Dominio
         private async Task ValidarDatosEditarLote(Productos prod)
         {
             if (prod == null) throw new Exception("No hay datos del producto");
-            if (string.IsNullOrWhiteSpace(prod.Nombre) || prod.Nombre == "Nombre*")
+            if (string.IsNullOrWhiteSpace(prod.Nombre) || prod.Nombre.ToLower().Trim() == "Nombre*".ToLower().Trim())
                 throw new Exception("El campo 'Nombre' esta vacio");
             if (string.IsNullOrWhiteSpace(prod.Venta.ToString()))
                 throw new Exception("El campo 'Venta' esta vacio");
@@ -131,7 +131,7 @@ namespace Dominio
         {
             if (categoria == null)
                 throw new Exception("No hay datos del producto");
-            if (string.IsNullOrWhiteSpace(categoria.Nombre) || categoria.Nombre == "Nombre de la categoria")
+            if (string.IsNullOrWhiteSpace(categoria.Nombre) || categoria.Nombre.ToLower().Trim() == "NOMBRE DE LA CATEGORIA".ToLower().Trim())
                 throw new Exception("El campo 'Nombre', del formulario de carga, esta vacio");
             if (string.IsNullOrWhiteSpace(categoria.Mostrar))
                 throw new Exception("El campo 'Mostrar' no esta definido.");
@@ -145,7 +145,7 @@ namespace Dominio
         {
             if (categoria == null)
                 throw new Exception("No hay datos del producto");
-            if(string.IsNullOrWhiteSpace(categoria.Nombre) ||categoria.Nombre == "Nombre de la categoria")
+            if(string.IsNullOrWhiteSpace(categoria.Nombre) || categoria.Nombre.ToLower().Trim() == "NOMBRE DE LA CATEGORIA".ToLower().Trim())
                 throw new Exception("El campo 'Nombre', del formulario de carga, esta vacio");
             if(categoria.Nombre.Length > 80)
                 throw new Exception("El nombre de la categoria no puede superar los 80 caracteres");
@@ -155,15 +155,15 @@ namespace Dominio
         {
             if (prod == null)
                 throw new Exception ("No hay datos del producto");
-            if (string.IsNullOrWhiteSpace(prod.Margen) || prod.Margen == "Margen de ganancia en %*")
+            if (string.IsNullOrWhiteSpace(prod.Margen) || prod.Margen.ToLower().Trim() == "Margen de ganancia en %*".ToLower().Trim())
                 throw new Exception("El campo 'Margen' esta vacio");
-            if (string.IsNullOrWhiteSpace(prod.UnidadMedida) || prod.UnidadMedida == "Unidad de medida*")
+            if (string.IsNullOrWhiteSpace(prod.UnidadMedida) || prod.UnidadMedida.ToLower().Trim() == "Unidad de medida*".ToLower().Trim())
                 throw new Exception("El campo 'Unidad de medida' esta vacio");
-            if (string.IsNullOrWhiteSpace(prod.Nombre) || prod.Nombre == "Nombre*")
+            if (string.IsNullOrWhiteSpace(prod.Nombre) || prod.Nombre.ToLower().Trim() == "Nombre*".ToLower().Trim())
                 throw new Exception("El campo 'Nombre' esta vacio");
-            if (string.IsNullOrWhiteSpace(prod.Categoria) || prod.Categoria == "Categoria*")
+            if (string.IsNullOrWhiteSpace(prod.Categoria) || prod.Categoria.ToLower().Trim() == "Categoria*".ToLower().Trim())
                 throw new Exception("El campo 'Categoria' esta vacio");
-            if (string.IsNullOrWhiteSpace(prod.Codigo) || prod.Codigo == "Código*")
+            if (string.IsNullOrWhiteSpace(prod.Codigo) || prod.Codigo.ToLower().Trim() == "Código*".ToLower().Trim())
                 throw new Exception("El campo 'Codigo' esta vacio");
             if (string.IsNullOrWhiteSpace(prod.Compra.ToString()))
                 throw new Exception("El campo 'Compra' esta vacio");

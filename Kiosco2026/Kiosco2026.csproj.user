@@ -16,6 +16,15 @@
     <Compile Update="Vistas\CONFIGURACION\MenuConfiguracion.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Vistas\INFORMACION\InformacionAdministrarCategorias.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Vistas\INFORMACION\InformacionAnadirProducto.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Vistas\INFORMACION\InformacionVentasPrincipal.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Vistas\STOCK\AdministrarCategorias.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

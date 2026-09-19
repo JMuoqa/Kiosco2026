@@ -2,6 +2,7 @@
 using Entidades;
 using Kiosco2026.ModeloDeLasVistas.Hijas;
 using Kiosco2026.Vistas.CONFIGURACION;
+using Kiosco2026.Vistas.INFORMACION;
 using Kiosco2026.Vistas.VENTAS;
 using System;
 using System.Collections.Generic;
@@ -29,11 +30,13 @@ namespace Kiosco2026.ModeloDeLasVistas
             MostrarVentaPrincipal = new ComandoModeloDeVista(EjecutarMostrarVentaPrincipal);
             AbrirConfiguracion = new ComandoModeloDeVista(EjecutarAbrirConfiguracion);
             MostrarHistorialVentas = new ComandoModeloDeVista(EjecutarMostrarHistorialVentas);
+            AbrirVentanaInfo = new ComandoModeloDeVista(EjecutarAbrirVentanaInfo);
             _aut = new AdminAut();
             EjecutarIniciarSession(null);
         }
         private AdminAut _aut;
         private ModeloDeVistaBase _vistaHijaActual;
+        private Window _ventanaInfo;
         private string _nombreVentana;
         public string NombreVentana
         {
@@ -60,6 +63,42 @@ namespace Kiosco2026.ModeloDeLasVistas
         public ICommand IniciarSession { get; }
         public ICommand MostrarVentaPrincipal { get; }
         public ICommand MostrarHistorialVentas { get; }
+        public ICommand AbrirVentanaInfo { get; }
+        private async Task EjecutarAbrirVentanaInfo(object arg)
+        {
+            if (_ventanaInfo != null)
+            {
+                _ventanaInfo.Activate();
+                return;
+            }
+            if (VistaHijaActual is ModeloVentasPrincipales)
+            {
+                PrepararVentanaInfo(new InformacionVentasPrincipal());
+            }
+            else if (VistaHijaActual is ModeloAnadirProducto)
+            {
+                PrepararVentanaInfo(new InformacionAnadirProducto());
+            }
+            else if (VistaHijaActual is ModeloAdministrarCategorias)
+            {
+                PrepararVentanaInfo(new InformacionAdministrarCategorias());
+            }
+            else
+            {
+                return;
+            }
+            _ventanaInfo.Show();
+        }
+        private void PrepararVentanaInfo(Window ventana)
+        {
+            _ventanaInfo?.Close();
+            _ventanaInfo = ventana;
+            _ventanaInfo.Owner = Application.Current.MainWindow;
+            _ventanaInfo.Closed += (s, e) =>
+            {
+                _ventanaInfo = null;
+            };
+        }
         private async Task EjecutarMostrarHistorialVentas(object arg)
         {
             VistaHijaActual = new ModeloHistorialVentas();

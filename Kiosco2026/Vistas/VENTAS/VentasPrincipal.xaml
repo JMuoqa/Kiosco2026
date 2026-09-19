@@ -54,10 +54,11 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </TextBox>
+                <!--
                 <RadioButton Style="{StaticResource boton_buscar}" Margin="0, 0, 15, 0"  Width="40"
                              Command="{Binding CargarItem}" Focusable="False">
                     <fa:IconImage Icon="Add" Width="20"/>
-                </RadioButton>
+                </RadioButton>-->
                 <TextBox x:Name="entrada_cantidad" Style="{StaticResource entrada_form}" Width="100" PreviewTextInput="entradas_PreviewTextInput"
                          Text="{Binding Cantidad, UpdateSourceTrigger=PropertyChanged}" Foreground="{Binding ColoresEntradas.Cantidad}">
                     <i:Interaction.Triggers>
@@ -78,7 +79,7 @@
             </StackPanel>
             <Border Grid.Column="1" Width="200" HorizontalAlignment="Right">
                 <RadioButton x:Name="botonRestablecer" Style="{StaticResource boton_cancelar}"  Margin="25, 0, 15, 0" Command="{Binding RestablecerValores}">
-                    <TextBlock Style="{StaticResource texto_botones_uno}" Text="Restablecer" Margin="15, 0" />
+                    <TextBlock Style="{StaticResource texto_botones_uno}" Text="Nueva venta" Margin="15, 0" />
                 </RadioButton>
             </Border>
             <Grid Grid.Row="1"  >
@@ -180,27 +181,33 @@
                     <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20" Margin="0,0,0,20"
                            Text="Resumen de venta">
                     </TextBlock>
-                    <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 20">
-                        <TextBlock FontFamily="Roboto Flex" FontWeight="SemiBold" FontSize="18"
-                           Text="Unidades: ">
-                        </TextBlock>
-                        <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" Margin="0, 0, 10, 0" FontSize="18"
-                           Text="{Binding CantidadItems}">
-                        </TextBlock>
-                        <TextBlock FontFamily="Roboto Flex" FontWeight="SemiBold" FontSize="18"
+                    <StackPanel Orientation="Vertical" Margin="0, 0, 0, 20">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <TextBlock FontFamily="Roboto Flex" FontWeight="SemiBold" FontSize="18"
                            Text="Productos: ">
-                        </TextBlock>
-                        <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" Margin="0, 0, 10, 0" FontSize="18"
+                            </TextBlock>
+                            <TextBlock FontFamily="Roboto Flex" FontWeight="Normal"  FontSize="18"
                            Text="{Binding CantidadProductos}">
-                        </TextBlock>
+                            </TextBlock>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" >
+                            <TextBlock FontFamily="Roboto Flex" FontWeight="SemiBold" FontSize="18"
+                           Text="Unidades: ">
+                            </TextBlock>
+                            <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" Margin="0, 0, 10, 0" FontSize="18"
+                           Text="{Binding CantidadItems}">
+                            </TextBlock>
+                        </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Vertical" Margin="0, 0, 0, 10">
-                        <TextBlock FontFamily="Roboto Flex" FontWeight="SemiBold" FontSize="18"
-                           Text="Total: ">
-                        </TextBlock>
-                        <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" Margin="5, 0, 0, 20" FontSize="18"
+                        <StackPanel Orientation="Horizontal" Margin="0, 0, 0, 20">
+                            <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="22" Margin="0"
+                           Text="TOTAL: ">
+                            </TextBlock>
+                            <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" Margin="0" FontSize="22"
                            Text="{Binding PrecioTotal}">
-                        </TextBlock>
+                            </TextBlock>
+                        </StackPanel>
                         <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
                            Text="Forma de pago:">
                         </TextBlock>

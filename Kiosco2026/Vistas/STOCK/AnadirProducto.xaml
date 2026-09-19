@@ -24,7 +24,7 @@
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Vertical" Grid.Column="0">
                 <TextBox x:Name="entrada_codigo" Style="{StaticResource entrada_form}" Text="{Binding Codigo, UpdateSourceTrigger=PropertyChanged}" 
-                         Foreground="{Binding ColoresEntradas.Codigo}" >
+                         Foreground="{Binding ColoresEntradas.Codigo}" PreviewTextInput="entradas_PreviewTextInput">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="GotFocus">
                             <i:InvokeCommandAction Command="{Binding GotFocus}" 
@@ -38,10 +38,11 @@
                             <i:InvokeCommandAction Command="{Binding ComprobarExistencia}"
                                                    PassEventArgsToCommand="True"/>
                         </i:EventTrigger>
+                        <!--
                         <i:EventTrigger EventName="Loaded">
                             <i:InvokeCommandAction Command="{Binding SelecionarTextBox}" 
                                                    CommandParameter="{Binding ElementName=entrada_codigo}"/>
-                        </i:EventTrigger>
+                        </i:EventTrigger>-->
                     </i:Interaction.Triggers>
                 </TextBox>
                 <TextBox x:Name="entrada_nombre" Style="{StaticResource entrada_form}"
@@ -80,19 +81,6 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <TextBox x:Name="entrada_compra" Style="{StaticResource entrada_form}" Text="{Binding Compra, UpdateSourceTrigger=PropertyChanged}" 
-                         PreviewTextInput="entradas_PreviewTextInput" Foreground="{Binding ColoresEntradas.Compra}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="GotFocus">
-                            <i:InvokeCommandAction Command="{Binding GotFocus}" 
-                               CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
-                        </i:EventTrigger>
-                        <i:EventTrigger EventName="LostFocus">
-                            <i:InvokeCommandAction Command="{Binding LostFocus}" 
-                               CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </TextBox>
                 <Grid >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -129,6 +117,19 @@
                         </i:Interaction.Triggers>
                     </ComboBox>
                 </Grid>
+                <TextBox x:Name="entrada_compra" Style="{StaticResource entrada_form}" Text="{Binding Compra, UpdateSourceTrigger=PropertyChanged}" 
+                         PreviewTextInput="entradas_PreviewTextInput" Foreground="{Binding ColoresEntradas.Compra}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="GotFocus">
+                            <i:InvokeCommandAction Command="{Binding GotFocus}" 
+                               CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="LostFocus">
+                            <i:InvokeCommandAction Command="{Binding LostFocus}" 
+                               CommandParameter="{Binding Name, RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </TextBox>
                 <TextBlock Margin="10" FontFamily="Roboto Flex" 
                            FontSize="16"><Bold>- Campos obligatorios: </Bold> Todos los campos marcados con un asterisco
                     <LineBreak/> (<Span Foreground="#990000">*</Span>) deben completarse sin excepción.</TextBlock>
@@ -146,12 +147,7 @@
                 </TextBlock>
             </StackPanel>
             <StackPanel Grid.Column="1">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox x:Name="entrada_venta" Grid.Column="0" Style="{StaticResource entrada_form}" Text="{Binding Margen, UpdateSourceTrigger=PropertyChanged}" 
+                <TextBox x:Name="entrada_venta"  Style="{StaticResource entrada_form}" Text="{Binding Margen, UpdateSourceTrigger=PropertyChanged}" 
                          PreviewTextInput="entradas_PreviewTextInput" Foreground="{Binding ColoresEntradas.Venta}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="GotFocus">
@@ -164,11 +160,10 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </TextBox>
-                    <StackPanel Orientation="Horizontal" Grid.Column="1">
-                        <TextBlock Style="{StaticResource titulosFormularios}"  VerticalAlignment="Center" Margin="0" Text="Venta P/U: "/>
-                        <TextBlock Style="{StaticResource titulosFormularios}"  VerticalAlignment="Center" Margin="0" Text="{Binding PrecioVentaEnVivo}"/>
-                    </StackPanel>
-                </Grid>
+                <StackPanel Orientation="Horizontal" Margin="10,0,0,36">
+                    <TextBlock Style="{StaticResource titulosFormularios}" FontSize="18" VerticalAlignment="Center" Margin="0" Text="Precio de venta por unidad: "/>
+                    <TextBlock Style="{StaticResource titulosFormularios}" FontSize="18" VerticalAlignment="Center" Margin="0" Text="{Binding PrecioVentaEnVivo}"/>
+                </StackPanel>
                 <TextBox x:Name="entrada_proveedor" Style="{StaticResource entrada_form}" Text="{Binding Proveedor}" 
                          Foreground="{Binding ColoresEntradas.Proveedor}">
                     <i:Interaction.Triggers>

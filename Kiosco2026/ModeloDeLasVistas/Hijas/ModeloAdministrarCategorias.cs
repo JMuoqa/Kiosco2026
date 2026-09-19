@@ -48,8 +48,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             SoloLectura = true;
             Busqueda = "Buscar por nombre";
             Edicion = "Editar nombre";
-            CategoriaSeleccionada = "Ninguna seleccionada";
+            CategoriaSeleccionada = "Ninguna";
             _colores = new ColoresTexto();
+            categoriaAEditar = null;
             ColorMensajeEdicion = _colores.Normal;
             tiempo = new System.Timers.Timer();
             tiempo.Elapsed += ResetearMensaje;
@@ -60,6 +61,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private System.Timers.Timer tiempo;
         private string _edicion;
         private string _categoriaSeleccionada;
+        private Categorias categoriaAEditar;
         private string _colorMensajeEditar;
         private string _mensajeEditar;
         private ColoresTexto _colores;
@@ -264,7 +266,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             SoloLectura = true;
             Visualizacion = default;
             Edicion = "Editar nombre";
-            CategoriaSeleccionada = "Ninguna seleccionada";
+            CategoriaSeleccionada = "Ninguna";
+            categoriaAEditar = null;
             ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
         }
         private async Task EjecutarBuscarCategorias(object arg)
@@ -313,16 +316,14 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 if (!_metodoEnEjecucion)
                 {
                     _metodoEnEjecucion = true;
-                    if (string.IsNullOrWhiteSpace(CategoriaSeleccionada) || CategoriaSeleccionada == "Ninguna seleccionada")
+                    if (categoriaAEditar == null)
                         throw new Exception("No hay ninguna categoria seleccionada");
                     string visualizacion;
                     if (Visualizacion)
                         visualizacion = "SI";
                     else
                         visualizacion = "NO";
-                    int idCategoria;
-                    if (!int.TryParse(CategoriaSeleccionada, out idCategoria))
-                        throw new Exception("Algo salio mal, contactanos");
+                    int idCategoria = categoriaAEditar.ID;
                     Categorias cate = new Categorias
                     {
                         Nombre = Edicion.ToUpper(),
@@ -335,7 +336,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     {
                         Busqueda = "Buscar por nombre";
                         Edicion = "Editar nombre";
-                        CategoriaSeleccionada = "Ninguna seleccionada";
+                        CategoriaSeleccionada = "Ninguna";
+                        categoriaAEditar = null;
                         ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
                         ColorMensajeEdicion = _colores.ColorExito;
                         EjecutarBuscarCategorias(null);
@@ -371,7 +373,11 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             else
                 Visualizacion = false;
             ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
-            CategoriaSeleccionada = categoria.ID.ToString();
+            categoriaAEditar = new Categorias
+            {
+                ID = categoria.ID,
+            };
+            CategoriaSeleccionada = $"{categoria.Nombre} (ID: {categoria.ID})";
         }
         private async Task EjecutarActualizarAnchoActual(object arg)
         {

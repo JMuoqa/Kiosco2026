@@ -141,7 +141,7 @@
                                     </Button.Template>
                                     <fa:IconImage  Icon="Gear" Width="20"/>
                                 </Button>
-                                <Button Grid.Column="1">
+                                <Button Grid.Column="1" Command="{Binding AbrirVentanaInfo}">
                                     <Button.Style>
                                         <Style TargetType="Button">
                                             <Setter Property="Background" Value="Transparent"/>
@@ -170,7 +170,7 @@
                                             </Border>
                                         </ControlTemplate>
                                     </Button.Template>
-                                    <fa:IconImage  Icon="Print" Width="20"/>
+                                    <fa:IconImage  Icon="InfoCircle" Width="20" />
                                 </Button>
                             </Grid>
                         </Grid>

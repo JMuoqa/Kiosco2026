@@ -268,49 +268,72 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             ComboBox cmb = (ComboBox)arg;
             _cmbUni = cmb;
         }
+        private async Task RevisarExistencia()
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(Codigo) || Codigo == "Código de barras*") return;
+                if (!_metodoEnEjecucion)
+                {
+                    _metodoEnEjecucion = true;
+                    var res = await _adminProductos.RevisarExistenciaProducto(Codigo);
+                    if (!res.estado)
+                        throw new Exception("Ocurrio un error. Contacta a soporte para solucionarlo");
+                    if (res.existencia)
+                    {
+                        ProductoNuevo = res.mensaje;
+                        Codigo = res.producto.Codigo;
+                        Nombre = res.producto.Nombre;
+                        Proveedor = res.producto.Proveedor;
+                        ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
+                        ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
+                        ColoresEntradas.UnidadMedida = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
+                        ColoresEntradas.Proveedor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
+                        for (int i = 0; i < _cmbCat.Items.Count; i++)
+                        {
+                            Categorias cate = (Categorias)_cmbCat.Items[i];
+                            if (cate.ID == res.producto.IDCategoria)
+                                _cmbCat.SelectedIndex = i;
+                        }
+                        for (int i = 0; i < _cmbUni.Items.Count; i++)
+                        {
+                            ComboBoxItem cmbItem = (ComboBoxItem)_cmbUni.Items[i];
+                            string texto = cmbItem.Content.ToString();
+                            if (texto == res.producto.UnidadMedida)
+                                _cmbUni.SelectedIndex = i;
+                        }
+                    }
+                    else
+                    {
+                        ProductoNuevo = res.mensaje;
+                    }
+                    _metodoEnEjecucion = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                ColorMensaje = _colores.ColorError;
+                Mensaje = ex.Message;
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloAnadirProducto", "EjecutarComprobarExistencia", _configuracion.NombreDeCaja);
+                EscribirEnTXTError(error);
+                _metodoEnEjecucion = false;
+            }
+            finally
+            {
+                tiempo.Interval = 15000;
+                tiempo.Enabled = true;
+            }
+        }
         private async Task EjecutarComprobarExistencia(object arg)
         {
             try
             {
-                if (!_metodoEnEjecucion)
+                var e = (KeyEventArgs)arg;
+                if (e.Key == Key.Enter)
                 {
-                    _metodoEnEjecucion = true;
-                    var e = (KeyEventArgs)arg;
-                    if (e.Key == Key.Enter)
-                    {
-                        var res = await _adminProductos.RevisarExistenciaProducto(Codigo);
-                        if (!res.estado)
-                            throw new Exception("Ocurrio un error. Contacta a soporte para solucionarlo");
-                        if (res.existencia)
-                        {
-                            ProductoNuevo = res.mensaje;
-                            Codigo = res.producto.Codigo;
-                            Nombre = res.producto.Nombre;
-                            Proveedor = res.producto.Proveedor;
-                            ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
-                            ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
-                            ColoresEntradas.UnidadMedida = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
-                            ColoresEntradas.Proveedor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
-                            for (int i = 0; i < _cmbCat.Items.Count; i++)
-                            {
-                                Categorias cate = (Categorias)_cmbCat.Items[i];
-                                if (cate.ID == res.producto.IDCategoria)
-                                    _cmbCat.SelectedIndex = i;
-                            }
-                            for (int i = 0; i < _cmbUni.Items.Count; i++)
-                            {
-                                ComboBoxItem cmbItem = (ComboBoxItem)_cmbUni.Items[i];
-                                string texto = cmbItem.Content.ToString();
-                                if (texto == res.producto.UnidadMedida)
-                                    _cmbUni.SelectedIndex = i;
-                            }
-                        }
-                        else
-                        {
-                            ProductoNuevo = res.mensaje;
-                        }
-                    }
-                    _metodoEnEjecucion = false;
+                    if (string.IsNullOrWhiteSpace(Codigo) || Codigo == "Código de barras*")
+                        throw new Exception("Para buscar si existe un producto, pon el código de barras");
+                    RevisarExistencia();
                 }
             }
             catch (Exception ex)
@@ -353,7 +376,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     );
                     ProductosDto producto = new ProductosDto
                     {
-                        Nombre = this.Nombre.ToUpper(),
+                        Nombre = this.Nombre,
                         Categoria = this.Categoria.Nombre, //Categoria deberia ser un numero
                         Codigo = this.Codigo,
                         Margen = this.Margen,
@@ -414,9 +437,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private async Task EjecutarValoresPredeterminados(object arg)
         {
             Nombre = "Nombre*";
-            Codigo = "Código*";
-            Margen = "Margen de ganancia en %*";
-            Compra = "Costo de compra*";
+            Codigo = "Código de barras*";
+            Margen = "Ganancia sobre costo (%)*";
+            Compra = "Costo total de compra*";
             Cantidad = "Cantidad*";
             Proveedor = "Proveedor";
             ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
@@ -470,20 +493,21 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private async Task EjecutarLostFocus(object arg)
         {
+            RevisarExistencia();
             string nombre = (string)arg;
             switch (nombre)
             {
                 case "entrada_nombre": if (string.IsNullOrWhiteSpace(Nombre) || Nombre.Trim() == "Nombre*") { Nombre = "Nombre*"; ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
-                case "entrada_codigo": if (string.IsNullOrWhiteSpace(Codigo) || Codigo.Trim() == "Código*") { Codigo = "Código*"; ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
-                case "entrada_venta": if (string.IsNullOrWhiteSpace(Margen) || Margen.Trim() == "Margen de ganancia en %*") { Margen = "Margen de ganancia en %*"; ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
-                case "entrada_compra": if (string.IsNullOrWhiteSpace(Compra) || Compra.Trim() == "Costo de compra*") { Compra = "Costo de compra*"; ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
+                case "entrada_codigo": if (string.IsNullOrWhiteSpace(Codigo) || Codigo.Trim() == "Código de barras*") { Codigo = "Código de barras*"; ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
+                case "entrada_venta": if (string.IsNullOrWhiteSpace(Margen) || Margen.Trim() == "Ganancia sobre costo (%)*") { Margen = "Ganancia sobre costo (%)*"; ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
+                case "entrada_compra": if (string.IsNullOrWhiteSpace(Compra) || Compra.Trim() == "Costo total de compra*") { Compra = "Costo total de compra*"; ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
                 case "entrada_cantidad": if (string.IsNullOrWhiteSpace(Cantidad) || Cantidad.Trim() == "Cantidad*") { Cantidad = "Cantidad*"; ColoresEntradas.Cantidad = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
                 case "entrada_proveedor": if (string.IsNullOrWhiteSpace(Proveedor) || Proveedor.Trim() == "Proveedor") { Proveedor = "Proveedor"; ColoresEntradas.Proveedor = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
             }
         }
         private bool RevisarEntradas(TextBox entrada)
         {
-            string[] valores = ["Nombre*", "Código*", "Margen de ganancia en %*", "Costo de compra*", "Cantidad*", "Proveedor"];
+            string[] valores = ["Nombre*", "Código de barras*", "Ganancia sobre costo (%)*", "Costo total de compra*", "Cantidad*", "Proveedor"];
             foreach (string valor in valores)
             {
                 if (valor == entrada.Text)
@@ -495,9 +519,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private void PostCarga()
         {
             Nombre = "Nombre*";
-            Codigo = "Código*";
-            Margen = "Margen de ganancia en %*";
-            Compra = "Costo de compra*";
+            Codigo = "Código de barras*";
+            Margen = "Ganancia sobre costo (%)*";
+            Compra = "Costo total de compra*";
             Cantidad = "Cantidad*";
             Proveedor = "Proveedor";
             Categoria = new Categorias("Categoria*");

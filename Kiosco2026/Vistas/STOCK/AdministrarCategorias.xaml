@@ -73,7 +73,7 @@
                 <RadioButton Style="{StaticResource boton_neutral}" Grid.Column="1" Command="{Binding AbrirMAC}"
                              VerticalAlignment="Center" Margin="0" Width="240" HorizontalAlignment="Right">
                     <TextBlock Background="Transparent" Foreground="#FFFFFF" FontFamily="Roboto Flex"
-                         FontSize="18" FontWeight="Medium">Ver opciones para agregar</TextBlock>
+                         FontSize="18" FontWeight="Medium">Agregar nueva categoría</TextBlock>
                 </RadioButton>
             </Grid>
             <Border Grid.Row="1" BorderThickness="1" CornerRadius="10" BorderBrush="#C8C8D0">
@@ -147,9 +147,9 @@
                 </Grid>
             </Border>
             <StackPanel Grid.Row="2"  Orientation="Vertical">
-                <StackPanel Margin="0, 20, 0, 10" Orientation="Horizontal">
+                <StackPanel Margin="0, 20, 0, 25" Orientation="Horizontal" >
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Margin="3,0" FontSize="20" FontWeight="SemiBold" FontFamily="Roboto Flex">Editar categoria Nº:</TextBlock>
+                        <TextBlock Margin="3,0" FontSize="20" FontWeight="SemiBold" FontFamily="Roboto Flex">Categoría seleccionada:</TextBlock>
                         <TextBox Background="Transparent" Foreground="#000000"
                                  FontSize="18" FontWeight="Medium" FontFamily="Roboto Flex"
                                  Margin="10, 0, 0, 0" Text="{Binding CategoriaSeleccionada}" 
@@ -177,8 +177,8 @@
                     </TextBox>
                     <StackPanel VerticalAlignment="Center" Grid.Column="1" Orientation="Horizontal" Height="40">
                         <TextBlock FontSize="20" FontWeight="Medium" Margin="5, 0, 0, 0"
-                                VerticalAlignment="Center" FontFamily="Roboto Flex">Visibilidad:</TextBlock>
-                        <CheckBox VerticalAlignment="Center"  Margin="10, 0, 0, 0" IsChecked="{Binding Visualizacion}"></CheckBox>
+                                VerticalAlignment="Center" FontFamily="Roboto Flex" ToolTip="Indica si la categoría estará disponible para utilizarse en el sistema.">Visibilidad:</TextBlock>
+                        <CheckBox VerticalAlignment="Center" ToolTip="Indica si la categoría estará disponible para utilizarse en el sistema." Margin="10, 0, 0, 0" IsChecked="{Binding Visualizacion}"></CheckBox>
                     </StackPanel>
                 </Grid>
                 <Grid>
@@ -187,7 +187,7 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <RadioButton Grid.Column="0"  Style="{StaticResource boton_confirmar}" Margin="3, 10" Command="{Binding EditarCategoria}">
-                        <TextBlock Style="{StaticResource texto_botones_uno}" Text="Realizar cambios" />
+                        <TextBlock Style="{StaticResource texto_botones_uno}" Text="Guardar cambios" />
                     </RadioButton>
                     <RadioButton Grid.Column="1" Style="{StaticResource boton_cancelar}" Margin="3, 10" 
                              Command="{Binding Cancelar}">
