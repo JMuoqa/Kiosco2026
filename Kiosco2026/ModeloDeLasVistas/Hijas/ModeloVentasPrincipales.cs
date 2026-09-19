@@ -480,11 +480,29 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     if (!res.estado)
                         throw new Exception(res.mensaje);
                     List<Productos> p = ListaProductos.ToList();
-                    Productos productoElejido = res.lista[0];
-                    productoElejido.Cantidad = c;
-                    p.Add(productoElejido);
-                    ListaProductos = new ObservableCollection<Productos>(p);
-                    RestablecerValoresPostItem();
+                    Productos productoElejido = null;
+                    if (res.lista.Count == 1)
+                    {
+                        productoElejido = res.lista[0];
+                    }
+                    else if (res.lista.Count > 1)
+                    {
+                        AgregarAlCarrito window = new AgregarAlCarrito(res.lista);
+                        window.Owner = Application.Current.MainWindow;
+                        window.Closed += (sender, e) =>
+                        {
+                            ModeloAgregarAlCarrito viewModel = (ModeloAgregarAlCarrito)window.DataContext;
+                            if (viewModel != null && viewModel._productoSeleccionado != null) productoElejido = viewModel._productoSeleccionado;
+                        };
+                        window.ShowDialog();
+                    }
+                    if(productoElejido != null)
+                    {
+                        productoElejido.Cantidad = c;
+                        p.Add(productoElejido);
+                        ListaProductos = new ObservableCollection<Productos>(p);
+                        RestablecerValoresPostItem();
+                    }
                 }
             }
             catch(Exception ex)

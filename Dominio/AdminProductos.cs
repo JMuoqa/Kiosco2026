@@ -81,7 +81,10 @@ namespace Dominio
         }
         public async Task<(bool estado, string mensaje, List<Productos> lista)> BusquedaProductoPorCodigoUltLote(string codigo)
         {
-            return await _productos.Con_BusquedaPorCodigoUltLote(codigo);
+            var primerRespuesta = await _productos.Con_BusquedaPorCodigoUltLote(codigo);
+            //codigo.Any(char.IsLetter) comprueba si almenos tiene una letra
+            if (primerRespuesta.lista.Count == 0 && codigo.Any(char.IsLetter)) return await _productos.Con_ObtenerUltLotePorNombre(codigo, ""); 
+            return primerRespuesta;
         }
         public async Task<(bool estado, string mensaje, List<Categorias> lista)> BusquedaCategorias(string busqueda) 
         {

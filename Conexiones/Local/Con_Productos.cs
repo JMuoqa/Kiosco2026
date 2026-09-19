@@ -400,8 +400,8 @@ namespace Conexiones
                             });
                         }
                     }
-                    if (productos.Count < 1)
-                        throw new Exception("No hay un producto cargado con ese codigo de barras");
+                    //Con la entra inteligente no hace falta devolver false todavia
+                    if (productos.Count < 1) return (true, "No hay un producto cargado con ese codigo de barras", productos);
                     var listaCate = await Con_ObtenerCategorias();
                     List<Categorias> listaCompleta = listaCate.lista;
                     for (int i = 0; i < productos.Count; i++)
@@ -526,7 +526,7 @@ namespace Conexiones
                         }
                     }
                     if (productos.Count < 1)
-                        return (false, "No hay productos cargados", new List<Productos>());
+                        return (false, "No hay un producto cargado con ese codigo de barras o nombre", new List<Productos>());
                     var listaCate = await Con_ObtenerCategorias();
                     List<Categorias> listaCompleta = listaCate.lista;
                     for (int i = 0; i < productos.Count; i++)

@@ -31,6 +31,9 @@
     <Compile Update="Vistas\STOCK\EditarProductos.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Vistas\VENTAS\AgregarAlCarrito.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Vistas\VENTAS\DetallesVenta.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

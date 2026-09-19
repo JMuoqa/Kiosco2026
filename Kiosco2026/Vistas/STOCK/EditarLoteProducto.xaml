@@ -47,7 +47,7 @@
                     <fa:IconImage Icon="ArrowRotateForward" Margin="0" Style="{StaticResource iconos_menu}"/>
                 </RadioButton>
             </StackPanel>
-            <Border  Grid.Row="1" BorderThickness="0.6" CornerRadius="10" BorderBrush="#000000">
+            <Border  Grid.Row="1" BorderThickness="0.6" CornerRadius="10" BorderBrush="#C8C8D0">
                 <Grid x:Name="grillaAncho">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SizeChanged">

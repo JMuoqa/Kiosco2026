@@ -41,7 +41,7 @@ namespace Kiosco2026.Vistas.VENTAS
         {
             try
             {
-                if (!char.IsNumber(e.Text[0]))
+                if (!char.IsNumber(e.Text[0]) )
                     e.Handled = true;
             }catch (Exception ex)
             {
