@@ -29,31 +29,34 @@ namespace Conexiones
         {
             using (var conexion = new MySqlConnection(cadenaDeConexion))
             {
+                MySqlTransaction transaccion = null;
                 try
                 {
+                    conexion.Open();
+                    transaccion = conexion.BeginTransaction();
                     string registrarUsuario = "INSERT INTO ventas (fecha, items, cantidad_total_productos, forma_pago, descuento, total) VALUES( @fecha, @items, @cantidad_total, @forma_pago, @descuento, @total);";
-                    MySqlCommand cmd = new MySqlCommand(registrarUsuario, conexion);
+                    MySqlCommand cmd = new MySqlCommand(registrarUsuario, conexion, transaccion);
                     cmd.Parameters.AddWithValue("@fecha", venta.Fecha);
                     cmd.Parameters.AddWithValue("@items", venta.Productos.Count);
                     cmd.Parameters.AddWithValue("@cantidad_total", venta.CantidadProductos);
                     cmd.Parameters.AddWithValue("@forma_pago", venta.FormaDePago);
                     cmd.Parameters.AddWithValue("@descuento", venta.Descuento);
                     cmd.Parameters.AddWithValue("@total", venta.Total);
-                    conexion.Open(); 
                     var resultado = cmd.ExecuteNonQuery();
                     var ultimoIdVenta = cmd.LastInsertedId;
-                    if(resultado>0)
+                    if (resultado <= 0)
+                        throw new Exception("No se pudo registrar la venta.");
+                    for (int i = 0; i < venta.Productos.Count; i++)
                     {
-                        for (int i = 0; i < venta.Productos.Count; i++) 
-                        {
-                            var resultadoDetalleVentas = await RestarProductoVendido(venta.Productos[i], conexion, ultimoIdVenta);
-                        }
+                        await RestarProductoVendido(venta.Productos[i], conexion, ultimoIdVenta, transaccion);
                     }
+                    transaccion.Commit();
                     return (true, "Se registro correctamente", ultimoIdVenta);
                 }
                 catch (Exception ex)
                 {
-
+                    if (transaccion != null)
+                        transaccion.Rollback();
                     Debug.WriteLine(ex.Message);
                     HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Ventas", "Con_RegistrarVenta", _configuracion.NombreDeCaja);
                     RegistrarErrorBDLocal(error);
@@ -61,13 +64,13 @@ namespace Conexiones
                 }
             }
         }
-        public async Task<bool> RestarProductoVendido(Productos pr, MySqlConnection con, long ultimoIdVenta)
+        public async Task<bool> RestarProductoVendido(Productos pr, MySqlConnection con, long ultimoIdVenta, MySqlTransaction transaccion)
         {
             bool ciclo = true;
             while (ciclo)
             {
-                string productoARestar = "SELECT * FROM (SELECT p.*, ROW_NUMBER() OVER (ORDER BY Ingreso ASC) AS rn FROM Productos p WHERE Codigo = @codigo AND Cantidad > 0) t WHERE rn = 1;";
-                MySqlCommand cmd = new MySqlCommand(productoARestar, con);
+                string productoARestar = "SELECT * FROM (SELECT p.*, ROW_NUMBER() OVER (ORDER BY Ingreso ASC) AS rn FROM Productos p WHERE Codigo = @codigo AND Cantidad > 0) t WHERE rn = 1 FOR UPDATE;";
+                MySqlCommand cmd = new MySqlCommand(productoARestar, con, transaccion);
                 cmd.Parameters.AddWithValue("@codigo", pr.Codigo);
                 Productos primerProductoConStock = new Productos();
                 using (MySqlDataReader lector = cmd.ExecuteReader())
@@ -95,41 +98,47 @@ namespace Conexiones
                 }
 
                 int cantidadARestar = pr.Cantidad;
-                int cantidadDelPrimerProducto = primerProductoConStock.Cantidad;
-                int resultadoDeResta = cantidadDelPrimerProducto - cantidadARestar;
-                if (resultadoDeResta < 0)
+                int cantidadDelPrimerProducto = primerProductoConStock.Cantidad; 
+                int cantidadSacadaDelLote;
+                int cantidadRestante;
+                if (cantidadDelPrimerProducto < cantidadARestar)
                 {
-                    pr.Cantidad = resultadoDeResta * (-1);
+                    cantidadSacadaDelLote = cantidadDelPrimerProducto;
+                    cantidadRestante = cantidadARestar - cantidadDelPrimerProducto;
+                    pr.Cantidad = cantidadRestante;
                     string actualizarProducto = "UPDATE Productos SET Cantidad = 0 WHERE ID = @id;";
-                    MySqlCommand cmdActualizarProducto = new MySqlCommand(actualizarProducto, con);
+                    MySqlCommand cmdActualizarProducto = new MySqlCommand(actualizarProducto, con, transaccion);
                     cmdActualizarProducto.Parameters.AddWithValue("@id", primerProductoConStock.ID);
                     cmdActualizarProducto.ExecuteNonQuery();
                 }
                 else
                 {
+                    cantidadSacadaDelLote = cantidadARestar;
+                    cantidadRestante = 0; 
+                    int cantidadNuevaDelLote = cantidadDelPrimerProducto - cantidadARestar;
                     string actualizarProducto = "UPDATE Productos SET Cantidad = @cantidad WHERE ID = @id;";
-                    MySqlCommand cmdActualizarProducto = new MySqlCommand(actualizarProducto, con);
+                    MySqlCommand cmdActualizarProducto = new MySqlCommand(actualizarProducto, con, transaccion);
                     cmdActualizarProducto.Parameters.AddWithValue("@id", primerProductoConStock.ID);
-                    cmdActualizarProducto.Parameters.AddWithValue("@cantidad", resultadoDeResta);
+                    cmdActualizarProducto.Parameters.AddWithValue("@cantidad", cantidadNuevaDelLote);
                     cmdActualizarProducto.ExecuteNonQuery();
                     ciclo = false;
                 }
-                bool estadoDetalle = await CargarDetalleVenta(pr, primerProductoConStock, con, ultimoIdVenta);
+                bool estadoDetalle = await CargarDetalleVenta(pr, primerProductoConStock, con, ultimoIdVenta, transaccion, cantidadSacadaDelLote);
                 if (!estadoDetalle)
                     throw new Exception("Ocurrio un error al cargar el detalle de la venta");
             }
             return true;
         }
-        public async Task<bool> CargarDetalleVenta(Productos pr, Productos primerProductoConStock, MySqlConnection con, long ultimoIdVenta)
+        public async Task<bool> CargarDetalleVenta(Productos pr, Productos primerProductoConStock, MySqlConnection con, long ultimoIdVenta, MySqlTransaction transaccion, int cantidadSacadaDelLote)
         {
             string cargarDetalleVentacar = "INSERT INTO detalle_ventas (id_venta, id_producto, codigo, cantidad, precio_unitario, subtotal) VALUES(@idventa, @idproducto, @codigo, @cantidad, @preciounitario, @subtotal);";
             decimal subTotal = decimal.Parse(pr.Venta, NumberStyles.Any, new CultureInfo("es-AR")) * pr.Cantidad;
             decimal venta = decimal.Parse(pr.Venta, NumberStyles.Any, new CultureInfo("es-AR"));
-            MySqlCommand cmd = new MySqlCommand(cargarDetalleVentacar, con);
+            MySqlCommand cmd = new MySqlCommand(cargarDetalleVentacar, con, transaccion);
             cmd.Parameters.AddWithValue("@idventa", ultimoIdVenta);
             cmd.Parameters.AddWithValue("@idproducto", primerProductoConStock.ID);
             cmd.Parameters.AddWithValue("@codigo", pr.Codigo);
-            cmd.Parameters.AddWithValue("@cantidad", pr.Cantidad);
+            cmd.Parameters.AddWithValue("@cantidad", cantidadSacadaDelLote);
             cmd.Parameters.AddWithValue("@preciounitario", venta);
             cmd.Parameters.AddWithValue("@subtotal", subTotal);
             cmd.ExecuteNonQuery();

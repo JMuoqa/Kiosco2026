@@ -26,12 +26,14 @@ namespace Conexiones
         {
             using(var con = new MySqlConnection(cadenaDeConexion))
             {
+                MySqlTransaction transaccion = null;
                 try
                 {
                     con.Open();
-                    int idCategoriaExistente = await Con_ObtenerCategoriaProducto(con, producto.Codigo);
-                    int idCategoriaFinal = await Con_ObtenerIDCategoria(con, producto.Categoria);
-                    string t = await Con_ObtenerUnidadMedidaPorCodigo(con, producto.Codigo);
+                    transaccion = con.BeginTransaction();
+                    int idCategoriaExistente = await Con_ObtenerCategoriaProducto(con, producto.Codigo, transaccion);
+                    int idCategoriaFinal = await Con_ObtenerIDCategoria(con, producto.Categoria, transaccion);
+                    string t = await Con_ObtenerUnidadMedidaPorCodigo(con, producto.Codigo, transaccion);
                     if(!string.IsNullOrWhiteSpace(t) && t != producto.UnidadMedida)
                         return (estado: false, mensaje: "El producto ya está registrado y" +
                             " la 'unidad de medida' que intentas asignar no coincide con la 'unidad de medida'" +
@@ -57,12 +59,15 @@ namespace Conexiones
                     cmd.Parameters.AddWithValue("@vencimiento", producto.Vencimiento);
                     cmd.Parameters.AddWithValue("@@unidad", producto.UnidadMedida);
                     var resultado = await cmd.ExecuteNonQueryAsync();
-                    if(resultado>0)
+                    transaccion.Commit();
+                    if (resultado>0)
                         return (true, "Se cargo exitosamente");
                     return (false, "No se pudo cargar el producto correctamente");
                 }
                 catch (Exception ex)
                 {
+                    if (transaccion != null)
+                        transaccion.Rollback();
                     Debug.WriteLine(ex.Message);
                     HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Productos", "Con_CargarProducto", _configuracion.NombreDeCaja);
                     RegistrarErrorBDLocal(error);
@@ -70,10 +75,10 @@ namespace Conexiones
                 }
             }
         }
-        private async Task<string> Con_ObtenerUnidadMedidaPorCodigo(MySqlConnection con, string codigo)
+        private async Task<string> Con_ObtenerUnidadMedidaPorCodigo(MySqlConnection con, string codigo, MySqlTransaction transaccion)
         {
             string obtenerUnidadMedida = "SELECT UnidadMedida FROM Productos WHERE Codigo = @codigo";
-            MySqlCommand cmd = new MySqlCommand(obtenerUnidadMedida, con);
+            MySqlCommand cmd = new MySqlCommand(obtenerUnidadMedida, con, transaccion);
             cmd.Parameters.AddWithValue("@codigo", codigo);
             string t = "";
             using (MySqlDataReader datos = cmd.ExecuteReader())
@@ -85,10 +90,10 @@ namespace Conexiones
             }
             return t;
         }
-        private async Task<int> Con_ObtenerIDCategoria(MySqlConnection con, string nombreCategoria)
+        private async Task<int> Con_ObtenerIDCategoria(MySqlConnection con, string nombreCategoria, MySqlTransaction transaccion)
         {
             string obtenerID = "SELECT ID FROM Categorias WHERE Nombre = @nombre";
-            MySqlCommand cmd = new MySqlCommand(obtenerID, con);
+            MySqlCommand cmd = new MySqlCommand(obtenerID, con, transaccion);
             cmd.Parameters.AddWithValue("@nombre", nombreCategoria);
             int n = -1;
             using(MySqlDataReader datos = cmd.ExecuteReader())
@@ -102,10 +107,10 @@ namespace Conexiones
             return n;
             
         }
-        private async Task<int> Con_ObtenerCategoriaProducto(MySqlConnection con, string codigo)
+        private async Task<int> Con_ObtenerCategoriaProducto(MySqlConnection con, string codigo, MySqlTransaction transaccion)
         {
             string query = "SELECT IDCategoria FROM Productos WHERE Codigo = @codigo";
-            MySqlCommand cmd = new MySqlCommand(query, con);
+            MySqlCommand cmd = new MySqlCommand(query, con, transaccion);
             cmd.Parameters.AddWithValue("@codigo", codigo);
             int n = -1;
             using (MySqlDataReader datos = cmd.ExecuteReader())
@@ -173,17 +178,19 @@ namespace Conexiones
         {
             using (MySqlConnection con = new MySqlConnection(cadenaDeConexion))
             {
+                MySqlTransaction transaccion = null;
                 try
                 {
-                    con.Open();
-                    int idCategoriaFinal = await Con_ObtenerIDCategoria(con, producto.Categoria);
+                    con.Open(); 
+                    transaccion = con.BeginTransaction();
+                    int idCategoriaFinal = await Con_ObtenerIDCategoria(con, producto.Categoria, transaccion);
                     string editarTodosLosLotes = "UPDATE Productos SET Nombre = @nombre, IDCategoria = @categoria WHERE Codigo = @codigo;";
-                    MySqlCommand cmd = new MySqlCommand(editarTodosLosLotes, con);
+                    MySqlCommand cmd = new MySqlCommand(editarTodosLosLotes, con, transaccion);
                     cmd.Parameters.AddWithValue("@nombre", producto.Nombre);
                     cmd.Parameters.AddWithValue("@categoria", idCategoriaFinal);
                     cmd.Parameters.AddWithValue("@codigo", producto.Codigo);
                     string editarProducto = "UPDATE Productos SET Compra = @compra, Venta = @venta, Mostrar = @mostrar WHERE ID = @id;";
-                    MySqlCommand cmd2 = new MySqlCommand(editarProducto, con);
+                    MySqlCommand cmd2 = new MySqlCommand(editarProducto, con, transaccion);
                     decimal precioCompra = decimal.Parse(producto.Compra, NumberStyles.Any, new CultureInfo("es-AR"));
                     decimal precioVenta = decimal.Parse(producto.Venta, NumberStyles.Any, new CultureInfo("es-AR"));
                     cmd2.Parameters.AddWithValue("@compra", precioCompra);
@@ -192,12 +199,15 @@ namespace Conexiones
                     cmd2.Parameters.AddWithValue("@id", producto.ID);
                     var resultado = cmd.ExecuteNonQuery();
                     var resultado2 = cmd2.ExecuteNonQuery();
-                    if(resultado > 0 && resultado2 > 0)
+                    transaccion.Commit();
+                    if (resultado > 0 && resultado2 > 0)
                         return (true, "Se edito correctamente el producto y los lotes");
                     return (false, "No se pudo terminar la opreación");
                 }
                 catch (Exception ex)
                 {
+                    if (transaccion != null)
+                        transaccion.Rollback();
                     Debug.WriteLine(ex.Message);
                     HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Productos", "Con_EditarProductoPorCodigo", _configuracion.NombreDeCaja);
                     RegistrarErrorBDLocal(error);
@@ -211,12 +221,14 @@ namespace Conexiones
         {
             using (var con = new MySqlConnection(cadenaDeConexion))
             {
+                MySqlTransaction transaccion = null;
                 try
                 {
                     con.Open();
+                    transaccion = con.BeginTransaction();
                     string editarLote = "UPDATE Productos SET Nombre = @nombre, Compra = @compra, Venta = @venta, Cantidad = @cantidad, Ingreso = @ingreso,"+
                         " Vencimiento = @vencimiento WHERE ID = @id;";
-                    MySqlCommand cmd = new MySqlCommand(editarLote, con);
+                    MySqlCommand cmd = new MySqlCommand(editarLote, con, transaccion);
                     decimal precioCompra = decimal.Parse(producto.Compra, NumberStyles.Any, new CultureInfo("es-AR"));
                     decimal precioVenta = decimal.Parse(producto.Venta, NumberStyles.Any, new CultureInfo("es-AR"));
                     cmd.Parameters.AddWithValue("@nombre", producto.Nombre);
@@ -227,12 +239,15 @@ namespace Conexiones
                     cmd.Parameters.AddWithValue("@vencimiento", producto.Vencimiento);
                     cmd.Parameters.AddWithValue("@id", producto.ID);
                     var resultado = cmd.ExecuteNonQuery();
+                    transaccion.Commit();
                     if(resultado > 0)
                         return (true, "Se modifico el lote correctamente");
                     return (true, "No se pudo modificar el lote");
                 }
                 catch (Exception ex)
                 {
+                    if (transaccion != null)
+                        transaccion.Rollback();
                     Debug.WriteLine(ex.Message);
                     HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Productos", "Con_EditarLote", _configuracion.NombreDeCaja);
                     RegistrarErrorBDLocal(error);
@@ -272,21 +287,26 @@ namespace Conexiones
         {
             using (var con = new MySqlConnection(cadenaDeConexion)) 
             {
+                MySqlTransaction transaction = null;
                 try
                 {
                     con.Open();
+                    transaction = con.BeginTransaction();
                     string insertarCategoria = "UPDATE Categorias SET Nombre = @nombre, Mostrar = @mostrar WHERE ID = @id";
-                    MySqlCommand cmd = new MySqlCommand(insertarCategoria, con);
+                    MySqlCommand cmd = new MySqlCommand(insertarCategoria, con, transaction);
                     cmd.Parameters.AddWithValue("@nombre", categoria.Nombre);
                     cmd.Parameters.AddWithValue("@mostrar", categoria.Mostrar);
                     cmd.Parameters.AddWithValue("@id", categoria.ID);
                     var resultado = cmd.ExecuteNonQuery();
+                    transaction.Commit();
                     if (resultado > 0)
                         return (true, "La categoria se edito correctamente");
                     return (false, "No se pudo editar la categoria");
                 }
                 catch (Exception ex)
                 {
+                    if(transaction!=null)
+                        transaction.Rollback();
                     Debug.WriteLine(ex.Message);
                     HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Productos", "Con_EditarCategoria", _configuracion.NombreDeCaja);
                     RegistrarErrorBDLocal(error);
@@ -490,10 +510,12 @@ namespace Conexiones
         {
             using (var con = new MySqlConnection(cadenaDeConexion))
             {
+                MySqlTransaction transaccion = null;
                 try
                 {
                     con.Open();
-                    int idCategoria = await Con_ObtenerIDCategoria(con, categoria);
+                    transaccion = con.BeginTransaction();
+                    int idCategoria = await Con_ObtenerIDCategoria(con, categoria, transaccion);
                     nombre = "%" + nombre + "%";
                     string obtenerUltLote = "SELECT ult.ID, ult.IDCategoria, ult.Nombre, ult.Codigo, ult.Compra, ult.Venta," +
                         " ult.Proveedor, ult.Mostrar, ult.Ingreso, ult.Vencimiento, ult.UnidadMedida, tot.Cantidad " +
@@ -527,6 +549,7 @@ namespace Conexiones
                     }
                     if (productos.Count < 1)
                         return (false, "No hay un producto cargado con ese codigo de barras o nombre", new List<Productos>());
+                    
                     var listaCate = await Con_ObtenerCategorias();
                     List<Categorias> listaCompleta = listaCate.lista;
                     for (int i = 0; i < productos.Count; i++)
@@ -540,10 +563,13 @@ namespace Conexiones
                             }
                         }
                     }
+                    transaccion.Commit();
                     return (true, "Se encontraron productos", productos);
                 }
                 catch (Exception ex)
                 {
+                    if (transaccion != null)
+                        transaccion.Rollback();
                     Debug.WriteLine(ex.Message);
                     HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Conexiones", "Con_Productos", "Con_ObtenerUltLotePorNombre", _configuracion.NombreDeCaja);
                     RegistrarErrorBDLocal(error);
