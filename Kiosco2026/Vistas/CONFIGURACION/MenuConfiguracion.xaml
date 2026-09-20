@@ -5,9 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kiosco2026.Vistas.CONFIGURACION"
         xmlns:modelo="clr-namespace:Kiosco2026.ModeloDeLasVistas.Hijas"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="MenuConfiguracion" Height="400" Width="800">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="PreviewKeyDown">
+            <i:InvokeCommandAction Command="{Binding PreviewKeyDownParaCerrar}"
+                                   PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Window.Resources>
         <DataTemplate DataType="{x:Type modelo:ModeloConfBD}">
             <local:ConfBaseDeDatos/>

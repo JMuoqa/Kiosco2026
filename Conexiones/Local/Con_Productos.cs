@@ -376,7 +376,7 @@ namespace Conexiones
                             });
                         }
                     }
-                    return (true, "Pruebas", categoriasObtenidas);
+                    return (true, "Se encontraron las cateogrias", categoriasObtenidas);
                 }
                 catch (Exception ex)
                 {

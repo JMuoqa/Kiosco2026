@@ -42,11 +42,11 @@
             </Grid.ColumnDefinitions>
             <Border Grid.Column="0" Background="#FFFFFF" CornerRadius="0, 20, 0 ,0">
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Style="{StaticResource titulosNav}">PUNTO DE VENTA</TextBlock>
+                    <TextBlock Style="{StaticResource titulosNav}">VENTAS</TextBlock>
                     <RadioButton Style="{StaticResource botones_nav}" Command="{Binding MostrarVentaPrincipal}">
                         <StackPanel Orientation="Horizontal">
                             <fa:IconImage Icon="DollarSign" Style="{StaticResource iconos_menu}"/>
-                            <TextBlock Style="{StaticResource texto_botones_nav}">Principal</TextBlock>
+                            <TextBlock Style="{StaticResource texto_botones_nav}">Nueva venta</TextBlock>
                         </StackPanel>
                     </RadioButton>
                     <RadioButton Style="{StaticResource botones_nav}" Command="{Binding MostrarHistorialVentas}">
@@ -60,19 +60,19 @@
                         <RadioButton Style="{StaticResource botones_nav}" Command="{Binding MostrarVistaAdicionProducto}">
                             <StackPanel Orientation="Horizontal">
                                 <fa:IconImage Icon="Add" Style="{StaticResource iconos_menu}" />
-                                <TextBlock Style="{StaticResource texto_botones_nav}">Añadir producto</TextBlock>
+                                <TextBlock Style="{StaticResource texto_botones_nav}">Agregar producto</TextBlock>
                             </StackPanel>
                         </RadioButton>
                         <RadioButton Style="{StaticResource botones_nav}" Command="{Binding MostrarEdicionProducto}">
                             <StackPanel Orientation="Horizontal">
                                 <fa:IconImage Icon="Edit" Style="{StaticResource iconos_menu}"/>
-                                <TextBlock Style="{StaticResource texto_botones_nav}">Editar producto</TextBlock>
+                                <TextBlock Style="{StaticResource texto_botones_nav}">Editar productos</TextBlock>
                             </StackPanel>
                         </RadioButton>
                         <RadioButton Style="{StaticResource botones_nav}" Command="{Binding MostrarAdministrarCategorias}">
                             <StackPanel Orientation="Horizontal">
                                 <fa:IconImage Icon="LayerGroup" Style="{StaticResource iconos_menu}"/>
-                                <TextBlock Style="{StaticResource texto_botones_nav}">Administrar categorias</TextBlock>
+                                <TextBlock Style="{StaticResource texto_botones_nav}">Categorías</TextBlock>
                             </StackPanel>
                         </RadioButton>
                     </StackPanel>

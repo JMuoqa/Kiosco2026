@@ -15,6 +15,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             MostrarConfBD = new ComandoModeloDeVista(EjecutarMostrarConfBD);
             MostrarConfDN = new ComandoModeloDeVista(EjecutarMostrarConfDN);
             MostrarConfImpresora = new ComandoModeloDeVista(EjecutarMostrarConfImpresora);
+            PreviewKeyDownParaCerrar= new ComandoModeloDeVista(EjecutarPreviewKeyDownParaCerrar);
         }
         private ModeloDeVistaBase _vistaHijaActual;
         public ModeloDeVistaBase VistaHijaActual
@@ -30,8 +31,34 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand MostrarConfBD { get; }
         public ICommand MostrarConfDN { get; }
         public ICommand MostrarConfImpresora { get; }
+        public ICommand PreviewKeyDownParaCerrar { get; }
         #endregion
         #region Funciones 
+        public event Action CerrarVentana;
+        private DateTime? primeraPulsacion; 
+        private async Task EjecutarPreviewKeyDownParaCerrar(object arg)
+        {
+            if (arg is not KeyEventArgs e)
+                return;
+            if (e.Key != Key.Escape)
+                return;
+            DateTime ahora = DateTime.Now;
+            if (primeraPulsacion == null)
+            {
+                primeraPulsacion = ahora;
+                return;
+            }
+            TimeSpan diferencia = ahora - primeraPulsacion.Value;
+            if (diferencia.TotalSeconds <= 1)
+            {
+                primeraPulsacion = null;
+                CerrarVentana?.Invoke();
+            }
+            else
+            {
+                primeraPulsacion = ahora;
+            }
+        }
         public async Task EjecutarMostrarConfBD (object arg)
         {
             VistaHijaActual = new ModeloConfBD();

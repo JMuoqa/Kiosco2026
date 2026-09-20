@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Kiosco2026.Vistas.INFORMACION"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
+        PreviewKeyDown="Window_PreviewKeyDown"
         Title="Información de la sección administrar categorias" Height="496" Width="800">
     <Border
         Margin="15"

@@ -21,7 +21,8 @@
         <Grid Margin="15">
             <Grid.RowDefinitions>
                 <RowDefinition Height="55"/>
-                <RowDefinition/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="60"/>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Orientation="Horizontal">
                 <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="22"
@@ -38,16 +39,8 @@
                                 VerticalAlignment="Center" Margin="10, 0, 0, 0" Width="60" Command="{Binding BuscarVentas}">
                     <fa:IconImage Icon="Search" Margin="0" Style="{StaticResource iconos_menu}"/>
                 </RadioButton>
-                <StackPanel Orientation="Horizontal" Margin="20,0,0,0"  VerticalAlignment="Center" Height="40">
-                    <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="22" Margin="0" VerticalAlignment="Center"
-                        Text="TOTAL DEL PERÍODO: " >
-                    </TextBlock>
-                    <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" Margin="0" FontSize="22"
-                            Text="{Binding PrecioTotal}" VerticalAlignment="Center"> 
-                    </TextBlock>
-                </StackPanel>
             </StackPanel>
-            <Border  Grid.Row="1" BorderThickness="0.6" CornerRadius="10" BorderBrush="#C8C8D0">
+            <Border Padding="5" Grid.Row="1" BorderThickness="0.6" CornerRadius="10" BorderBrush="#C8C8D0">
                 <Grid x:Name="grillaAncho">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SizeChanged">
@@ -141,6 +134,14 @@
                     </ListBox>
                 </Grid>
             </Border>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="20,0,0,0"  VerticalAlignment="Center" Height="40">
+                <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="22" Margin="0" VerticalAlignment="Center"
+                        Text="TOTAL DEL PERÍODO: " >
+                </TextBlock>
+                <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" Margin="0" FontSize="22"
+                            Text="{Binding PrecioTotal}" VerticalAlignment="Center">
+                </TextBlock>
+            </StackPanel>
         </Grid>
     </Border>
 </UserControl>

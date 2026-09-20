@@ -87,6 +87,10 @@ namespace Kiosco2026.ModeloDeLasVistas
             {
                 PrepararVentanaInfo(new InformacionEditarProducto());
             }
+            else if (VistaHijaActual is ModeloHistorialVentas)
+            {
+                PrepararVentanaInfo(new InformacionHistorialVentas());
+            }
             else
             {
                 return;
@@ -118,22 +122,22 @@ namespace Kiosco2026.ModeloDeLasVistas
         {
             //El nombre del modelo esta mal "redactado" seria la ventana principal de la sección ventas
             VistaHijaActual = new ModeloVentasPrincipales();
-            NombreVentana = "Ventas | Principal";
+            NombreVentana = "Ventas | Nueva venta";
         }
         private async Task EjecutarMostrarVistaAdicionProducto(object arg)
         {
             VistaHijaActual = new ModeloAnadirProducto();
-            NombreVentana = "Productos | Añadir producto";
+            NombreVentana = "Productos | Agregar producto";
         }
         private async Task EjecutarMostrarEdicionProducto(object arg)
         {
             VistaHijaActual = new ModeloEditarProducto();
-            NombreVentana = "Productos | Editar producto";
+            NombreVentana = "Productos | Editar productos";
         }
         private async Task EjecutarMostrarAdministrarCategorias(object arg)
         {
             VistaHijaActual = new ModeloAdministrarCategorias();
-            NombreVentana = "Productos | Administrar categorais";
+            NombreVentana = "Productos | Categorías";
         }
         private async Task EjecutarIniciarSession(object arg)
         {

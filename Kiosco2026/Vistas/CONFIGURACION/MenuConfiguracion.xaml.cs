@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Entidades;
+using Kiosco2026.ModeloDeLasVistas.Hijas;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +24,14 @@ namespace Kiosco2026.Vistas.CONFIGURACION
         public MenuConfiguracion()
         {
             InitializeComponent();
+            var _viewModel = new ModeloConfiguracion();
+            this.DataContext = _viewModel;
+            _viewModel.CerrarVentana += CerrarVentaana;
+
+        }
+        private void CerrarVentaana()
+        {
+            this.Close();
         }
     }
 }

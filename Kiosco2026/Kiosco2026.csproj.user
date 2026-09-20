@@ -25,6 +25,9 @@
     <Compile Update="Vistas\INFORMACION\InformacionEditarProducto.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Vistas\INFORMACION\InformacionHistorialVentas.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Vistas\INFORMACION\InformacionVentasPrincipal.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

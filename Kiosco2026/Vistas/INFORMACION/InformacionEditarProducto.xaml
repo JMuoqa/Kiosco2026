@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kiosco2026.Vistas.INFORMACION"
         mc:Ignorable="d"
+        PreviewKeyDown="Window_PreviewKeyDown"
         Title="Información de la sección editar producto" Height="527" Width="800">
     <Border
         Margin="15"

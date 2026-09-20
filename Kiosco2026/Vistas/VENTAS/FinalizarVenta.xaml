@@ -9,7 +9,7 @@
         WindowStartupLocation="CenterOwner"
         mc:Ignorable="d"
         Title="Ticket" 
-        Height="680" Width="450">
+        Height="690" Width="450">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="PreviewKeyDown">
             <i:InvokeCommandAction Command="{Binding PreviewKeyDownParaCerrarOImprimir}"
