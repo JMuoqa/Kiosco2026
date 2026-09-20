@@ -4,6 +4,8 @@ using Kiosco2026.Vistas.VENTAS;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -29,6 +31,10 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             BuscarVentas = new ComandoModeloDeVista(EjecutarBuscarVentas);
             VerMasInfo = new ComandoModeloDeVista(EjecutarVerMasInfo);
             ActualizarAnchoActual = new ComandoModeloDeVista(EjecutarActualizarAnchoActual);
+            DateTime hoy = DateTime.Today;
+            DateTime manana = hoy.AddDays(+1);
+            FechaDesde = hoy;
+            FechaHasta = manana;
         }
         #region Columnas privadas
         private double _eColumna_uno;
@@ -157,6 +163,16 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         #region Propiedades
         private AdminVentas _adminVentas;
         private ObservableCollection<Ventas> _listaVentas;
+        private string _precioTotal;
+        public string PrecioTotal
+        {
+            get => _precioTotal;
+            set
+            {
+                _precioTotal = value;
+                OnPropertyChanged(nameof(PrecioTotal));
+            }
+        }
         public ObservableCollection<Ventas> ListaVentas
         {
             get => _listaVentas;
@@ -173,6 +189,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             set
             {
                 _fechaDesde = value;
+                EjecutarBuscarVentas(null);
                 OnPropertyChanged(nameof(FechaDesde));
             }
         }
@@ -183,6 +200,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             set
             {
                 _fechaHasta = value;
+                EjecutarBuscarVentas(null);
                 OnPropertyChanged(nameof(FechaHasta));
             }
         }
@@ -199,6 +217,12 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 var res = await _adminVentas.BuscarVentas(FechaDesde, FechaHasta);
                 List<Ventas> lista = res.ventas;
+                decimal precioTotal = 0;
+                for (int i = 0; i < lista.Count; i++)
+                {
+                    precioTotal += lista[i].Total;
+                }
+                PrecioTotal = precioTotal.ToString("C2", new CultureInfo("es-AR"));
                 ListaVentas = new ObservableCollection<Ventas>(lista);
             }
             catch (Exception ex) 

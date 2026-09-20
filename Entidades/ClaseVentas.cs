@@ -81,9 +81,9 @@ namespace Entidades
                 _total = value;
             }
         }
-        public string STRDescuento { get => _descuento.ToString(new CultureInfo("es-AR")); }
-        public string STRSubTotal{ get => _subTotal.ToString(new CultureInfo("es-AR")); }
-        public string STRTotal{ get => _total.ToString(new CultureInfo("es-AR")); }
+        public string STRDescuento { get => _descuento.ToString("C2", new CultureInfo("es-AR")); }
+        public string STRSubTotal { get => _subTotal.ToString("C2", new CultureInfo("es-AR")); }
+        public string STRTotal { get => _total.ToString("C2", new CultureInfo("es-AR")); }
 
     }
 }
