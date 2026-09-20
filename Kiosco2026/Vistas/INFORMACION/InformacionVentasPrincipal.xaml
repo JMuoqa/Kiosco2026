@@ -6,54 +6,139 @@
         xmlns:local="clr-namespace:Kiosco2026.Vistas.INFORMACION"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
-        Background="#F2F2F2"
-        Title="InformacionVentasPrincipal" Height="550" Width="800">
-    <ScrollViewer>
-        <Border Margin="20"
-            Padding="25"
-            Background="White"
-            CornerRadius="12">
-            <Grid Margin="0,0,0,-25">
+        Title="Información de la sección punto de venta" Height="550" Width="800">
+
+        <Border
+        Margin="15"
+        Padding="25"
+        Background="White"
+        CornerRadius="12">
+
+            <Grid>
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0"
-                       Text="Ventas"
-                       FontFamily="Roboto Flex"
-                       FontSize="24"
-                       FontWeight="SemiBold"
-                       Margin="0,0,0,20"/>
+
+                <!-- TÍTULO -->
                 <TextBlock
-                       FontFamily="Roboto Flex"
-                       FontSize="16"
-                       TextWrapping="Wrap"
-                       LineHeight="25" Margin="0,48,0,10" Grid.RowSpan="2">
-                <Run FontWeight="Bold">Buscar producto:</Run>
-                Escribí el nombre o código de barras del producto. También podés utilizar un lector de códigos de barras.
-                <LineBreak/><LineBreak/>
-                <Run FontWeight="Bold">Cantidad:</Run>
-                Indica cuántas unidades del producto querés agregar a la venta.
-                <LineBreak/><LineBreak/>
-                <Run FontWeight="Bold">Productos:</Run>
-                Cantidad de productos diferentes incluidos en la venta.
-                <LineBreak/><LineBreak/>
-                <Run FontWeight="Bold">Unidades:</Run>
-                Cantidad total de unidades incluidas en la venta.
-                <LineBreak/><LineBreak/>
-                <Run FontWeight="Bold">Forma de pago:</Run>
-                Seleccioná el medio utilizado por el cliente para realizar el pago.
-                <LineBreak/><LineBreak/>
-                <Run FontWeight="Bold">Descuento:</Run>
-                Permite aplicar un descuento porcentual sobre el total de la venta.
-                <LineBreak/><LineBreak/>
-                <Run FontWeight="Bold">Finalizar venta:</Run>
-                Guarda la venta, actualiza el stock y registra sus detalles.
-                <LineBreak/><LineBreak/>
-                <Run FontWeight="Bold">Nueva venta:</Run>
-                Limpia la venta actual para comenzar una nueva.
-                </TextBlock>
+                Grid.Row="0"
+                Text="Ventas"
+                FontFamily="Roboto Flex"
+                FontSize="24"
+                FontWeight="SemiBold"
+                Margin="0,0,0,20"/>
+
+                <!-- INFORMACIÓN -->
+                <ScrollViewer
+                Grid.Row="1"
+                VerticalScrollBarVisibility="Auto">
+
+                    <TextBlock
+                    FontFamily="Roboto Flex"
+                    FontSize="15"
+                    Foreground="#333333"
+                    TextWrapping="Wrap"
+                    LineHeight="24">
+
+                    <Run
+                        Text="Esta sección permite realizar ventas, controlar los productos agregados y registrar el pago correspondiente."
+                        FontWeight="SemiBold"/>
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="1. Buscar producto"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Escribí el nombre o código de barras del producto. También podés utilizar un lector de códigos de barras.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="2. Cantidad"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Indicá cuántas unidades del producto querés agregar a la venta.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="3. Productos"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Cantidad de productos diferentes incluidos en la venta.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="4. Unidades"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Cantidad total de unidades incluidas en la venta.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="5. Forma de pago"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Seleccioná el medio utilizado por el cliente para realizar el pago.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="6. Descuento"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Permite aplicar un descuento porcentual sobre el total de la venta.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="7. Finalizar venta"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Guarda la venta, actualiza el stock y registra sus detalles.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="8. Nueva venta"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Limpia la venta actual para comenzar una nueva.
+
+                    </TextBlock>
+
+                </ScrollViewer>
+
             </Grid>
+
         </Border>
-    </ScrollViewer>
 </Window>

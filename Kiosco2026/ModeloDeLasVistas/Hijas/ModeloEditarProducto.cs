@@ -547,7 +547,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 else if(!_metodoEnEjecucion)
                 {
                     _metodoEnEjecucion = true;
-                    EjecutarBusquedaPorCodigoUltLote(null);
+                    //EjecutarBusquedaPorCodigoUltLote(null);
                 }
             }
             catch (Exception ex)

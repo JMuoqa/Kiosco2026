@@ -548,7 +548,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private async Task EjecutarValoresPredeterminados(object arg)
         {
-            Debug.WriteLine("valor predeterminado");
             CodigoBarras = "Codigo de barras";
             Descuento = "0";
             Cantidad = "1";

@@ -46,6 +46,11 @@
                             VerticalAlignment="Center" Margin="5, 0, 0, 0" Width="50" Command="{Binding ObtenerProductos}">
                     <fa:IconImage Icon="ArrowRotateForward" Margin="0" Style="{StaticResource iconos_menu}"/>
                 </RadioButton>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Height="40" Margin="20,0,0,0">
+                    <TextBox FontFamily="Roboto Flex" FontWeight="Normal" Text="Ver lotes ocultos" 
+                                     VerticalAlignment="Center" FontSize="16" Margin="0,0,5,0" IsReadOnly="True"/>
+                    <CheckBox VerticalAlignment="Center" IsChecked="{Binding VerProductosOcultos}"></CheckBox>
+                </StackPanel>
             </StackPanel>
             <Border  Grid.Row="1" BorderThickness="0.6" CornerRadius="10" BorderBrush="#C8C8D0">
                 <Grid x:Name="grillaAncho">
@@ -174,16 +179,9 @@
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal">
                 <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
-                           VerticalAlignment="Center" Text="Lote seleccionado: #" Margin="15, 0, 0, 0"/>
+                           VerticalAlignment="Center" Text="Lote seleccionado: " Margin="15, 0, 0, 0"/>
                 <TextBlock FontFamily="Roboto Flex" FontWeight="Bold" FontSize="20"
-                           VerticalAlignment="Center" Text="{Binding Producto.ID}" Margin="0"/>
-            </StackPanel>
-            <StackPanel Grid.Row="0" Grid.Column="1">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Height="40" Margin="0,0,20,0">
-                    <TextBox FontFamily="Roboto Flex" FontWeight="Normal" Text="Ver productos ocultos" 
-                                     VerticalAlignment="Center" FontSize="16" Margin="0,0,5,0" IsReadOnly="True"/>
-                    <CheckBox VerticalAlignment="Center" IsChecked="{Binding VerProductosOcultos}"></CheckBox>
-                </StackPanel>
+                           VerticalAlignment="Center" Text="{Binding IDSeleccionado}" Margin="0"/>
             </StackPanel>
             <StackPanel Orientation="Vertical" Grid.Row="1">
                 <TextBox x:Name="entrada_nombre" Style="{StaticResource entrada_form}" Text="{Binding Nombre}" 
@@ -264,8 +262,13 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </TextBox>
+                <StackPanel Orientation="Horizontal" Height="40" Margin="10, 10">
+                    <TextBlock FontSize="20" FontWeight="Medium" Margin="5, 0, 0, 0"
+                                    VerticalAlignment="Center" FontFamily="Roboto Flex" >Visible:</TextBlock>
+                    <CheckBox VerticalAlignment="Center"  Margin="10, 0, 0, 0" IsChecked="{Binding Marcado}"></CheckBox>
+                </StackPanel>
                 <RadioButton Style="{StaticResource boton_confirmar}" Command="{Binding EditarLote}">
-                    <TextBlock Style="{StaticResource texto_botones_uno}" Text="Editar"/>
+                    <TextBlock Style="{StaticResource texto_botones_uno}" Text="Editar lote"/>
                 </RadioButton>
                 <TextBlock Margin="10, 23, 10, 0" FontFamily="Roboto Flex" 
                            FontSize="16" Text="{Binding Mensaje}" Foreground="{Binding ColorMensaje}" TextWrapping="Wrap" ></TextBlock>

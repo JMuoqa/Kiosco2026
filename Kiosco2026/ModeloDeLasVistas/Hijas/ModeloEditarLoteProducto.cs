@@ -214,10 +214,41 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         #endregion
         private Productos _pr;
+        private string _iDSeleccionado;
+        public string IDSeleccionado
+        {
+            get => _iDSeleccionado;
+            set
+            {
+                _iDSeleccionado = value;
+                OnPropertyChanged(nameof(IDSeleccionado));
+            }
+        }
         private Productos _producto;
+        public Productos Producto
+        {
+            get => _producto;
+            set
+            {
+                _producto = value;
+                if (value != null) IDSeleccionado = Producto.ID.ToString();
+                else IDSeleccionado = "Ninguno";
+                OnPropertyChanged(nameof(Producto));
+            }
+        }
         public event Action CerrarVentana;
         private string _venta;
         private string _compra;
+        private bool _marcado;
+        public bool Marcado
+        {
+            get => _marcado;
+            set
+            {
+                _marcado = value;
+                OnPropertyChanged(nameof(Marcado));
+            }
+        }
         private string _cantidad;
         private string _nombre;
         private string _mensaje;
@@ -282,15 +313,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 _coloresEntradas = value;
                 OnPropertyChanged(nameof(_coloresEntradas));
-            }
-        }
-        public Productos Producto
-        {
-            get => _producto;
-            set
-            {
-                _producto = value;
-                OnPropertyChanged(nameof(Producto));
             }
         }
         public string Nombre
@@ -393,7 +415,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             Venta = productoSeleccionado.Venta;
             Cantidad = productoSeleccionado.Cantidad.ToString();
             Ingreso = productoSeleccionado.Ingreso;
-            Vencimiento = productoSeleccionado.Vencimiento; 
+            Vencimiento = productoSeleccionado.Vencimiento;
+            Marcado = productoSeleccionado.Mostrar;
             ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
             ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
             ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
@@ -464,6 +487,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                         Venta = this.Venta.Replace(".", ""),
                         Vencimiento = this.Vencimiento ?? new DateTime(),
                         Ingreso = this.Ingreso ?? new DateTime(),
+                        Mostrar = Marcado,
                         ID = this.Producto.ID,
                     };
                     var res = await _adminProductos.EditarLote(nuevoProducto);
@@ -555,10 +579,12 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             Compra = "Costo de compra*";
             Venta = "Precio de venta*";
             Cantidad = "Cantidad*";
+            Marcado = default;
             Ingreso = null;
             Vencimiento = null;
             BusquedaIngreso = null; 
             VerProductosOcultos = true;
+            Producto = null;
             ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
             ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
             ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));

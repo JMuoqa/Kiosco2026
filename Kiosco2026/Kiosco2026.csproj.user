@@ -22,6 +22,9 @@
     <Compile Update="Vistas\INFORMACION\InformacionAnadirProducto.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Vistas\INFORMACION\InformacionEditarProducto.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Vistas\INFORMACION\InformacionVentasPrincipal.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

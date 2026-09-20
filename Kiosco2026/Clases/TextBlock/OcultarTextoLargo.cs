@@ -13,7 +13,6 @@ namespace Kiosco2026.Clases.TextBlock
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Debug.WriteLine(value);
             string texto = value as string;
             if (string.IsNullOrEmpty(texto)) return string.Empty;
 

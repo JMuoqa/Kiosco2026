@@ -104,7 +104,6 @@ namespace Conexiones
                     n = Convert.ToInt32(datos["ID"]);
                 }
             }
-            Debug.WriteLine("Con_Productos - Con_ObtenerIDCategoria. n: " + n);
             return n;
             
         }
@@ -228,7 +227,7 @@ namespace Conexiones
                     con.Open();
                     transaccion = con.BeginTransaction();
                     string editarLote = "UPDATE Productos SET Nombre = @nombre, Compra = @compra, Venta = @venta, Cantidad = @cantidad, Ingreso = @ingreso,"+
-                        " Vencimiento = @vencimiento WHERE ID = @id;";
+                        " Vencimiento = @vencimiento, Mostrar = @mostrar WHERE ID = @id;";
                     MySqlCommand cmd = new MySqlCommand(editarLote, con, transaccion);
                     decimal precioCompra = decimal.Parse(producto.Compra, NumberStyles.Any, new CultureInfo("es-AR"));
                     decimal precioVenta = decimal.Parse(producto.Venta, NumberStyles.Any, new CultureInfo("es-AR"));
@@ -238,6 +237,7 @@ namespace Conexiones
                     cmd.Parameters.AddWithValue("@cantidad", producto.Cantidad);
                     cmd.Parameters.AddWithValue("@ingreso", producto.Ingreso);
                     cmd.Parameters.AddWithValue("@vencimiento", producto.Vencimiento);
+                    cmd.Parameters.AddWithValue("@mostrar", producto.Mostrar);
                     cmd.Parameters.AddWithValue("@id", producto.ID);
                     var resultado = cmd.ExecuteNonQuery();
                     transaccion.Commit();

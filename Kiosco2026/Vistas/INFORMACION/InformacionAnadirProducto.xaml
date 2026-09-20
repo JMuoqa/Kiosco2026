@@ -6,89 +6,172 @@
         xmlns:local="clr-namespace:Kiosco2026.Vistas.INFORMACION"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
-        Background="#F2F2F2"
-        Title="InformacionAnadirProducto" Height="450" Width="800">
-    <ScrollViewer>
+        Title="Información de la sección añadir producto" Height="450" Width="800">
 
-        <Border Margin="20"
-            Padding="25"
-            Background="White"
-            CornerRadius="12">
+        <Border
+        Margin="15"
+        Padding="25"
+        Background="White"
+        CornerRadius="12">
 
             <Grid>
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0"
-                       Text="Añadir producto"
-                       FontFamily="Roboto Flex"
-                       FontSize="24"
-                       FontWeight="SemiBold"
-                       Margin="0,0,0,20"/>
+                <!-- TÍTULO -->
+                <TextBlock
+                Grid.Row="0"
+                Text="Añadir producto"
+                FontFamily="Roboto Flex"
+                FontSize="24"
+                FontWeight="SemiBold"
+                Margin="0,0,0,20"/>
 
-                <TextBlock Grid.Row="1"
-                       FontFamily="Roboto Flex"
-                       FontSize="16"
-                       TextWrapping="Wrap"
-                       LineHeight="25">
+                <!-- INFORMACIÓN -->
+                <ScrollViewer
+                Grid.Row="1"
+                VerticalScrollBarVisibility="Auto">
 
-                <Run FontWeight="Bold">Código de barras:</Run>
-                Identifica el producto mediante su código de barras.
+                    <TextBlock
+                    FontFamily="Roboto Flex"
+                    FontSize="15"
+                    Foreground="#333333"
+                    TextWrapping="Wrap"
+                    LineHeight="24">
 
-                <LineBreak/><LineBreak/>
+                    <Run
+                        Text="Esta sección permite registrar un nuevo producto y crear un lote con la mercadería ingresada."
+                        FontWeight="SemiBold"/>
 
-                <Run FontWeight="Bold">Nombre:</Run>
-                Nombre con el que se identificará el producto.
+                    <LineBreak/>
+                    <LineBreak/>
 
-                <LineBreak/><LineBreak/>
+                    <Run
+                        Text="1. Código de barras"
+                        FontWeight="Bold"/>
 
-                <Run FontWeight="Bold">Categoría:</Run>
-                Permite organizar el producto dentro de una categoría.
+                    <LineBreak/>
 
-                <LineBreak/><LineBreak/>
+                    Identifica el producto mediante su código de barras.
 
-                <Run FontWeight="Bold">Cantidad:</Run>
-                Cantidad total de unidades que ingresan en este lote.
+                    <LineBreak/>
+                    <LineBreak/>
 
-                <LineBreak/><LineBreak/>
+                    <Run
+                        Text="2. Nombre"
+                        FontWeight="Bold"/>
 
-                <Run FontWeight="Bold">Unidad de medida:</Run>
-                Indica cómo se mide el producto, por ejemplo unidades o gramos.
+                    <LineBreak/>
 
-                <LineBreak/><LineBreak/>
+                    Nombre con el que se identificará el producto.
 
-                <Run FontWeight="Bold">Costo total de compra:</Run>
-                Importe total que pagaste por la cantidad ingresada en este lote.
+                    <LineBreak/>
+                    <LineBreak/>
 
-                <LineBreak/><LineBreak/>
+                    <Run
+                        Text="3. Categoría"
+                        FontWeight="Bold"/>
 
-                <Run FontWeight="Bold">Ganancia sobre costo (%):</Run>
-                Porcentaje que se aplica sobre el costo unitario para calcular el precio de venta.
+                    <LineBreak/>
 
-                <LineBreak/><LineBreak/>
+                    Permite organizar el producto dentro de una categoría.
 
-                <Run FontWeight="Bold">Precio de venta por unidad:</Run>
-                Se calcula automáticamente a partir del costo y la ganancia indicada.
+                    <LineBreak/>
+                    <LineBreak/>
 
-                <LineBreak/><LineBreak/>
+                    <Run
+                        Text="4. Cantidad"
+                        FontWeight="Bold"/>
 
-                <Run FontWeight="Bold">Proveedor:</Run>
-                Permite indicar quién proporcionó la mercadería.
+                    <LineBreak/>
 
-                <LineBreak/><LineBreak/>
+                    Cantidad total de unidades que ingresan en este lote.
 
-                <Run FontWeight="Bold">Ingreso:</Run>
-                Fecha correspondiente al ingreso del lote.
+                    <LineBreak/>
+                    <LineBreak/>
 
-                <LineBreak/><LineBreak/>
+                    <Run
+                        Text="5. Unidad de medida"
+                        FontWeight="Bold"/>
 
-                <Run FontWeight="Bold">Vencimiento:</Run>
-                Fecha de vencimiento del lote. Por defecto se establece un año después del ingreso.
-                </TextBlock>
+                    <LineBreak/>
+
+                    Indica cómo se mide el producto, por ejemplo unidades o gramos.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="6. Costo total de compra"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Importe total que pagaste por la cantidad ingresada en este lote.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="7. Ganancia sobre costo (%)"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Porcentaje que se aplica sobre el costo unitario para calcular el precio de venta.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="8. Precio de venta por unidad"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Se calcula automáticamente a partir del costo y la ganancia indicada.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="9. Proveedor"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Permite indicar quién proporcionó la mercadería.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="10. Ingreso"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Fecha correspondiente al ingreso del lote.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="11. Vencimiento"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Fecha de vencimiento del lote. Por defecto se establece un año después del ingreso.
+
+                    </TextBlock>
+
+                </ScrollViewer>
+
             </Grid>
 
         </Border>
-    </ScrollViewer>
 </Window>

@@ -83,6 +83,10 @@ namespace Kiosco2026.ModeloDeLasVistas
             {
                 PrepararVentanaInfo(new InformacionAdministrarCategorias());
             }
+            else if (VistaHijaActual is ModeloEditarProducto)
+            {
+                PrepararVentanaInfo(new InformacionEditarProducto());
+            }
             else
             {
                 return;

@@ -1,0 +1,124 @@
+﻿<Window x:Class="Kiosco2026.Vistas.INFORMACION.InformacionEditarProducto"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Kiosco2026.Vistas.INFORMACION"
+        mc:Ignorable="d"
+        Title="Información de la sección editar producto" Height="527" Width="800">
+    <Border
+        Margin="15"
+        Padding="25"
+        Background="White"
+        CornerRadius="12">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- TÍTULO -->
+            <TextBlock
+                Grid.Row="0"
+                Text="Editar producto"
+                FontSize="24"
+                FontWeight="Bold"
+                Foreground="#111111"
+                Margin="0,0,0,20"/>
+
+            <!-- INFORMACIÓN -->
+            <ScrollViewer
+                Grid.Row="1"
+                VerticalScrollBarVisibility="Auto">
+
+                <TextBlock
+                    FontSize="15"
+                    Foreground="#333333"
+                    TextWrapping="Wrap"
+                    LineHeight="24">
+
+                    <Run
+                        Text="Esta sección permite modificar la información de un producto y consultar sus lotes."
+                        FontWeight="SemiBold"/>
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="1. Buscar un producto"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Podés buscar productos por nombre, código o categoría.
+                    Luego seleccioná el producto que quieras modificar.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="2. Datos del producto"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    El nombre y la categoría son datos generales del producto.
+                    Los cambios realizados en estos campos se aplicarán a todos
+                    los lotes correspondientes a ese producto.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="3. Datos del lote"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    El costo de compra y el precio de venta corresponden al lote
+                    seleccionado. Estos valores no modifican los demás lotes.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="4. Visibilidad"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    La opción "Visible" determina si el producto puede utilizarse
+                    normalmente en el punto de venta.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="5. Editar producto"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Al seleccionar "Editar producto" se modifican los datos
+                    generales del producto. Antes de realizar el cambio se
+                    solicitará una confirmación, ya que el nombre y la categoría
+                    afectan a todos sus lotes.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="6. Ver lotes del producto"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Desde "Ver lotes del producto" podés consultar y modificar
+                    individualmente los lotes asociados al producto.
+
+                </TextBlock>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</Window>

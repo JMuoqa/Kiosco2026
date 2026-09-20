@@ -6,64 +6,116 @@
         xmlns:local="clr-namespace:Kiosco2026.Vistas.INFORMACION"
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
-        Background="#F2F2F2"
-        Title="InformacionAdministrarCategorias" Height="496" Width="800">
-    <ScrollViewer>
+        Title="Información de la sección administrar categorias" Height="496" Width="800">
+    <Border
+        Margin="15"
+        Padding="25"
+        Background="White"
+        CornerRadius="12">
 
-        <Border Margin="20"
-            Padding="25"
-            Background="White"
-            CornerRadius="12">
+        <Grid>
 
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0"
-                       Text="Administrar categorías"
-                       FontFamily="Roboto Flex"
-                       FontSize="24"
-                       FontWeight="SemiBold"
-                       Margin="0,0,0,20"/>
+            <!-- TÍTULO -->
+            <TextBlock
+                Grid.Row="0"
+                Text="Administrar categorías"
+                FontFamily="Roboto Flex"
+                FontSize="24"
+                FontWeight="SemiBold"
+                Margin="0,0,0,20"/>
 
-                <TextBlock Grid.Row="1"
-                       FontFamily="Roboto Flex"
-                       FontSize="16"
-                       TextWrapping="Wrap"
-                       LineHeight="25">
+            <!-- INFORMACIÓN -->
+            <ScrollViewer
+                Grid.Row="1"
+                VerticalScrollBarVisibility="Auto">
 
-                <Run FontWeight="Bold">Buscar categoría:</Run>
-                Utilizá el campo de búsqueda para encontrar una categoría rápidamente.
+                <TextBlock
+                    FontFamily="Roboto Flex"
+                    FontSize="15"
+                    Foreground="#333333"
+                    TextWrapping="Wrap"
+                    LineHeight="24">
 
-                <LineBreak/><LineBreak/>
+                    <Run
+                        Text="Esta sección permite administrar las categorías utilizadas para organizar los productos del sistema."
+                        FontWeight="SemiBold"/>
 
-                <Run FontWeight="Bold">Seleccionar una categoría:</Run>
-                Hacé clic sobre una categoría de la lista para cargar sus datos y poder modificarlos.
+                    <LineBreak/>
+                    <LineBreak/>
 
-                <LineBreak/><LineBreak/>
+                    <Run
+                        Text="1. Buscar categoría"
+                        FontWeight="Bold"/>
 
-                <Run FontWeight="Bold">Editar nombre:</Run>
-                Permite modificar el nombre de la categoría seleccionada.
+                    <LineBreak/>
 
-                <LineBreak/><LineBreak/>
+                    Utilizá el campo de búsqueda para encontrar una categoría rápidamente.
 
-                <Run FontWeight="Bold">Visibilidad:</Run>
-                Determina si la categoría estará disponible para utilizarse en el sistema.
+                    <LineBreak/>
+                    <LineBreak/>
 
-                <LineBreak/><LineBreak/>
+                    <Run
+                        Text="2. Seleccionar una categoría"
+                        FontWeight="Bold"/>
 
-                <Run FontWeight="Bold">Guardar cambios:</Run>
-                Guarda las modificaciones realizadas sobre la categoría seleccionada.
+                    <LineBreak/>
 
-                <LineBreak/><LineBreak/>
+                    Hacé clic sobre una categoría de la lista para cargar sus datos y poder modificarlos.
 
-                <Run FontWeight="Bold">Agregar nueva categoría:</Run>
-                Permite crear una nueva categoría para utilizarla al cargar productos.
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="3. Editar nombre"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Permite modificar el nombre de la categoría seleccionada.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="4. Visibilidad"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Determina si la categoría estará disponible para utilizarse en el sistema.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="5. Guardar cambios"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Guarda las modificaciones realizadas sobre la categoría seleccionada.
+
+                    <LineBreak/>
+                    <LineBreak/>
+
+                    <Run
+                        Text="6. Agregar nueva categoría"
+                        FontWeight="Bold"/>
+
+                    <LineBreak/>
+
+                    Permite crear una nueva categoría para utilizarla al cargar productos.
+
                 </TextBlock>
-            </Grid>
 
-        </Border>
-    </ScrollViewer>
+            </ScrollViewer>
+
+        </Grid>
+
+    </Border>
 </Window>
