@@ -79,24 +79,24 @@ namespace Dominio
             if (producto.Nombre.Length > 100)
                 throw new Exception("El nombre del producto no puede superar los 100 caracteres.");
         }
-        public async Task<(bool estado, string mensaje, List<Productos> lista)> BusquedaProductoPorCodigoUltLote(string codigo)
+        public async Task<(bool estado, string mensaje, List<Productos> lista)> BusquedaProductoPorCodigoUltLote(string codigo, int? visible)
         {
-            var primerRespuesta = await _productos.Con_BusquedaPorCodigoUltLote(codigo);
+            var primerRespuesta = await _productos.Con_BusquedaPorCodigoUltLote(codigo, visible);
             //codigo.Any(char.IsLetter) comprueba si almenos tiene una letra
-            if (primerRespuesta.lista.Count == 0 && codigo.Any(char.IsLetter)) return await _productos.Con_ObtenerUltLotePorNombre(codigo, ""); 
+            if (primerRespuesta.lista.Count == 0 && codigo.Any(char.IsLetter)) return await _productos.Con_ObtenerUltLotePorNombre(codigo, "", visible);
             return primerRespuesta;
         }
         public async Task<(bool estado, string mensaje, List<Categorias> lista)> BusquedaCategorias(string busqueda) 
         {
             return await _productos.Con_BusquedaCategorias(busqueda);
         }
-        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_ObtenerUltLotePorNombre(string busqueda, string categoria)
+        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_ObtenerUltLotePorNombre(string busqueda, string categoria, int? visible)
         {
-            return await _productos.Con_ObtenerUltLotePorNombre(busqueda, categoria);
+            return await _productos.Con_ObtenerUltLotePorNombre(busqueda, categoria, visible);
         }
-        public async Task<(bool estado, string mensaje, List<Productos> lista)> BusquedaPorIngreso(string codigo, DateTime? busqueda)
+        public async Task<(bool estado, string mensaje, List<Productos> lista)> BusquedaPorIngreso(string codigo, DateTime? busqueda, int? visible)
         {
-            return await _productos.Con_LotesPorIngreso(codigo, busqueda);
+            return await _productos.Con_LotesPorIngreso(codigo, busqueda, visible);
         }
         public async Task<(bool estado, string mensaje, List<Categorias> lista)> ObtenerCategoriasCliente()
         {
@@ -133,8 +133,6 @@ namespace Dominio
                 throw new Exception("No hay datos del producto");
             if (string.IsNullOrWhiteSpace(categoria.Nombre) || categoria.Nombre.ToLower().Trim() == "NOMBRE DE LA CATEGORIA".ToLower().Trim())
                 throw new Exception("El campo 'Nombre', del formulario de carga, esta vacio");
-            if (string.IsNullOrWhiteSpace(categoria.Mostrar))
-                throw new Exception("El campo 'Mostrar' no esta definido.");
             if (categoria.ID <= 0)
                 throw new Exception("No hay ninguna categoria seleccionada");
             if (categoria.Nombre.Length > 80)

@@ -476,8 +476,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                         throw new Exception("El campo cantidad no puede ser menor ni igual a 0");
                     if (CodigoBarras == "Codigo de barras" || string.IsNullOrWhiteSpace(CodigoBarras))
                         throw new Exception("No pusiste ningun coodigo de barras");
-                    var res = await _adminProductos.BusquedaProductoPorCodigoUltLote(CodigoBarras);
-                    if (!res.estado)
+                    var res = await _adminProductos.BusquedaProductoPorCodigoUltLote(CodigoBarras, 1);
+                    if (!res.estado || res.lista.Count == 0)
                         throw new Exception(res.mensaje);
                     List<Productos> p = ListaProductos.ToList();
                     Productos productoElejido = null;

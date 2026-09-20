@@ -58,11 +58,14 @@ namespace Entidades
             }
         }
         public string Proveedor { get; set; }
-        private string _mostrar;
-        public string Mostrar 
+        public bool Mostrar { get; set; }
+        public string Visible
         {
-            get => _mostrar.ToUpper();
-            set { _mostrar = value; } 
+            get
+            {
+                if (Mostrar) return "SI";
+                else return "NO";
+            }
         }
         public DateTime Ingreso { get; set; }
         public DateTime Vencimiento { get; set; }
@@ -105,6 +108,15 @@ namespace Entidades
         public string Margen { get; set; }
         public string Compra { get; set; }
         public string Cantidad { get; set; }
+        public bool Mostrar { get; set; }
+        public string Visible
+        {
+            get
+            {
+                if (Mostrar) return "SI";
+                else return "NO";
+            }
+        }
         public string Proveedor { get; set; }
         public string Visibilidad { get; set; }
         public DateTime Ingreso { get; set; }
@@ -119,6 +131,14 @@ namespace Entidades
         }
         public int ID { get; set; }
         public string Nombre { get; set; }
-        public string Mostrar { get; set; }
+        public bool Mostrar { get; set; }
+        public string Visible
+        {
+            get
+            {
+                if (Mostrar) return "SI";
+                else return "NO";
+            }
+        }
     }
 }

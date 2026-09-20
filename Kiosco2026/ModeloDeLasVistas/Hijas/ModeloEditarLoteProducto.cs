@@ -228,6 +228,17 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private DateTime? _busquedaIngreso;
         private AdminProductos _adminProductos;
         private ObservableCollection<Productos> _listaProductos;
+        private bool _verProductosOcultos;
+        public bool VerProductosOcultos
+        {
+            get => _verProductosOcultos;
+            set
+            {
+                _verProductosOcultos = value;
+                EjecutarObtenerProductos(null);
+                OnPropertyChanged(nameof(VerProductosOcultos));
+            }
+        }
         public Brush ColorMensaje
         {
             get => _colorMensaje;
@@ -395,7 +406,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 if (!_metodoEnEjecucion)
                 {
                     _metodoEnEjecucion = true;
-                    var res = await _adminProductos.BusquedaPorIngreso(_pr.Codigo, null);
+                    int? visible = VerProductosOcultos ? null : 1;
+                    var res = await _adminProductos.BusquedaPorIngreso(_pr.Codigo, null, visible);
                     ListaProductos = new ObservableCollection<Productos>(res.lista);
                 }
             }
@@ -414,7 +426,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             try
             {
-                var res = await _adminProductos.BusquedaPorIngreso(_pr.Codigo, BusquedaIngreso);
+                int? visible = VerProductosOcultos ? null : 1;
+                var res = await _adminProductos.BusquedaPorIngreso(_pr.Codigo, BusquedaIngreso, null);
                 ListaProductos = new ObservableCollection<Productos>(res.lista);
             }
             catch (Exception ex)
@@ -544,7 +557,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             Cantidad = "Cantidad*";
             Ingreso = null;
             Vencimiento = null;
-            BusquedaIngreso = null;
+            BusquedaIngreso = null; 
+            VerProductosOcultos = true;
             ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
             ColoresEntradas.Compra = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
             ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));

@@ -101,7 +101,7 @@
                         </Border>
                         <Border Width="{Binding EColumna_dos}">
                             <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
-                                       VerticalAlignment="Center" Text="VISIBILIDAD"/>
+                                       VerticalAlignment="Center" Text="VISIBLE"/>
                         </Border>
                         <Border Width="{Binding EColumna_tres}">
                             <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
@@ -133,7 +133,7 @@
                                         </Border>
                                         <Border Width="{Binding DataContext.TColumna_dos, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
                                             <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"
-                       VerticalAlignment="Center"  Text="{Binding Mostrar}"/>
+                       VerticalAlignment="Center"  Text="{Binding Visible}"/>
                                         </Border>
                                         <Border Width="{Binding DataContext.TColumna_tres, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
                                             <TextBlock FontFamily="Roboto Flex" FontWeight="Normal" FontSize="18"

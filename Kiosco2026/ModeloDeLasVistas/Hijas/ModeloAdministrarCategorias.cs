@@ -318,17 +318,12 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     _metodoEnEjecucion = true;
                     if (categoriaAEditar == null)
                         throw new Exception("No hay ninguna categoria seleccionada");
-                    string visualizacion;
-                    if (Visualizacion)
-                        visualizacion = "SI";
-                    else
-                        visualizacion = "NO";
                     int idCategoria = categoriaAEditar.ID;
                     Categorias cate = new Categorias
                     {
                         Nombre = Edicion.ToUpper(),
                         ID = idCategoria,
-                        Mostrar = visualizacion
+                        Mostrar = Visualizacion
                     };
                     var respuesta = await _adminProductos.EditarCategoria(cate);
                     _metodoEnEjecucion = false;
@@ -368,10 +363,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             Categorias categoria = (Categorias)arg;
             Edicion = categoria.Nombre;
             SoloLectura = false;
-            if (categoria.Mostrar == "SI")
-                Visualizacion = true;
-            else
-                Visualizacion = false;
+            Visualizacion = categoria.Mostrar;
             ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
             categoriaAEditar = new Categorias
             {

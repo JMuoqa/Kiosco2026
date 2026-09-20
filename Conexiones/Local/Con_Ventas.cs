@@ -69,7 +69,7 @@ namespace Conexiones
             bool ciclo = true;
             while (ciclo)
             {
-                string productoARestar = "SELECT * FROM (SELECT p.*, ROW_NUMBER() OVER (ORDER BY Ingreso ASC) AS rn FROM Productos p WHERE Codigo = @codigo AND Cantidad > 0) t WHERE rn = 1 FOR UPDATE;";
+                string productoARestar = "SELECT * FROM (SELECT p.*, ROW_NUMBER() OVER (ORDER BY Ingreso ASC, ID ASC) AS rn FROM Productos p WHERE Codigo = @codigo AND Cantidad > 0 AND Mostrar = 1) t WHERE rn = 1 FOR UPDATE;";
                 MySqlCommand cmd = new MySqlCommand(productoARestar, con, transaccion);
                 cmd.Parameters.AddWithValue("@codigo", pr.Codigo);
                 Productos primerProductoConStock = new Productos();
@@ -81,7 +81,7 @@ namespace Conexiones
                         primerProductoConStock = new Productos()
                         {
                             ID = lector.GetInt32("ID"),
-                            Mostrar = lector.GetString("Mostrar"),
+                            Mostrar = lector.GetBoolean("Mostrar"),
                             Nombre = lector.GetString("Nombre"),
                             IDCategoria = lector.GetInt32("IDCategoria"),
                             Compra = lector.GetDecimal("Compra").ToString(_cultura),
@@ -106,7 +106,7 @@ namespace Conexiones
                     cantidadSacadaDelLote = cantidadDelPrimerProducto;
                     cantidadRestante = cantidadARestar - cantidadDelPrimerProducto;
                     pr.Cantidad = cantidadRestante;
-                    string actualizarProducto = "UPDATE Productos SET Cantidad = 0 WHERE ID = @id;";
+                    string actualizarProducto = "UPDATE Productos SET Cantidad = 0 WHERE ID = @id AND Mostrar = 1; ";
                     MySqlCommand cmdActualizarProducto = new MySqlCommand(actualizarProducto, con, transaccion);
                     cmdActualizarProducto.Parameters.AddWithValue("@id", primerProductoConStock.ID);
                     cmdActualizarProducto.ExecuteNonQuery();
@@ -116,7 +116,7 @@ namespace Conexiones
                     cantidadSacadaDelLote = cantidadARestar;
                     cantidadRestante = 0; 
                     int cantidadNuevaDelLote = cantidadDelPrimerProducto - cantidadARestar;
-                    string actualizarProducto = "UPDATE Productos SET Cantidad = @cantidad WHERE ID = @id;";
+                    string actualizarProducto = "UPDATE Productos SET Cantidad = @cantidad WHERE ID = @id AND Mostrar = 1;";
                     MySqlCommand cmdActualizarProducto = new MySqlCommand(actualizarProducto, con, transaccion);
                     cmdActualizarProducto.Parameters.AddWithValue("@id", primerProductoConStock.ID);
                     cmdActualizarProducto.Parameters.AddWithValue("@cantidad", cantidadNuevaDelLote);

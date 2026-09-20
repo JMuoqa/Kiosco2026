@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using System.Globalization;
 using System.Reflection.PortableExecutable;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -45,8 +46,8 @@ namespace Conexiones
                             " existente. Para continuar, puedes cambiar la 'categoría' del" +
                             " producto que estás intentando cargar o actualizar la del producto ya registrado.");
                     int IDCategoria = idCategoriaFinal;
-                    string insertarProductos = "INSERT INTO Productos (Nombre, IDCategoria, Codigo, Venta, Compra, Cantidad, Proveedor, Mostrar, Ingreso, Vencimiento, UnidadMedida)"+
-                        " VALUES(@nombre, @categoria, @codigo, @venta, @compra, @cantidad, @proveedor, \"SI\", @ingreso, @vencimiento, @unidad);";
+                    string insertarProductos = "INSERT INTO Productos (Nombre, IDCategoria, Codigo, Venta, Compra, Cantidad, Proveedor, Ingreso, Vencimiento, UnidadMedida)"+
+                        " VALUES(@nombre, @categoria, @codigo, @venta, @compra, @cantidad, @proveedor, @ingreso, @vencimiento, @unidad);";
                     MySqlCommand cmd = new MySqlCommand(insertarProductos, con);
                     cmd.Parameters.AddWithValue("@nombre", producto.Nombre);
                     cmd.Parameters.AddWithValue("@categoria", IDCategoria);
@@ -323,7 +324,7 @@ namespace Conexiones
                 try
                 {
                     con.Open();
-                    string obtenerCategorias = "SELECT ID, Nombre FROM Categorias WHERE Mostrar = \"si\"";
+                    string obtenerCategorias = "SELECT ID, Nombre FROM Categorias WHERE Mostrar = 1";
                     MySqlCommand cmd = new MySqlCommand(obtenerCategorias, con);
                     List<Categorias> categoriasObtenidas = new List<Categorias>();
                     using (MySqlDataReader lector = cmd.ExecuteReader())
@@ -371,7 +372,7 @@ namespace Conexiones
                             {
                                 ID = lector.GetInt32("ID"),
                                 Nombre = lector.GetString("Nombre"),
-                                Mostrar = lector.GetString("Mostrar")
+                                Mostrar = lector.GetBoolean("Mostrar")
                             });
                         }
                     }
@@ -389,7 +390,7 @@ namespace Conexiones
         #endregion
         #region Con_BusquedaPorCodigoUltLote
         //Esta es para obtener el ultimo producto cargado, buscandolo apartir del codigo de barras
-        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_BusquedaPorCodigoUltLote(string busqueda)
+        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_BusquedaPorCodigoUltLote(string busqueda, int? visible)
         {
             using (var con = new MySqlConnection(cadenaDeConexion))
             {
@@ -399,9 +400,10 @@ namespace Conexiones
                         throw new Exception("El codigo no esta definido");
                     con.Open();
                     // Aca selecciono el ultimo producto cargado de tal codigo de barras
-                    string soli = "SELECT * FROM ( SELECT p.*, ROW_NUMBER() OVER (PARTITION BY Codigo ORDER BY Ingreso DESC) AS rn FROM Productos p) t WHERE rn = 1 AND Codigo = @codigo;";
+                    string soli = "SELECT * FROM ( SELECT p.*, ROW_NUMBER() OVER (PARTITION BY Codigo ORDER BY Ingreso DESC) AS rn FROM Productos p) t WHERE rn = 1 AND Codigo = @codigo AND (Mostrar = @visible OR @visible IS NULL);";
                     MySqlCommand cmd = new MySqlCommand(soli, con);
                     cmd.Parameters.AddWithValue("@codigo", busqueda);
+                    cmd.Parameters.AddWithValue("@visible", visible);
                     List<Productos> productos = new List<Productos>();
                     using (MySqlDataReader lector = cmd.ExecuteReader())
                     {
@@ -410,7 +412,7 @@ namespace Conexiones
                             productos.Add(new Productos()
                             {
                                 ID = lector.GetInt32("ID"),
-                                Mostrar = lector.GetString("Mostrar"),
+                                Mostrar = lector.GetBoolean("Mostrar"),
                                 Nombre = lector.GetString("Nombre"),
                                 Codigo = lector.GetString("Codigo"),
                                 Compra = lector.GetDecimal("Compra").ToString(_cultura),
@@ -421,7 +423,7 @@ namespace Conexiones
                         }
                     }
                     //Con la entra inteligente no hace falta devolver false todavia
-                    if (productos.Count < 1) return (true, "No hay un producto cargado con ese codigo de barras", productos);
+                    if (productos.Count < 1) return (true, "No hay un producto visible con ese código de barras. Cargá el producto o activá su visibilidad.", productos);
                     var listaCate = await Con_ObtenerCategorias();
                     List<Categorias> listaCompleta = listaCate.lista;
                     for (int i = 0; i < productos.Count; i++)
@@ -449,17 +451,18 @@ namespace Conexiones
         #endregion
         #region Con_LotesPorIngreso
         //Aca realizamos las busqueda por lotes
-        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_LotesPorIngreso(string codigo, DateTime? busqueda)
+        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_LotesPorIngreso(string codigo, DateTime? busqueda, int? visible)
         {
             using (var con = new MySqlConnection(cadenaDeConexion))
             {
                 try
                 {
                     con.Open();
-                    string obtenerLotes = "SELECT * FROM Productos WHERE Codigo = @codigo AND (Ingreso >= @busqueda OR @busqueda IS NULL);";
+                    string obtenerLotes = "SELECT * FROM Productos WHERE Codigo = @codigo AND (Ingreso >= @busqueda OR @busqueda IS NULL) AND (Mostrar = @visible OR @visible IS NULL);";
                     MySqlCommand cmd = new MySqlCommand(obtenerLotes, con);
                     cmd.Parameters.AddWithValue("@codigo", codigo);
                     cmd.Parameters.AddWithValue("@busqueda", busqueda); 
+                    cmd.Parameters.AddWithValue("@visible", visible); 
                     List<Productos> productos = new List<Productos>();
                     using (MySqlDataReader lector = cmd.ExecuteReader())
                     {
@@ -468,7 +471,7 @@ namespace Conexiones
                             productos.Add(new Productos()
                             {
                                 ID = lector.GetInt32("ID"),
-                                Mostrar = lector.GetString("Mostrar"),
+                                Mostrar = lector.GetBoolean("Mostrar"),
                                 Nombre = lector.GetString("Nombre"),
                                 Compra = lector.GetDecimal("Compra").ToString(_cultura),
                                 Venta = lector.GetDecimal("Venta").ToString(_cultura),
@@ -506,7 +509,7 @@ namespace Conexiones
         #endregion
         #region Con_ObtenerUltLotePorNombre
         //Esta es para buscar productos para editar cuando se busca por nombre
-        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_ObtenerUltLotePorNombre(string nombre, string categoria)
+        public async Task<(bool estado, string mensaje, List<Productos> lista)> Con_ObtenerUltLotePorNombre(string nombre, string categoria, int? visible)
         {
             using (var con = new MySqlConnection(cadenaDeConexion))
             {
@@ -521,11 +524,12 @@ namespace Conexiones
                         " ult.Proveedor, ult.Mostrar, ult.Ingreso, ult.Vencimiento, ult.UnidadMedida, tot.Cantidad " +
                         " FROM ( SELECT ID, IDCategoria, Nombre, Codigo, Compra, Venta, Proveedor, Mostrar, Ingreso, Vencimiento, UnidadMedida" +
                         " FROM ( SELECT p.*, ROW_NUMBER() OVER (PARTITION BY Codigo ORDER BY Ingreso DESC) AS rn FROM Productos p ) t" +
-                        " WHERE rn = 1 AND (Nombre LIKE @nombre OR @nombre = \"\") AND (IDCategoria = @idcategoria OR @idcategoria = -1) )ult JOIN( SELECT Codigo, CAST(SUM(Cantidad) AS SIGNED) AS Cantidad" +
-                        " FROM Productos GROUP BY Codigo ) tot ON ult.Codigo = tot.Codigo;";
+                        " WHERE rn = 1 AND (Nombre LIKE @nombre OR @nombre = \"\") AND (IDCategoria = @idcategoria OR @idcategoria = -1) AND (Mostrar = @visible OR @visible IS NULL) )ult JOIN( SELECT Codigo, CAST(SUM(Cantidad) AS SIGNED) AS Cantidad" +
+                        " FROM Productos WHERE (Mostrar = @visible OR @visible IS NULL) GROUP BY Codigo ) tot ON ult.Codigo = tot.Codigo;";
                     MySqlCommand cmd = new MySqlCommand(obtenerUltLote, con);
                     cmd.Parameters.AddWithValue("@nombre", nombre);
-                    cmd.Parameters.AddWithValue("@@idcategoria", idCategoria);
+                    cmd.Parameters.AddWithValue("@idcategoria", idCategoria);
+                    cmd.Parameters.AddWithValue("@visible", visible);
                     List<Productos> productos = new List<Productos>();
                     using (MySqlDataReader lector = cmd.ExecuteReader())
                     {
@@ -534,7 +538,7 @@ namespace Conexiones
                             productos.Add(new Productos()
                             {
                                 ID = lector.GetInt32("ID"),
-                                Mostrar = lector.GetString("Mostrar"),
+                                Mostrar = lector.GetBoolean("Mostrar"),
                                 Nombre = lector.GetString("Nombre"),
                                 IDCategoria = lector.GetInt32("IDCategoria"),
                                 Compra = lector.GetDecimal("Compra").ToString(_cultura),

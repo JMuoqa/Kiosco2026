@@ -57,9 +57,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             tiempo.AutoReset = true;
             BusquedaCodigo = "Buscar por codigo";
             Busqueda = "Buscar por nombre";
+            NombreProducto = "Ninguno";
         }
-        #region Propiedades
-        private System.Timers.Timer tiempo;
         #region Columnas privadas
         private double _eColumna_uno;
         private double _eColumna_dos;
@@ -68,7 +67,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private double _eColumna_cinco;
         private double _eColumna_seis;
         private double _eColumna_siete;
-        private double _eColumna_ocho;
         private double _tColumna_uno;
         private double _tColumna_dos;
         private double _tColumna_tres;
@@ -76,7 +74,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private double _tColumna_cinco;
         private double _tColumna_seis;
         private double _tColumna_siete;
-        private double _tColumna_ocho;
         #endregion
         #region Columnas publicas
         public double EColumna_uno
@@ -142,15 +139,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 OnPropertyChanged(nameof(EColumna_siete));
             }
         }
-        public double EColumna_ocho
-        {
-            get => _eColumna_ocho;
-            set
-            {
-                _eColumna_ocho = value;
-                OnPropertyChanged(nameof(EColumna_ocho));
-            }
-        }
         public double TColumna_uno
         {
             get => _tColumna_uno;
@@ -214,16 +202,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 OnPropertyChanged(nameof(TColumna_siete));
             }
         }
-        public double TColumna_ocho
-        {
-            get => _tColumna_ocho;
-            set
-            {
-                _tColumna_ocho = value;
-                OnPropertyChanged(nameof(TColumna_ocho));
-            }
-        }
         #endregion
+        #region Propiedades
+        private System.Timers.Timer tiempo;
         private AdminProductos _adminProductos;
         private ColoresTexto _colores;
         private ObservableCollection<Categorias> _listaCategorias;
@@ -249,6 +230,27 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private string _mensaje;
         private string _busquedaCodigo;
         private string _busqueda;
+        private string _nombreProducto;
+        private bool _verProductosOcultos;
+        public bool VerProductosOcultos
+        {
+            get => _verProductosOcultos;
+            set
+            {
+                _verProductosOcultos = value;
+                EjecutarObtenerProductos(null);
+                OnPropertyChanged(nameof(VerProductosOcultos));
+            }
+        }
+        public string NombreProducto
+        {
+            get => _nombreProducto;
+            set
+            {
+                _nombreProducto = value;
+                OnPropertyChanged(nameof(NombreProducto));
+            }
+        }
         public string Busqueda
         {
             get => _busqueda;
@@ -427,9 +429,6 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     );
                     if (confirmacion != MessageBoxResult.Yes)
                         throw new Exception("Cancelaste la operación");
-                    string mostrar = "SI";
-                    if (!Marcado)
-                        mostrar = "NO";
                     Productos producto = new Productos
                     {
                         Nombre = this.Nombre.ToUpper(),
@@ -438,7 +437,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                         Compra = this.Compra.Replace(".", ""),
                         Codigo = this.Producto.Codigo,
                         ID = this._idProducto,
-                        Mostrar = mostrar
+                        Mostrar = Marcado
                     };
                     var res = await _adminProductos.EditarProductoPorCodigo(producto);
                     _metodoEnEjecucion = false;
@@ -508,6 +507,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             Nombre = Producto.Nombre;
             Venta = Producto.Venta;
             Compra = Producto.Compra;
+            NombreProducto = Producto.Nombre;
             _idProducto = Producto.ID;
             ColoresEntradas.Nombre = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
             ColoresEntradas.Venta = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#202020"));
@@ -520,13 +520,12 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     cmbCat.SelectedIndex = i;
             }
             bool mostrar = false;
-            if(Producto.Mostrar == "SI")
-                mostrar = true;
-            Marcado = mostrar;
+            Marcado = Producto.Mostrar;
         }
         private async Task ResetearTabla(object arg)
         {
             BusquedaCodigo = "Buscar por codigo";
+            NombreProducto = "Ninguno";
             ColoresEntradas.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
             Busqueda = "Buscar por nombre";
             ColoresEntradas.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
@@ -570,7 +569,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             string categoria = CategoriaParaBusqueda is Categorias ? CategoriaParaBusqueda.Nombre : "";
             BusquedaCodigo = "Buscar por codigo";
             ColoresEntradas.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
-            var res = await _adminProductos.Con_ObtenerUltLotePorNombre(valor, categoria);
+            int? visible = VerProductosOcultos ? null : 1;
+            var res = await _adminProductos.Con_ObtenerUltLotePorNombre(valor, categoria, visible);
             ListaProductos = new ObservableCollection<Productos>(res.lista);
         }
         private async Task EjecutarBusquedaPorCodigoUltLote(object obj)
@@ -578,7 +578,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             Busqueda = "Buscar por nombre";
             cmbCatParaBusqueda.SelectedIndex = 0;
             ColoresEntradas.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
-            var res = await _adminProductos.BusquedaProductoPorCodigoUltLote(BusquedaCodigo);
+            int? visible = VerProductosOcultos ? null : 1;
+            var res = await _adminProductos.BusquedaProductoPorCodigoUltLote(BusquedaCodigo, visible);
             ListaProductos = new ObservableCollection<Productos>(res.lista);
         }
         private async Task EjecutarActualizarAnchoActual(object arg)
@@ -586,25 +587,24 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             if(arg is Grid grid)
             {
                 double anchoActual = grid.ActualWidth;
-                double nueve = (anchoActual * 9) / 100;
-                double doce = (anchoActual * 12) / 100;
-                double relleno = (anchoActual * 16.33) / 100;
-                EColumna_uno = nueve;
-                EColumna_dos = doce;
-                EColumna_tres = relleno;
-                EColumna_cuatro = relleno;
-                EColumna_cinco = relleno;
-                EColumna_seis = nueve;
-                EColumna_siete = nueve;
-                EColumna_ocho = doce;
-                TColumna_uno = nueve;
-                TColumna_dos = doce;
-                TColumna_tres = relleno;
-                TColumna_cuatro = relleno;
-                TColumna_cinco = relleno;
-                TColumna_seis = nueve;
-                TColumna_siete = nueve;
-                TColumna_ocho = doce;
+                double ancho1 = (anchoActual * 8) / 100;
+                double ancho2 = (anchoActual * 14) / 100;
+                double ancho3 = (anchoActual * 22) / 100;
+                EColumna_uno    = ancho1;
+                EColumna_dos    = ancho3;
+                EColumna_tres   = ancho2;
+                EColumna_cuatro = ancho2;
+                EColumna_cinco  = ancho2;
+                EColumna_seis   = ancho2;
+                EColumna_siete  = ancho2;
+
+                TColumna_uno    = ancho1;
+                TColumna_dos    = ancho3;
+                TColumna_tres   = ancho2;
+                TColumna_cuatro = ancho2;
+                TColumna_cinco  = ancho2;
+                TColumna_seis   = ancho2;
+                TColumna_siete  = ancho2;
             }
         }
         private async Task EjecutarObtenerCategoriasGenerales(object arg)
@@ -626,6 +626,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private async Task EjecutarValoresPredeterminados(object arg)
         {
             Nombre = "Nombre*";
+            NombreProducto = "Ninguno";
             Venta = "Precio de venta*";
             Compra = "Costo de compra*";
             Marcado = default;
