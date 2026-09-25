@@ -18,9 +18,14 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
     {
         private Configuracion _configuracion;
         private string _ruta;
+        string carpetaDatos = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Muoqa",
+            "MuoqaStock"
+        );
         public ModeloConfDN()
         {
-            _ruta = "config.json";
+            _ruta = carpetaDatos + "\\config.json";
             string jsonDeConfiguracion = File.ReadAllText(_ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);

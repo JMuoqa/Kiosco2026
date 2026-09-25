@@ -60,13 +60,13 @@
                         <RadioButton Style="{StaticResource botones_nav}" Command="{Binding MostrarVistaAdicionProducto}">
                             <StackPanel Orientation="Horizontal">
                                 <fa:IconImage Icon="Add" Style="{StaticResource iconos_menu}" />
-                                <TextBlock Style="{StaticResource texto_botones_nav}">Agregar producto</TextBlock>
+                                <TextBlock Style="{StaticResource texto_botones_nav}">Cargar lote</TextBlock>
                             </StackPanel>
                         </RadioButton>
                         <RadioButton Style="{StaticResource botones_nav}" Command="{Binding MostrarEdicionProducto}">
                             <StackPanel Orientation="Horizontal">
                                 <fa:IconImage Icon="Edit" Style="{StaticResource iconos_menu}"/>
-                                <TextBlock Style="{StaticResource texto_botones_nav}">Editar productos</TextBlock>
+                                <TextBlock Style="{StaticResource texto_botones_nav}">Editar productos/lotes</TextBlock>
                             </StackPanel>
                         </RadioButton>
                         <RadioButton Style="{StaticResource botones_nav}" Command="{Binding MostrarAdministrarCategorias}">

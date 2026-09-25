@@ -26,15 +26,11 @@ namespace Kiosco2026.ModeloDeLasVistas
             MostrarVistaAdicionProducto = new ComandoModeloDeVista(EjecutarMostrarVistaAdicionProducto);
             MostrarAdministrarCategorias = new ComandoModeloDeVista(EjecutarMostrarAdministrarCategorias);
             MostrarEdicionProducto = new ComandoModeloDeVista(EjecutarMostrarEdicionProducto);
-            IniciarSession = new ComandoModeloDeVista(EjecutarIniciarSession);
             MostrarVentaPrincipal = new ComandoModeloDeVista(EjecutarMostrarVentaPrincipal);
             AbrirConfiguracion = new ComandoModeloDeVista(EjecutarAbrirConfiguracion);
             MostrarHistorialVentas = new ComandoModeloDeVista(EjecutarMostrarHistorialVentas);
             AbrirVentanaInfo = new ComandoModeloDeVista(EjecutarAbrirVentanaInfo);
-            _aut = new AdminAut();
-            EjecutarIniciarSession(null);
         }
-        private AdminAut _aut;
         private ModeloDeVistaBase _vistaHijaActual;
         private Window _ventanaInfo;
         private string _nombreVentana;
@@ -138,35 +134,6 @@ namespace Kiosco2026.ModeloDeLasVistas
         {
             VistaHijaActual = new ModeloAdministrarCategorias();
             NombreVentana = "Productos | Categorías";
-        }
-        private async Task EjecutarIniciarSession(object arg)
-        {
-            /*
-            UsuarioMuoqa usr = new UsuarioMuoqa
-            {
-                Usuario = "Muoqa",
-                Contrasena = "MuoqaMR1986" 
-            };
-            var res = await _aut.Con_IniciarSesion(usr);
-            string codigo = res.datosUsuario;
-            bool tarea = await ActualizarCodigo(codigo);*/
-            if (true)
-                EjecutarMostrarVentaPrincipal(null);
-        }
-        private async Task<bool> ActualizarCodigo(string codigoNuevo)
-        {
-            string ruta = "config.json";
-            //Leemos el json
-            string jsonDeConfiguracion = File.ReadAllText(ruta);
-            //Lo transfomamos a un objeto
-            Configuracion configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
-            //Modificamos las propiedades
-            configuracion.CodigoSeguridad = codigoNuevo; 
-            //Convertimos de vuelta a formato json
-            string nuevoJson = JsonSerializer.Serialize(configuracion, new JsonSerializerOptions { WriteIndented = true });
-            //Sobrescribimos el archivo con las nuevas modificaciones
-            File.WriteAllText(ruta, nuevoJson);
-            return true;
         }
     }
 }

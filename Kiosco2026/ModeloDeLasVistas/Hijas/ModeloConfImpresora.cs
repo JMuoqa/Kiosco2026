@@ -21,10 +21,15 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private Configuracion  _configuracion;
         private string _rutaImpresora;
         private string _rutaConf;
+        string carpetaDatos = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Muoqa",
+            "MuoqaStock"
+        );
         public ModeloConfImpresora()
         {
-            _rutaConf = "config.json";
-            _rutaImpresora = "configImpresora.json";
+            _rutaConf = carpetaDatos+"\\config.json";
+            _rutaImpresora = carpetaDatos+"\\configImpresora.json";
             string jsonDeConfiguracion = File.ReadAllText(_rutaConf);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             string jsonDeConfiguracionImpresora = File.ReadAllText(_rutaImpresora);

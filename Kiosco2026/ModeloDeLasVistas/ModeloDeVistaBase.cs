@@ -16,9 +16,14 @@ namespace Kiosco2026.ModeloDeLasVistas
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        string carpetaDatos = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Muoqa",
+            "MuoqaStock"
+        );
         public void EscribirEnTXTError(HistorialErrores ERROR)
         {
-            string ruta = "log_error.txt";
+            string ruta = carpetaDatos+"\\log_error.txt";
             DateTime hoy = DateTime.Now;
             string logError = File.ReadAllText(ruta);
             logError += "{" + $"fecha:{hoy.ToString("dd-MM-yyyy HH:mm:ss")}," +

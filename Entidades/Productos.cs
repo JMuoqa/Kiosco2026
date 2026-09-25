@@ -95,7 +95,13 @@ namespace Entidades
                 _subTotal = value;
             }
         }
-        public string STRSubTotal { get => _subTotal.ToString(new CultureInfo("es-AR"));  }
+        public string STRSubTotal {
+            get
+            {
+                decimal subTotalCalculado = decimal.Parse(Venta) * Cantidad;
+                return subTotalCalculado.ToString(new CultureInfo("es-AR"));
+            }  
+        }
     }
     public class ProductosDto
     {

@@ -265,7 +265,7 @@ namespace Conexiones
                 try
                 {
                     con.Open();    
-                    string cargarCategoria = "INSERT INTO Categorias (Nombre, Mostrar) VALUES(@nombre, \"SI\");";
+                    string cargarCategoria = "INSERT INTO Categorias (Nombre, Mostrar) VALUES(@nombre, 1);";
                     MySqlCommand cmd = new MySqlCommand(cargarCategoria, con);
                     cmd.Parameters.AddWithValue("@nombre", categoria.Nombre);
                     int resultado = cmd.ExecuteNonQuery();

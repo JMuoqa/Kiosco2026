@@ -4,6 +4,9 @@
     <_LastSelectedProfileId>C:\Users\Usuario\Desktop\Proyectos\Trabajo\SofKiosco2025\Kiosco2026\Kiosco2026\Properties\PublishProfiles\FolderProfile.pubxml</_LastSelectedProfileId>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Update="Autenticarse.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Vistas\CONFIGURACION\ConfBaseDeDatos.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

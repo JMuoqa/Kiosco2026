@@ -6,18 +6,56 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Management;
+using System.Security.Cryptography;
 
 namespace Conexiones
 {
     public class Con_Aut
     {
+        private async Task<string> ObtenerNumeroSeriePlacaMadre()
+        {
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT SerialNumber FROM Win32_BaseBoard"))
+            {
+                foreach (ManagementObject obj in searcher.Get())
+                {
+                    return obj["SerialNumber"]?.ToString() ?? "";
+                }
+            }
+            return "";
+        }
+        private async Task<string> ObtenerSistemaOperativo()
+        {
+            using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT Caption FROM Win32_OperatingSystem");
+            foreach (ManagementObject obj in searcher.Get())
+            {
+                return obj["Caption"]?.ToString() ?? "";
+            }
+            return "";
+        }
+        public async Task<string> ObtenerSMBIOSUUID()
+        {
+            using ManagementObjectSearcher searcher = new ManagementObjectSearcher( "SELECT UUID FROM Win32_ComputerSystemProduct");
+            foreach (ManagementObject obj in searcher.Get())
+            {
+                return obj["UUID"]?.ToString() ?? "";
+            }
+            return "";
+        }
         public async Task<(bool estado, string mensaje, string datosUsuario)> Con_IniciarSesion(UsuarioMuoqa usuario)
         {
             using (var client = new HttpClient())
             {
                 try
                 {
-                    var json = JsonSerializer.Serialize(new { Usuario = usuario.Usuario, Contraseña = usuario.Contrasena });
+                    string numeroSeriePlaca = await ObtenerNumeroSeriePlacaMadre();
+                    string SMBIOSUUID = await ObtenerSMBIOSUUID();
+                    string oS = await ObtenerSistemaOperativo();
+                    string resultadoParaHash = numeroSeriePlaca + "|" + SMBIOSUUID;
+                    byte[] bytes = Encoding.UTF8.GetBytes(resultadoParaHash);
+                    byte[] hash = SHA256.HashData(bytes);
+                    string identificadorEquipo = Convert.ToHexString(hash).ToLowerInvariant();
+                    var json = JsonSerializer.Serialize(new { Usuario = usuario.Usuario, Contraseña = usuario.Contrasena, IdentificadorEquipo = identificadorEquipo, Os = oS });
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
                     var respuesta = await client.PostAsync("https://muoqa.com/autenticacion/iniciar-desde-app", content);
                     if (respuesta.IsSuccessStatusCode)

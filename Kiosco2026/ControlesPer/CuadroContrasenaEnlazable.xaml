@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="WPFApp_Muestra.ControlesPer.CuadroContrasenaEnlazable"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WPFApp_Muestra.ControlesPer"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+        <PasswordBox x:Name="entrada_contraseña_elazable"
+          Background="Transparent"
+          
+          FontFamily="Montserrat"
+          Foreground="White"
+          CaretBrush="White"
+          FontSize="14"
+          BorderThickness="0,0,0,2"
+          VerticalAlignment="Center"
+          >
+            <PasswordBox.Template>
+                <ControlTemplate TargetType="PasswordBox">
+                    <Border x:Name="border" 
+                     BorderThickness="{TemplateBinding BorderThickness}" 
+                     BorderBrush="{TemplateBinding BorderBrush}" 
+                     Background="{TemplateBinding Background}">
+                        <!--Esto es importante para que pueda recibir texto-->
+                        <ScrollViewer x:Name="PART_ContentHost"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsFocused" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="#ff9500"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </PasswordBox.Template>
+        </PasswordBox>
+</UserControl>

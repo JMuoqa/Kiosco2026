@@ -14,9 +14,15 @@ namespace Conexiones
     {
         protected readonly string cadenaDeConexion;
         private Configuracion _configuracion;
+
+        string carpetaDatos = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Muoqa",
+            "MuoqaStock"
+        );
         public ConexionMySQL()
         {
-            string ruta = "config.json";
+            string ruta = carpetaDatos+"\\config.json";
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             string contrasena = _configuracion.ContrasenaBD;
