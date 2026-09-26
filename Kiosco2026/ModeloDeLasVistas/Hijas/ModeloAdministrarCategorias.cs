@@ -18,7 +18,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Kiosco2026.ModeloDeLasVistas.Hijas
 {
@@ -26,10 +25,15 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
     {
         private Configuracion _configuracion { get; }
         private bool _metodoEnEjecucion;
+        string carpetaDatos = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Muoqa",
+            "MuoqaStock"
+        );
         public ModeloAdministrarCategorias()
         {
             _metodoEnEjecucion = false;
-            string ruta = "config.json";
+            string ruta = carpetaDatos+"\\config.json";
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             ActualizarAnchoActual = new ComandoModeloDeVista(EjecutarActualizarAnchoActual);

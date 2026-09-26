@@ -112,7 +112,34 @@ namespace Kiosco2026.ModeloDeLasVistas
         {
             MenuConfiguracion window = new MenuConfiguracion();
             window.Owner = Application.Current.MainWindow;
+            window.Closed += (s, e) =>
+            {
+                ActualizarVista();
+            };
             window.ShowDialog();
+        }
+        private void ActualizarVista()
+        {
+            if (VistaHijaActual is ModeloVentasPrincipales)
+            {
+                EjecutarMostrarVentaPrincipal(null);
+            }
+            else if (VistaHijaActual is ModeloAnadirProducto)
+            {
+                EjecutarMostrarVistaAdicionProducto(null);
+            }
+            else if (VistaHijaActual is ModeloAdministrarCategorias)
+            {
+                EjecutarMostrarAdministrarCategorias(null);
+            }
+            else if (VistaHijaActual is ModeloEditarProducto)
+            {
+                EjecutarMostrarEdicionProducto(null);
+            }
+            else if (VistaHijaActual is ModeloHistorialVentas)
+            {
+                EjecutarMostrarHistorialVentas(null);
+            }
         }
         private async Task EjecutarMostrarVentaPrincipal(object arg)
         {

@@ -22,11 +22,15 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
     public class MAC : ModeloDeVistaBase
     {
         private Configuracion _configuracion { get; }
-
+        string carpetaDatos = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Muoqa",
+            "MuoqaStock"
+        );
         public MAC()
         {
             _metodoEnEjecucion = false;
-            string ruta = "config.json";
+            string ruta = carpetaDatos + "\\config.json";
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             CargarCategoria = new ComandoModeloDeVista(EjecutarCargarCategoria);

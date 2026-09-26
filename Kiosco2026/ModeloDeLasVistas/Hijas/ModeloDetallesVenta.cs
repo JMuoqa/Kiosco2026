@@ -19,10 +19,15 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
     {
         private Configuracion _configuracion { get; }
         private bool _metodoEnEjecucion;
+        string carpetaDatos = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Muoqa",
+            "MuoqaStock"
+        );
         public ModeloDetallesVenta(Ventas venta)
         {
             _metodoEnEjecucion = false;
-            string ruta = "config.json";
+            string ruta = carpetaDatos + "\\config.json";
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             _venta = venta;

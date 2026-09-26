@@ -14,10 +14,15 @@ namespace Conexiones
     {
         private Configuracion _configuracion { get; }
         private CultureInfo _cultura;
+        string carpetaDatos = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Muoqa",
+            "MuoqaStock"
+        );
         public Con_Productos()
         {
 
-            string ruta = "config.json";
+            string ruta = carpetaDatos + "\\config.json";
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             _cultura = new CultureInfo("es-AR");

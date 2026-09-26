@@ -200,6 +200,11 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             }
         }
         #endregion
+        string carpetaDatos = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Muoqa",
+            "MuoqaStock"
+        );
         public ModeloFinalizarVenta(Ventas venta)
         {
             _cultura = new CultureInfo("es-AR");
@@ -207,7 +212,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             ColoresEntradas.MontoPagado = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#202020"));
             GotFocus = new ComandoModeloDeVista(EjecutarGotFocus);
             LostFocus = new ComandoModeloDeVista(EjecutarLostFocus);
-            string ruta = "config.json";
+            string ruta = carpetaDatos + "\\config.json";
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             _venta = venta;

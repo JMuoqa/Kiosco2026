@@ -23,6 +23,12 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
     public class ModeloAnadirProducto : ModeloDeVistaBase
     {
         private Configuracion _configuracion { get; }
+
+        string carpetaDatos = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Muoqa",
+            "MuoqaStock"
+        );
         #region Propiedades
         private bool _metodoEnEjecucion;
         private string _precioVentaEnVivo;
@@ -210,7 +216,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ModeloAnadirProducto()
         {
             _metodoEnEjecucion = false;
-            string ruta = "config.json";
+            string ruta = carpetaDatos+"\\config.json";
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             ColoresEntradas = new ColoresProductos();

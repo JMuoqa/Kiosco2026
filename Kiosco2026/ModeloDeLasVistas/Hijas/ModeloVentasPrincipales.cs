@@ -28,11 +28,16 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private Configuracion _configuracion { get; }
         private CultureInfo _cultura { get; }
         private bool _metodoEnEjecucion;
+        string carpetaDatos = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Muoqa",
+            "MuoqaStock"
+        );
         public ModeloVentasPrincipales()
         {
             _metodoEnEjecucion = false;
             _cultura = new CultureInfo("es-AR");
-            string ruta = "config.json";
+            string ruta = carpetaDatos + "\\config.json";
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             ActualizarAnchoActual = new ComandoModeloDeVista(EjecutarActualizarAnchoActual);

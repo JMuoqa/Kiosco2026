@@ -16,9 +16,14 @@ namespace Kiosco2026.ModeloDeLasVistas.Autenticarse
     public class ModeloAutenticarse : ModeloDeVistaBase
     {
         private Configuracion _configuracion { get; }
+        string carpetaDatos = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Muoqa",
+            "MuoqaStock"
+        );
         public ModeloAutenticarse() 
         {
-            string ruta = "config.json";
+            string ruta = carpetaDatos + "\\config.json";
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             IniciarSession = new ComandoModeloDeVista(EjecutarIniciarSession);
@@ -73,7 +78,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Autenticarse
         }
         private async Task<bool> ActualizarCodigo(string codigoNuevo)
         {
-            string ruta = "config.json";
+            string ruta = carpetaDatos+"\\config.json";
             //Leemos el json
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             //Lo transfomamos a un objeto

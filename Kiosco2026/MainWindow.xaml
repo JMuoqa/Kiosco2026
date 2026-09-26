@@ -8,11 +8,17 @@
         xmlns:modeloHijas="clr-namespace:Kiosco2026.ModeloDeLasVistas.Hijas"
         xmlns:vistasStok="clr-namespace:Kiosco2026.Vistas"
         xmlns:vistasVentas="clr-namespace:Kiosco2026.Vistas.VENTAS"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Background="Transparent"
         WindowState="Maximized"
         Title="Muoqa stock" Height="900" Width="1440">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding MostrarVentaPrincipal}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Window.Resources>
         <DataTemplate DataType="{x:Type modeloHijas:ModeloAnadirProducto}">
             <vistasStok:AnadirProducto/>
