@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
         PreviewKeyDown="Window_PreviewKeyDown"
-        Title="Información de la sección añadir producto" Height="450" Width="800">
+        Title="Información de la sección cargar lote" Height="450" Width="800">
 
         <Border
         Margin="15"
@@ -25,7 +25,7 @@
                 <!-- TÍTULO -->
                 <TextBlock
                 Grid.Row="0"
-                Text="Añadir producto"
+                Text="Cargar lote"
                 FontFamily="Roboto Flex"
                 FontSize="24"
                 FontWeight="SemiBold"

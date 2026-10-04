@@ -106,7 +106,7 @@ namespace Kiosco2026.ModeloDeLasVistas
         private async Task EjecutarMostrarHistorialVentas(object arg)
         {
             VistaHijaActual = new ModeloHistorialVentas();
-            NombreVentana = "Ventas | Busqueda";
+            NombreVentana = "Ventas | Historial";
         }
         private async Task EjecutarAbrirConfiguracion(object arg)
         {
@@ -150,12 +150,12 @@ namespace Kiosco2026.ModeloDeLasVistas
         private async Task EjecutarMostrarVistaAdicionProducto(object arg)
         {
             VistaHijaActual = new ModeloAnadirProducto();
-            NombreVentana = "Productos | Agregar producto";
+            NombreVentana = "Productos | Cargar lote";
         }
         private async Task EjecutarMostrarEdicionProducto(object arg)
         {
             VistaHijaActual = new ModeloEditarProducto();
-            NombreVentana = "Productos | Editar productos";
+            NombreVentana = "Productos | Editar lotes/productos";
         }
         private async Task EjecutarMostrarAdministrarCategorias(object arg)
         {

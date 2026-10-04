@@ -94,7 +94,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Autenticarse
                     if (!res.estado) throw new Exception(res.mensaje);
                     MensajeRespuesta = res.mensaje;
                     string codigo = res.datosUsuario;
-                    bool tarea = await ActualizarCodigo(codigo);
+                    bool tarea = await ActualizarCodigo(codigo);                    
                     if (tarea) IniciarAplicacion?.Invoke();
                 }
             }

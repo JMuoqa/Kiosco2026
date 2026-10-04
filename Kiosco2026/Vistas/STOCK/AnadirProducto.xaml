@@ -28,7 +28,8 @@
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Vertical" Grid.Column="0">
                 <TextBox x:Name="entrada_codigo" Style="{StaticResource entrada_form}" Text="{Binding Codigo, UpdateSourceTrigger=PropertyChanged}" 
-                         Foreground="{Binding ColoresEntradas.Codigo}" PreviewTextInput="entradas_PreviewTextInput">
+                         Foreground="{Binding ColoresEntradas.Codigo}" ToolTip="Ingresa el código de barras del producto o un identificador único. Las próximas cargas serán más rápidas si utilizas este código." 
+                         PreviewTextInput="entradas_PreviewTextInput">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="GotFocus">
                             <i:InvokeCommandAction Command="{Binding GotFocus}" 
@@ -42,15 +43,11 @@
                             <i:InvokeCommandAction Command="{Binding ComprobarExistencia}"
                                                    PassEventArgsToCommand="True"/>
                         </i:EventTrigger>
-                        <!--
-                        <i:EventTrigger EventName="Loaded">
-                            <i:InvokeCommandAction Command="{Binding SelecionarTextBox}" 
-                                                   CommandParameter="{Binding ElementName=entrada_codigo}"/>
-                        </i:EventTrigger>-->
                     </i:Interaction.Triggers>
                 </TextBox>
                 <TextBox x:Name="entrada_nombre" Style="{StaticResource entrada_form}"
-                         Text="{Binding Nombre}" Foreground="{Binding ColoresEntradas.Nombre}">
+                         Text="{Binding Nombre}" Foreground="{Binding ColoresEntradas.Nombre}"
+                         ToolTip="Ingresa el nombre del producto. Ejemplo: «Fideos marca 500 g».">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="GotFocus">
                             <i:InvokeCommandAction Command="{Binding GotFocus}" 
@@ -68,7 +65,8 @@
                            ItemsSource="{Binding ListaCategorias}"
                            SelectedItem="{Binding Categoria}"
                            Foreground="{Binding ColoresEntradas.Categoria}"
-                           Cursor="Hand">
+                           Cursor="Hand"
+                           ToolTip="Si no ves categorías, primero debes agregar una en la sección «Categorías».">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding SelectionChanged}"
@@ -91,7 +89,8 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <TextBox x:Name="entrada_cantidad" Style="{StaticResource entrada_form}" Text="{Binding Cantidad, UpdateSourceTrigger=PropertyChanged}" 
-                         PreviewTextInput="entradas_PreviewTextInput" Foreground="{Binding ColoresEntradas.Cantidad}">
+                         PreviewTextInput="entradas_PreviewTextInput" Foreground="{Binding ColoresEntradas.Cantidad}"
+                             ToolTip="Ingresa la cantidad de unidades que compraste en este lote.">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="GotFocus">
                                 <i:InvokeCommandAction Command="{Binding GotFocus}" 
@@ -105,7 +104,8 @@
                     </TextBox>
                     <ComboBox x:Name="cmb_unidad" Grid.Column="1" PreviewMouseDown="cmb_categorias_PreviewMouseDown"
                         Style="{StaticResource cmb_entrada_form}" SelectedIndex="0" Foreground="{Binding ColoresEntradas.UnidadMedida}"
-                        Cursor="Hand" SelectedItem="{Binding ComboBoxItem}">
+                        Cursor="Hand" SelectedItem="{Binding ComboBoxItem}"
+                        ToolTip="Selecciona la unidad de medida correspondiente al producto o lote.">
                         <ComboBoxItem Foreground="#000000">Unidad de medida*</ComboBoxItem>
                         <ComboBoxItem Foreground="#000000">Uni</ComboBoxItem>
                         <ComboBoxItem Foreground="#000000">g</ComboBoxItem>
@@ -122,7 +122,8 @@
                     </ComboBox>
                 </Grid>
                 <TextBox x:Name="entrada_compra" Style="{StaticResource entrada_form}" Text="{Binding Compra, UpdateSourceTrigger=PropertyChanged}" 
-                         PreviewTextInput="entradas_PreviewTextInput" Foreground="{Binding ColoresEntradas.Compra}">
+                         PreviewTextInput="entradas_PreviewTextInput" Foreground="{Binding ColoresEntradas.Compra}"
+                         ToolTip="Ingresa el costo total de compra del lote.">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="GotFocus">
                             <i:InvokeCommandAction Command="{Binding GotFocus}" 
@@ -147,12 +148,13 @@
                 </TextBlock>
                 <TextBlock Margin="10" FontFamily="Roboto Flex" 
                            FontSize="16"><Bold>- Agregar categorías:</Bold> Para ampliar tu listado, utilizá la opción 
-                    <LineBreak/><Span Foreground="#FF265B71">“Administrar categorías”</Span> disponible dentro de la sección “Stock”.
+                    <LineBreak/><Span Foreground="#FF265B71" Cursor="Hand" ToolTip="Es la tercera opción del menú izquierdo, dentro de «Stock».">“Categorías”</Span> disponible dentro de la sección “Stock”.
                 </TextBlock>
             </StackPanel>
             <StackPanel Grid.Column="1">
                 <TextBox x:Name="entrada_venta"  Style="{StaticResource entrada_form}" Text="{Binding Margen, UpdateSourceTrigger=PropertyChanged}" 
-                         PreviewTextInput="entradas_PreviewTextInput" Foreground="{Binding ColoresEntradas.Venta}">
+                         PreviewTextInput="entradas_PreviewTextInput" Foreground="{Binding ColoresEntradas.Venta}"
+                         ToolTip="Ingresa el margen de ganancia que deseas obtener sobre la compra del lote. Este valor se expresa en porcentaje.">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="GotFocus">
                                 <i:InvokeCommandAction Command="{Binding GotFocus}" 
@@ -165,11 +167,14 @@
                         </i:Interaction.Triggers>
                     </TextBox>
                 <StackPanel Orientation="Horizontal" Margin="10,0,0,36">
-                    <TextBlock Style="{StaticResource titulosFormularios}" FontSize="18" VerticalAlignment="Center" Margin="0" Text="Precio de venta por unidad: "/>
-                    <TextBlock Style="{StaticResource titulosFormularios}" FontSize="18" VerticalAlignment="Center" Margin="0" Text="{Binding PrecioVentaEnVivo}"/>
+                    <TextBlock Style="{StaticResource titulosFormularios}" FontSize="18" VerticalAlignment="Center" Margin="0" Text="Precio de venta por unidad: "
+                               ToolTip="Es el precio de venta final del producto."/>
+                    <TextBlock Style="{StaticResource titulosFormularios}" FontSize="18" VerticalAlignment="Center" Margin="0" Text="{Binding PrecioVentaEnVivo}"
+                               ToolTip="Es el precio de venta final del producto."/>
                 </StackPanel>
                 <TextBox x:Name="entrada_proveedor" Style="{StaticResource entrada_form}" Text="{Binding Proveedor}" 
-                         Foreground="{Binding ColoresEntradas.Proveedor}">
+                         Foreground="{Binding ColoresEntradas.Proveedor}"
+                         ToolTip="Ingresa el proveedor del producto. Este campo es opcional.">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="GotFocus">
                             <i:InvokeCommandAction Command="{Binding GotFocus}" 
@@ -188,7 +193,8 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Style="{StaticResource titulosFormularios}" Grid.Column="0" VerticalAlignment="Center" >Ingreso*:</TextBlock>
                     <DatePicker Grid.Column="1" BorderThickness="0" FontFamily="Roboto Flex" FontSize="20" 
-                                Padding="0" VerticalAlignment="Center" SelectedDate="{Binding Ingreso}"></DatePicker>
+                                Padding="0" VerticalAlignment="Center" SelectedDate="{Binding Ingreso}"
+                                ToolTip="Modifica la fecha de ingreso del lote si es necesario."></DatePicker>
                 </Grid>
                 <Grid Margin="10, 9, 10, 10" Height="41">
                     <Grid.ColumnDefinitions>
@@ -197,10 +203,11 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Style="{StaticResource titulosFormularios}" Grid.Column="0" VerticalAlignment="Center">Vencimiento:</TextBlock>
                     <DatePicker Grid.Column="1" BorderThickness="0" FontFamily="Roboto Flex" FontSize="20" 
-                                Padding="0" VerticalAlignment="Center" SelectedDate="{Binding Vencimiento}"></DatePicker>
+                                Padding="0" VerticalAlignment="Center" SelectedDate="{Binding Vencimiento}"
+                                ToolTip="Modifica la fecha de vencimiento del lote si es necesario."></DatePicker>
                 </Grid>
                 <RadioButton Style="{StaticResource boton_confirmar}" Command="{Binding CargarProducto}"
-                             CommandParameter="{Binding ElementName=cmb_categorias}">
+                             CommandParameter="{Binding ElementName=cmb_categorias}" ToolTip="Puedes presionar la tecla «F9» dos veces para ejecutar esta acción.">
                     <TextBlock Style="{StaticResource texto_botones_uno}" Text="Añadir (F9+F9)"/>
                 </RadioButton>
                 <TextBlock Margin="10" FontFamily="Roboto Flex" 
