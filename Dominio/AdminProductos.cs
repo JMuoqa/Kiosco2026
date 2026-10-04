@@ -3,6 +3,8 @@ using Entidades;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
+using System.Numerics;
+using System.Text.RegularExpressions;
 
 namespace Dominio
 {
@@ -13,6 +15,9 @@ namespace Dominio
         {
             int margenGanancia;
             decimal precioCompra;
+            var miRegex = new Regex(@"^[0-9]+$");
+            if (!miRegex.IsMatch(productoDto.Codigo))
+                throw new Exception("El campo 'Codigo de barras' no es numerico");
             int cantidadProductos;
             if (!int.TryParse(productoDto.Margen, out margenGanancia))
                 throw new Exception("El campo de 'Margen de ganancia' no es numerico");
@@ -131,7 +136,7 @@ namespace Dominio
         {
             if (categoria == null)
                 throw new Exception("No hay datos del producto");
-            if (string.IsNullOrWhiteSpace(categoria.Nombre) || categoria.Nombre.ToLower().Trim() == "NOMBRE DE LA CATEGORIA".ToLower().Trim())
+            if (string.IsNullOrWhiteSpace(categoria.Nombre) || categoria.Nombre.ToLower().Trim() == "NOMBRE DE LA CATEGORÍA".ToLower().Trim())
                 throw new Exception("El campo 'Nombre', del formulario de carga, esta vacio");
             if (categoria.ID <= 0)
                 throw new Exception("No hay ninguna categoria seleccionada");
@@ -143,7 +148,7 @@ namespace Dominio
         {
             if (categoria == null)
                 throw new Exception("No hay datos del producto");
-            if(string.IsNullOrWhiteSpace(categoria.Nombre) || categoria.Nombre.ToLower().Trim() == "NOMBRE DE LA CATEGORIA".ToLower().Trim())
+            if(string.IsNullOrWhiteSpace(categoria.Nombre) || categoria.Nombre.ToLower().Trim() == "NOMBRE DE LA CATEGORÍA".ToLower().Trim())
                 throw new Exception("El campo 'Nombre', del formulario de carga, esta vacio");
             if(categoria.Nombre.Length > 80)
                 throw new Exception("El nombre de la categoria no puede superar los 80 caracteres");

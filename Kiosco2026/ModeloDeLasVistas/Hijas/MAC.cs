@@ -40,7 +40,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             PreviewKeyDownParaCerrar = new ComandoModeloDeVista(EjecutarPreviewKeyDownParaCerrar);
             _adminProductos = new AdminProductos();
             _colores = new ColoresTexto();
-            NombreCargar = "Nombre de la categoria";
+            NombreCargar = "Nombre de la categoría";
             ColorBusqueda = "#9A9A9A";
             tiempo = new System.Timers.Timer();
             tiempo.Elapsed += ResetearMensaje;
@@ -122,7 +122,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private async Task EjecutarKeyDownCargar(object arg)
         {
-
+            ColorBusqueda = "#202020";
+            NombreCargar = NombreCargar.Replace("Nombre de la categoría", "");
             if (arg is KeyEventArgs e)
             {
                 if (e.Key == Key.Enter)
@@ -133,7 +134,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private void EjecutarPostCarga()
         {
-            NombreCargar = "Nombre de la categoria";
+            NombreCargar = "Nombre de la categoría";
             ColorBusqueda = "#9A9A9A";
         }
         private async Task EjecutarCargarCategoria(object arg)
@@ -177,7 +178,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private async Task EjecutarGotFocus(object arg)
         {
-            if (NombreCargar == "Nombre de la categoria")
+            if (NombreCargar == "Nombre de la categoría")
             {
                 NombreCargar = string.Empty;
                 ColorBusqueda = "#202020";
@@ -186,9 +187,9 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         private async Task EjecutarLostFocus(object arg)
         {
             string nombre = (string)arg;
-            if (string.IsNullOrWhiteSpace(NombreCargar) || NombreCargar.Trim() == "Nombre de la categoria") 
+            if (string.IsNullOrWhiteSpace(NombreCargar) || NombreCargar.Trim() == "Nombre de la categoría") 
             { 
-                NombreCargar = "Nombre de la categoria";
+                NombreCargar = "Nombre de la categoría";
                 ColorBusqueda = "#9A9A9A";
             }
         }

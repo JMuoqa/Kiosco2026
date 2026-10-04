@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Kiosco2026"
         xmlns:controlesPer="clr-namespace:WPFApp_Muestra.ControlesPer"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         WindowStyle="None"
         ResizeMode="NoResize"
@@ -137,6 +138,12 @@
                          BorderThickness="0,0,0,2"
                          Margin="0,5,0,0"
                          VerticalAlignment="Center">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="KeyDown">
+                            <i:InvokeCommandAction Command="{Binding IniciarKeyDown}" 
+                                                   PassEventArgsToCommand="True"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <TextBox.Template>
                         <ControlTemplate TargetType="TextBox">
                             <Border x:Name="border"
@@ -165,15 +172,23 @@
                            Margin="0,25,0,0"/>
                 <controlesPer:CuadroContrasenaEnlazable
                     Contrasena="{Binding Contrasena, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    Margin="0,5,0,0"/>
-                <TextBlock Text="{Binding MensajeDeErro}"
-                           Foreground="#d7596d"
+                    Margin="0,5,0,0">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="KeyDown">
+                            <i:InvokeCommandAction Command="{Binding IniciarKeyDown}"
+                                                   PassEventArgsToCommand="True"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </controlesPer:CuadroContrasenaEnlazable>
+                <TextBlock Text="{Binding MensajeRespuesta}"
+                           Foreground="white"
                            FontFamily="Roboto flex"
                            FontWeight="Medium"
                            TextWrapping="Wrap"
                            TextAlignment="Left"
                            FontSize="14"
-                           Margin="0,15,0,0"/>
+                           Margin="0,15,0,0"
+                           />
                 <Button x:Name="boton_confirmar"
                         Content="Confirmar"
                         Foreground="#000"
@@ -188,17 +203,17 @@
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="Background"
-                                    Value="#DECDB3"/>
+                                    Value="#f59d00"/>
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver"
                                          Value="True">
                                     <Setter Property="Background"
-                                            Value="#F0E4C8"/>
+                                            Value="#ffab19"/>
                                 </Trigger>
                                 <Trigger Property="IsPressed"
                                          Value="True">
                                     <Setter Property="Background"
-                                            Value="#CBBF9C"/>
+                                            Value="#FFEA9706"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>

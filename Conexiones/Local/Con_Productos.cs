@@ -275,8 +275,8 @@ namespace Conexiones
                     cmd.Parameters.AddWithValue("@nombre", categoria.Nombre);
                     int resultado = cmd.ExecuteNonQuery();
                     if(resultado > 0)
-                        return (true, "La categoria se cargo correctamente");
-                    return (false, "No se pudo cargar la categoria");
+                        return (true, "La categoría se cargo correctamente");
+                    return (false, "No se pudo cargar la categoría");
                 }
                 catch (Exception ex)
                 {

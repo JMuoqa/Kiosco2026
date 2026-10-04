@@ -27,10 +27,22 @@ namespace Kiosco2026.ModeloDeLasVistas.Autenticarse
             string jsonDeConfiguracion = File.ReadAllText(ruta);
             _configuracion = JsonSerializer.Deserialize<Configuracion>(jsonDeConfiguracion);
             IniciarSession = new ComandoModeloDeVista(EjecutarIniciarSession);
+            IniciarKeyDown = new ComandoModeloDeVista(EjecutarIniciarKeyDown);
+            _enProceso = false;
             _aut = new AdminAut();
         }
 
         private AdminAut _aut;
+        private string _mensajeRespuesta;
+        public string MensajeRespuesta
+        {
+            get => _mensajeRespuesta;
+            set
+            {
+                _mensajeRespuesta = value;
+                OnPropertyChanged(nameof(MensajeRespuesta));
+            }
+        }
         private string _nombreUsuario;
         public string NombreUsuario
         {
@@ -52,29 +64,48 @@ namespace Kiosco2026.ModeloDeLasVistas.Autenticarse
             }
         }
         public ICommand IniciarSession { get; }
+        public ICommand IniciarKeyDown { get; }
         public event Action IniciarAplicacion;
 
+        private async Task EjecutarIniciarKeyDown(object arg)
+        {
+            if (arg is KeyEventArgs e)
+            {
+                if (e.Key == Key.Enter)
+                {
+                    EjecutarIniciarSession(null);
+                }
+            }
+        }
+        private bool _enProceso;
         private async Task EjecutarIniciarSession(object arg)
         {
             try
             {
-                UsuarioMuoqa usr = new UsuarioMuoqa
+                if (!_enProceso)
                 {
-                    Usuario = NombreUsuario,
-                    Contrasena = Contrasena
-                };
-                var res = await _aut.Con_IniciarSesion(usr);
-                if (!res.estado) throw new Exception(res.mensaje);
-                string codigo = res.datosUsuario;
-                bool tarea = await ActualizarCodigo(codigo);
-                if (tarea) IniciarAplicacion?.Invoke();
+                    _enProceso=true;
+                    UsuarioMuoqa usr = new UsuarioMuoqa
+                    {
+                        Usuario = NombreUsuario,
+                        Contrasena = Contrasena
+                    };
+                    var res = await _aut.Con_IniciarSesion(usr);
+                    if (!res.estado) throw new Exception(res.mensaje);
+                    MensajeRespuesta = res.mensaje;
+                    string codigo = res.datosUsuario;
+                    bool tarea = await ActualizarCodigo(codigo);
+                    if (tarea) IniciarAplicacion?.Invoke();
+                }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
+                MensajeRespuesta = ex.Message;
                 HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloHistorialVentas", "EjecutarBuscarVentas", _configuracion.NombreDeCaja);
                 EscribirEnTXTError(error);
             }
+            finally { _enProceso = false; }
         }
         private async Task<bool> ActualizarCodigo(string codigoNuevo)
         {

@@ -51,7 +51,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             _coloresEntradas = new ColoresProductos();
             SoloLectura = true;
             Busqueda = "Buscar por nombre";
-            Edicion = "Editar nombre";
+            Edicion = "Nombre de la categoría";
             CategoriaSeleccionada = "Ninguna";
             _colores = new ColoresTexto();
             categoriaAEditar = null;
@@ -269,7 +269,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         {
             SoloLectura = true;
             Visualizacion = default;
-            Edicion = "Editar nombre";
+            Edicion = "Nombre de la categoría";
             CategoriaSeleccionada = "Ninguna";
             categoriaAEditar = null;
             ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
@@ -334,7 +334,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     if (respuesta.estado)
                     {
                         Busqueda = "Buscar por nombre";
-                        Edicion = "Editar nombre";
+                        Edicion = "Nombre de la categoría";
                         CategoriaSeleccionada = "Ninguna";
                         categoriaAEditar = null;
                         ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
@@ -417,12 +417,12 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             switch (nombre)
             {
                 case "entrada_busqueda": if (string.IsNullOrWhiteSpace(Busqueda) || Busqueda.Trim() == "Buscar por nombre") { Busqueda = "Buscar por nombre"; ColoresProductos.Busuqeda = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
-                case "entrada_edicion": if (string.IsNullOrWhiteSpace(Edicion) || Edicion.Trim() == "Editar nombre") { Edicion = "Editar nombre"; ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
+                case "entrada_edicion": if (string.IsNullOrWhiteSpace(Edicion) || Edicion.Trim() == "Nombre de la categoría") { Edicion = "Nombre de la categoría"; ColoresProductos.BusuqedaUno = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A")); } break;
             }
         }
         private bool RevisarEntradas(TextBox entrada)
         {
-            string[] valores = ["Editar nombre", "Buscar por nombre"];
+            string[] valores = ["Nombre de la categoría", "Buscar por nombre"];
             foreach (string valor in valores)
             {
                 if (valor == entrada.Text)

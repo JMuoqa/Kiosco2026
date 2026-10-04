@@ -19,6 +19,7 @@ namespace Entidades
         public string Usuario { get; set; }
         public string UsuarioBD { get; set; }
         public string ContrasenaBD { get; set; }
+        public string VersionActual { get; set; }
     }
     public class ColoresTexto
     {

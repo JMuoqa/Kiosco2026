@@ -280,7 +280,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 int calculoCantidadProductos = _listaProductos.Count;
                 PrecioTotal = "$" + calculoTotal.ToString("N2", new CultureInfo("es-AR"));
                 CantidadProductos = calculoCantidadProductos.ToString();
-                Venta = new Ventas(_listaProductos.ToList(), 0, calculoTotal, calculoTotal, _listaProductos.Count, calculoCantidadProductos, FormaDePago);
+                Venta = new Ventas(_listaProductos.ToList(), 0, calculoTotal, calculoTotal, calculoCantidadProductos, int.Parse(CantidadItems), FormaDePago);
                 OnPropertyChanged(nameof(ListaProductos));
             }
         }
@@ -547,7 +547,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private void RestablecerValoresPostItem()
         {
-            CodigoBarras = "Codigo de barras";
+            CodigoBarras = "";
             Cantidad = "1";
             ColoresEntradas.Codigo = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#9A9A9A"));
         }

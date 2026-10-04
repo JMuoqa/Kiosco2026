@@ -69,11 +69,11 @@
                         </Border>
                         <Border Width="{Binding EColumna_tres}">
                             <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
-                   VerticalAlignment="Center" Text="ITEMS" Margin="10, 0, 0, 0"/>
+                   VerticalAlignment="Center" Text="Productos" Margin="10, 0, 0, 0"/>
                         </Border>
                         <Border Width="{Binding EColumna_cuatro}">
                             <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"
-                   VerticalAlignment="Center" Text="CANTIDAD_TOTAL" Margin="10, 0, 0, 0"/>
+                   VerticalAlignment="Center" Text="Unidades" Margin="10, 0, 0, 0"/>
                         </Border>
                         <Border Width="{Binding EColumna_cinco}">
                             <TextBlock FontFamily="Roboto Flex" FontWeight="DemiBold" FontSize="18"

@@ -15,6 +15,10 @@
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding ValoresPredeterminados}"/>
         </i:EventTrigger>
+        <i:EventTrigger EventName="PreviewKeyDown">
+            <i:InvokeCommandAction Command="{Binding PreviewKeyDownParaCargar}"
+                                   PassEventArgsToCommand="True"/>
+        </i:EventTrigger>
     </i:Interaction.Triggers>
     <Border CornerRadius="10" Margin="30" Background="#FFFFFF">
         <Grid Margin="15">
@@ -197,7 +201,7 @@
                 </Grid>
                 <RadioButton Style="{StaticResource boton_confirmar}" Command="{Binding CargarProducto}"
                              CommandParameter="{Binding ElementName=cmb_categorias}">
-                    <TextBlock Style="{StaticResource texto_botones_uno}" Text="Añadir"/>
+                    <TextBlock Style="{StaticResource texto_botones_uno}" Text="Añadir (F9+F9)"/>
                 </RadioButton>
                 <TextBlock Margin="10" FontFamily="Roboto Flex" 
                            FontSize="16" Text="{Binding Mensaje}" Foreground="{Binding ColorMensaje}" TextWrapping="Wrap" ></TextBlock>

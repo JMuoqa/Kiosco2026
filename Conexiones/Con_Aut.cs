@@ -55,7 +55,14 @@ namespace Conexiones
                     byte[] bytes = Encoding.UTF8.GetBytes(resultadoParaHash);
                     byte[] hash = SHA256.HashData(bytes);
                     string identificadorEquipo = Convert.ToHexString(hash).ToLowerInvariant();
-                    var json = JsonSerializer.Serialize(new { Usuario = usuario.Usuario, Contraseña = usuario.Contrasena, IdentificadorEquipo = identificadorEquipo, Os = oS });
+                    var datosEnviados = new DatosAutenticacion
+                    {
+                        Usuario = usuario.Usuario,
+                        Contraseña = usuario.Contrasena,
+                        IdentificadorEquipo = identificadorEquipo,
+                        Os = oS
+                    };
+                    var json = JsonSerializer.Serialize(datosEnviados);
                     var content = new StringContent(json, Encoding.UTF8, "application/json");
                     var respuesta = await client.PostAsync("https://muoqa.com/autenticacion/iniciar-desde-app", content);
                     if (respuesta.IsSuccessStatusCode)
@@ -66,7 +73,7 @@ namespace Conexiones
                         var datos = JsonSerializer.Deserialize<EstadoAut>(resultado);
                         if (datos == null || (datos != null && !datos.estado))
                             return (false, datos.mensaje, "");
-                        return (true, "exitoso", datos.Token);
+                        return (true, "Autenticado correctamente", datos.Token);
                     }
                     else
                     {
@@ -83,5 +90,12 @@ namespace Conexiones
                 }
             }
         }
+    }
+    public class DatosAutenticacion
+    {
+        public string Usuario { get; set; }
+        public string Contraseña { get; set; }
+        public string IdentificadorEquipo { get; set; }
+        public string Os { get; set; }
     }
 }

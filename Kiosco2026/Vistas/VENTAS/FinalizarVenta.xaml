@@ -11,6 +11,9 @@
         Title="Ticket" 
         Height="690" Width="450">
     <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding CargarVenta}"/>
+        </i:EventTrigger>
         <i:EventTrigger EventName="PreviewKeyDown">
             <i:InvokeCommandAction Command="{Binding PreviewKeyDownParaCerrarOImprimir}"
                                    PassEventArgsToCommand="True"/>
@@ -129,7 +132,7 @@
             </TextBox>
             <RadioButton Margin="14, 0" Style="{StaticResource boton_confirmar}" Command="{Binding ImprimirPagina}">
                 <TextBlock Style="{StaticResource texto_botones_uno}">
-                    Imprimir ticket
+                    Imprimir ticket (F9+F9)
                 </TextBlock>
             </RadioButton>
         </StackPanel>

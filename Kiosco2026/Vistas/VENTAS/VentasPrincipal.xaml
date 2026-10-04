@@ -246,7 +246,7 @@
                         </TextBox>
                         <RadioButton Style="{StaticResource boton_confirmar}" Margin="0, 5"
                                      Command="{Binding AbrirFinalizarVenta}">
-                            <TextBlock Style="{StaticResource texto_botones_uno}">Finalizar venta</TextBlock>
+                            <TextBlock Style="{StaticResource texto_botones_uno}">Finalizar venta (F9+F9)</TextBlock>
                         </RadioButton>
                         <!--
                         <RadioButton Style="{StaticResource boton_confirmar}" Margin="0, 5"

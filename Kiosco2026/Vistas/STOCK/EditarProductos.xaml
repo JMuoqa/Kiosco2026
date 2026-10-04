@@ -309,21 +309,22 @@
                                 </i:Interaction.Triggers>
                             </TextBox>
                         </Grid>
-                        <StackPanel Orientation="Horizontal" Height="40" Margin="10, 10">
+                        <StackPanel Orientation="Horizontal" Height="40" Margin="10, 9, 10, 0">
                             <TextBlock FontSize="20" FontWeight="Medium" Margin="5, 0, 0, 0"
                                     VerticalAlignment="Center" FontFamily="Roboto Flex" >Visible:</TextBlock>
                             <CheckBox VerticalAlignment="Center"  Margin="10, 0, 0, 0" IsChecked="{Binding Marcado}"></CheckBox>
                         </StackPanel>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
+                                <ColumnDefinition Width="50*"/>
+                                <ColumnDefinition Width="251*"/>
+                                <ColumnDefinition Width="300*"/>
                             </Grid.ColumnDefinitions>
-                            <RadioButton Style="{StaticResource boton_confirmar}" Command="{Binding EditarProducto}">
+                            <RadioButton Style="{StaticResource boton_confirmar}" Command="{Binding EditarProducto}" Grid.ColumnSpan="2" Margin="10,0,10,10">
                                 <TextBlock Style="{StaticResource texto_botones_uno}" Text="Editar producto"/>
                             </RadioButton>
-                            <RadioButton Grid.Column="1" Style="{StaticResource boton_neutral}" 
-                                         Click="RadioButton_Click" >
+                            <RadioButton Grid.Column="2" Style="{StaticResource boton_neutral}" 
+                                         Click="RadioButton_Click" Margin="10,0,10,10" >
                                 <TextBlock Style="{StaticResource texto_botones_uno}" Text="Ver lotes del producto"/>
                             </RadioButton>
                         </Grid>

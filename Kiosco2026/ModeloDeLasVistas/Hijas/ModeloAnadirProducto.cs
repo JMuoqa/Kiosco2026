@@ -231,6 +231,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             GuardarCmb = new ComandoModeloDeVista(EjecutarGuardarCmbCat);
             GuardarCmbUni= new ComandoModeloDeVista(EjecutarGuardarCmbUni);
             SelecionarTextBox = new ComandoModeloDeVista(EjecutarSelecionarTextBox);
+            PreviewKeyDownParaCargar = new ComandoModeloDeVista(EjecutarPreviewKeyDownParaCargar);
             _colores = new ColoresTexto();
             ColorMensaje = _colores.Normal;
             _adminProductos = new AdminProductos();
@@ -253,8 +254,33 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         public ICommand GuardarCmb { get; }
         public ICommand GuardarCmbUni { get; }
         public ICommand SelecionarTextBox { get; }
+        public ICommand PreviewKeyDownParaCargar { get; }
         #endregion
         #region Funciones
+        private DateTime? primeraPulsacionF9;
+        private async Task EjecutarPreviewKeyDownParaCargar(object arg)
+        {
+            if (arg is not KeyEventArgs e)
+                return;
+            if (e.Key != Key.F9)
+                return;
+            DateTime ahora = DateTime.Now;
+            if (primeraPulsacionF9 == null)
+            {
+                primeraPulsacionF9 = ahora;
+                return;
+            }
+            TimeSpan diferencia = ahora - primeraPulsacionF9.Value;
+            if (diferencia.TotalSeconds <= 1)
+            {
+                primeraPulsacionF9 = null;
+                EjecutarCargarProducto(null);
+            }
+            else
+            {
+                primeraPulsacionF9 = ahora;
+            }
+        }
         private void PrecioEnVivo()
         {
             decimal d = 0;

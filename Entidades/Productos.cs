@@ -98,8 +98,9 @@ namespace Entidades
         public string STRSubTotal {
             get
             {
-                decimal subTotalCalculado = decimal.Parse(Venta) * Cantidad;
-                return subTotalCalculado.ToString(new CultureInfo("es-AR"));
+                decimal cantidad = Cantidad;
+                decimal subTotalCalculado = decimal.Parse(Venta, new CultureInfo("es-AR")) * Cantidad;
+                return subTotalCalculado.ToString("N2", new CultureInfo("es-AR"));
             }  
         }
     }

@@ -464,6 +464,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             {
                 ColorMensaje = _colores.ColorError;
                 Mensaje = ex.Message;
+                HistorialErrores error = new HistorialErrores(ex.Message, ex.GetType().FullName, ex.StackTrace, "Kiosco2026.ModeloDeLasVistas.Hijas", "ModeloEditarProducto", "EjecutarObtenerProductos", _configuracion.NombreDeCaja);
+                EscribirEnTXTError(error);
                 _metodoEnEjecucion = false;
             }
             finally
@@ -552,7 +554,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 else if(!_metodoEnEjecucion)
                 {
                     _metodoEnEjecucion = true;
-                    //EjecutarBusquedaPorCodigoUltLote(null);
+                    EjecutarBusquedaPorCodigoUltLote(null);
                 }
             }
             catch (Exception ex)

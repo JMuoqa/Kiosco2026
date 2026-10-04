@@ -112,7 +112,7 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                         _montoPagado = value;
                 }
                 else
-                    _montoPagado = "0";
+                    _montoPagado = "";
                 ActualizarVuelto();
                 OnPropertyChanged(nameof(MontoPagado));
             }
@@ -218,8 +218,8 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             _venta = venta;
             _fechaRegistrada = venta.Fecha;
             _metodoDePago = venta.FormaDePago;
-            Descuento = venta.Descuento.ToString();
-            SubTotal = venta.SubTotal.ToString();
+            Descuento = venta.Descuento.ToString("N2", _cultura);
+            SubTotal = venta.SubTotal.ToString("N2", _cultura);
             _total = venta.Total;
             _listaProductos = venta.Productos;
             ListadoDeProductos = new ObservableCollection<Productos>(_listaProductos);
@@ -230,15 +230,16 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
             Caja = _configuracion.NumeroDeCaja.ToString("D3");
             Cajero = _configuracion.NombreDeCaja;
             _adminVentas = new AdminVentas();
-            EjecutarRegistrarVenta(null);
             DireccionTienda = _configuracion.DireccionDelLocal;
             ImprimirPagina = new ComandoModeloDeVista(EjecutarImprimirPagina);
             PreviewKeyDownParaCerrarOImprimir = new ComandoModeloDeVista(EjecutarPreviewKeyDownParaCerrarOImprimir);
+            CargarVenta = new ComandoModeloDeVista(EjecutarRegistrarVenta);
         }
         #region Comandos
         public ICommand ImprimirPagina { get; }
         public ICommand GotFocus { get; }
         public ICommand LostFocus { get; }
+        public ICommand CargarVenta { get; }
         public ICommand PreviewKeyDownParaCerrarOImprimir { get; }
         #endregion
         #region Funciones
@@ -289,9 +290,11 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
         }
         private void ActualizarVuelto()
         {
-            if(decimal.TryParse(_montoPagado, out decimal monto)){
+            string montoPagado = _montoPagado;
+            if (string.IsNullOrWhiteSpace(montoPagado)) montoPagado = "0";
+            if (decimal.TryParse(montoPagado, out decimal monto)){
                 decimal resultado = monto - _total;
-                Vuelto = resultado.ToString(_cultura);
+                Vuelto = resultado.ToString("N2", _cultura);
             }
         }
         private async Task EjecutarRegistrarVenta(object arg)
@@ -439,12 +442,12 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                     e.Graphics.DrawString(vCantidad, fuenteInfo, Brushes.Black, limiteIzquierdo, y);
                     e.Graphics.DrawString(vPrecioVenta, fuenteInfo, Brushes.Black, xVCantidad, y);
                     y += 15;
-                    RectangleF rectNombre = new RectangleF(limiteIzquierdo, y, 220, 100);
                     //Aca uso la sobre carag que usa un RectangleF para que si el nombre es muy largo haga "wrap"
+                    RectangleF rectNombre = new RectangleF(limiteIzquierdo, y, 220, 100);
                     e.Graphics.DrawString(vNombre, fuenteInfo, Brushes.Black, rectNombre);
                     //Aca se calcula tamaño de el string, y despues accedemos a el alto real que tiene
                     SizeF anchoNombreProducto = e.Graphics.MeasureString(vNombre, fuenteInfo, 220);
-                    //Se le resta 15 para alinearlo
+                    //Se le resta 12 para alinearlo
                     y += anchoNombreProducto.Height - 12;
                     e.Graphics.DrawString(strVPrecioTotal, fuenteInfo, Brushes.Black, posPrecioTotal, y);
                     y += 20;
@@ -480,8 +483,13 @@ namespace Kiosco2026.ModeloDeLasVistas.Hijas
                 y += 20;
                 e.Graphics.DrawString(divisor, fuenteDeco, Brushes.Black, divisorCentrado, y);
                 y += 20;
-                e.Graphics.DrawString(_nombreTienda, fuenteInfo, Brushes.Black, xNombreTiendaUnoCentrado, y);
-                y += 20;
+                string noFactura = "Este comprobante no tiene\nvalidez como factura.";
+                SizeF anchoNoFactura = e.Graphics.MeasureString(noFactura, fuenteInfo);
+                float xNoFacturaCentrado = limiteIzquierdo + (e.MarginBounds.Width - anchoNoFactura.Width) / 2;
+                RectangleF rectNoFactura = new RectangleF(xNoFacturaCentrado, y, 200, 100);
+                e.Graphics.DrawString(noFactura, fuenteInfo, Brushes.Black, rectNoFactura);
+                SizeF anchoTxtNoFactura = e.Graphics.MeasureString(noFactura, fuenteInfo, 200);
+                y += anchoTxtNoFactura.Height + 20;
                 Barcode barcode = new Barcode();
                 var img = barcode.Encode(BarcodeStandard.Type.Code128, ticket, new SKColor(0, 0, 0), new SKColor(255, 255, 255), 200, 30);
                 float xCodigobarras = limiteIzquierdo + (e.MarginBounds.Width - img.Width) / 2;

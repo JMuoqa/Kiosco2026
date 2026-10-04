@@ -34,7 +34,7 @@ namespace Conexiones
 
         private void EscribirEnTXTError(HistorialErrores ERROR)
         {
-            string ruta = "log_error.txt";
+            string ruta = carpetaDatos + "\\log_error.txt";
             DateTime hoy = DateTime.Now;
             string logError = File.ReadAllText(ruta);
             logError += "{" + $"fecha:{hoy.ToString("dd-MM-yyyy HH:mm:ss")}, " +
